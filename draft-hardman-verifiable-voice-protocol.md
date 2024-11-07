@@ -12,9 +12,8 @@ v: 3
 # area: AREA
 # workgroup: WG Working Group
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - voip
+ - telecom
 venue:
 #  group: WG
 #  type: Working Group
@@ -26,7 +25,7 @@ venue:
 author:
  -
     fullname: "Daniel Hardman"
-    organization: Your Organization Here
+    organization: Provenant, Inc
     email: "daniel.hardman@gmail.com"
 
 normative:
