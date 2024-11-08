@@ -32,32 +32,46 @@ author:
     email: "daniel.hardman@gmail.com"
 
 normative:
+  RFC3261:
+  RFC5280:
+  ISO.17442-1:
+  ISO.17442-3:
+  TOIP.CESR:
+  TOIP.ACDC:
+  TOIP.KERI:
 
 informative:
+  I-D.ietf-stir-passport-rcd:
+  I-D.ietf-oauth-selective-disclosure-jwt:
+  I-D.ietf-sipcore-callinfo-spam:
+  ATIS.1000074:
+  W3C.REC-did-core-20220719:
+  W3C.REC-vc-data-model-20220303:  
+
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR/SHAKEN+RCD and related technologies. Like these approaches, it binds strong cryptographic evidence to the message that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. It can be used by itself, or as an inexpensive supplement to bridge gaps in existing approaches.
+Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR ({{I-D.ietf-stir-passport-rcd}}), SHAKEN ({{ATIS.1000074}}), RCD ({{I-D.ietf-stir-passport-rcd}}), and related technologies. Like these approaches, it uses binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. It can be used by itself, or as an inexpensive supplement to bridge gaps in existing approaches.
 
 --- middle
 
 # Introduction
 
-When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context.
+When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context. 
 
 Unfortunately, providing quality answers is much harder than it seems. Scammers love to impersonate, and they succeed more often than we'd like.
 
-Regulators are mandating increased transparency to address this risk. This is wise, and it can be effective. However, it introduces some heavy burdens. Reliably vetting the identity of every possible caller is an ambitious task. Maintaining a comprehensive, up-to-date graph of certificates and cryptophic keys to attest vetted identities is harder. Operating a central registry of such identities and evidence, especially as phone calls increasingly cross jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting technical standards, variety in PSTNs and system interconnects, and many other factors further complexify.
+Regulators are mandating increased transparency to address this risk. This is wise, and it can be effective. However, it introduces some heavy burdens. Reliably vetting the identity of every possible caller is an ambitious task. Maintaining a comprehensive, up-to-date graph of certificates and cryptographic keys to attest vetted identities is harder. Operating a central registry of such identities and evidence, especially as phone calls increasingly cross jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting technical standards, variety in PSTNs and system interconnects, and many other factors further complexify.
 
-However, the inherent limit in today's transparency efforts is more fundamental: there exists a pernicious a gap between the party accountable for a phone call, and the party who answers the "who's calling?" question. A decade ago, the TSP told us who's calling in a probabilistic way, based on unreliable metadata about a call's source. More recently, approaches like STIR/SHAKEN move the answer closer to the origin, and add tamper protections. However, there is still a gap: the signer of a SHAKEN passport is the OSP, not the caller, and the OSP may not know what's happening in this gap.
+However, the inherent limit in today's transparency efforts is more fundamental: there exists a pernicious gap between the party accountable for a phone call, and the party who answers the "who's calling?" question. A decade ago, the TSP told us who's calling in a probabilistic way, based on unreliable metadata about a call's source. More recently, approaches like STIR/SHAKEN move the answer closer to the origin, and add tamper protections. However, there is still a gap: the signer of a SHAKEN passport is the OSP, not the caller, and the OSP may not know what's happening in this gap.
 
 In theory, the remaining gap could be eliminated by requiring a perfect authentication and authorization between callers and OSPs, for every phone call. However, this is impractical for many legitimate business reasons. To cite one obvious example, Organization X might hire Call Center Y to call on their behalf, using X's reputation/brand and X's phone number. In such a situation, X is the relevant answer to the "who's calling" question, but Y is the originator of the call -- and there's no good way to guarantee that everyone knows the existence and status of that relationship. In addition, the market manifests a demand for wholesalers/aggregators of phone numbers, and is characterized by complex system layers and interconnects, that further challenge transparency.
 
 VVP solves these problems by applying two crucial innovations:
 
-* It uses an evidence format called an ACDC (Authentic Chained Data Containers). The chaining feature in ACDCs is far more powerful, far safer, and far easier to maintain than certificates. It is also capable of modeling delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be easily built and maintained by X and Y and does not need to be published in a central registry. Further, when evidence about X and Y is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs are lossless with respect to identity relationships, whereas formats like W3C Verifiable Credentials and SD-JWTs are lossy; this means ACDCs can be used to generate derivative forms of evidence for subsets of an ecosystem that prefer to consume evidence differnetly. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.
+* It uses an evidence format called Authentic Chained Data Container (ACDC) -- {{TOIP.ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates ({{RFC5280}}). It is also capable of modeling delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be easily built and maintained by X and Y and does not need to be published in a central registry. Further, when evidence about X and Y is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs are lossless with respect to identity relationships, whereas formats like W3C Verifiable Credentials and SD-JWTs are lossy; this means ACDCs can be used to generate derivative forms of evidence for subsets of an ecosystem that prefer to consume evidence differnetly. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.
 
-* Although VVP can work inside the governance frameworks such as SHAKEN, it dramatically upgrades at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in ISO 17442. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI that's globally required in cross-border banking. This means the basis of vLEI trust is already adopted, and it is not limited to any particular jurisdiction or to telecom. VVP offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistics, regulatory, web, email, and social media contexts.
+* Although VVP can work inside governance frameworks such as SHAKEN {{ATIS.1000074}}, it dramatically upgrades at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO.17442-3}}. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI ({{ISO.17442-1}}) that's globally required in cross-border banking. This means the basis of vLEI trust is already adopted, and it is not limited to any particular jurisdiction or to telecom. VVP offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
 
 # Conventions and Definitions
 
@@ -65,23 +79,35 @@ VVP solves these problems by applying two crucial innovations:
 
 # Overview
 
+Verifiable Voice Protocol depends on three interrelated activities:
+
+* Curating evidence
+* Citing evidence
+* Checking evidence
+
+Citing and checking evidence occur in realtime during actual phone calls, and are therefore the heart of VVP. However, curated evidence must exist before it can be cited; curating is an ongoing, parallel activity as phone calls occur; and citing and checking must react properly to changes in evidence. Further, existing approaches have trust gaps precisely because they impose too few requirements on the evidence that backs their ecosystems. Therefore, the protocol specification includes normative statements about the nature of evidence and the processes that create and maintain it.
+
+Before we explain the evidence, however, we must define some roles.
+
 ## Roles
 
-For a given phone call, the Terminating Party (TP) is the party that receives the call. The direct service provider of the TP is the Terminating Service Provider (TSP).
+For a given phone call, the Terminating Party (TP) is the party that receives the call. The direct service provider of the TP is the Terminating Service Provider (TSP). 
 
-The Originating Party (OP) is the caller. The direct service provider of the OP is commonly called the Originating Service Provider (OSP). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
+The Originating Party (OP) is the caller. The direct service provider of the OP is the Originating Service Provider (OSP). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
-Accountable Parties (AP) are organizations or individuals who hold the right to use (RTU) in the eyes of a regulator. APs can be OPs, but this relationship does not always hold. A business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP.
+Accountable Parties (AP) are organizations or individuals who hold the right to use a telephone number (RTU) in the eyes of a regulator. APs MAY be OPs, but this relationship does not always hold. A business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP.
 
-Checkers (CH) are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be checkers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
+Verifiers (V) are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance. The verifier role in VVP does not just check the validity of cryptographic evidence; it also considers how that evidence matches business rules. For example, a verfier may do more than decide whether Call Center Y has the right to make calls on behalf of Organization X; it may decide whether Y has this right at a particular time of day, when calling into a particular jurisdiction, for a particular business purpose.
 
 ## Evidence
 
-A digital signature over arbitrary data D constitutes evidence that the signer processed D. The proof can be verified by checking that the signature is associated with the public key of the signer. Assuming that the signer has not lost unique control of the corresponding private key, and that cryptography is appropriately strong, we are justified in the belief that the signer acted to process the data.
+The term "credential" has a fuzzy meaning in casual conversation. However, understanding how evidence is built from credentials in VVP requires considerably more precision. Let's start from lower-level concepts.
+
+A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs. The evidence can be verified by checking that the signature is associated with the public key of the signer. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action and seen an unmodified D in its entirety.
 
 VVP uses digital signatures as one form of evidence.
 
-Most other evidence in VVP uses the ACDC format. This is a normalized, serialized form of data that contains references to signatures anchored elsewhere. See the ACDC spec.
+Most other evidence in VVP uses the ACDC format. This is a normalized, serialized form of data with an associated digital signature. Signatures over ACDCs are not contained inside the ACDC; rather, they are anchored elsewhere and referenced by the ACDC. ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable. We adopt many terms and concepts from the ACDC spec. 
 
 Some formal definitions will help to characterize ACDC-based evidence.
 
@@ -108,15 +134,7 @@ With this background, we can now say that VVP depends on the following types of 
 Some Not all CVD The signer of a Credential is called an Issuer.
 
 A Bearer Credential confers entitlement through simple possession.
-
-
-VVP is built from three interrelated activities:
-
-* Curating evidence
-* Citing evidence
-* Checking evidence
-
-Each Accountable Party (AP) that wants to associate its reputation with phone calls MUST maintain evidence, and they MUST cite evidence. Some maintainence MUST occur before the first time evidence is cited; thereafter, these two activities can overlap one another. Citing evidence is what allows
+ 
 
 ## Curation
 
@@ -138,3 +156,52 @@ This document has no IANA actions.
 
 TODO acknowledge.
 
+## References
+
+### Normative References
+
+## References
+
+### Normative References
+
+- **[RFC3261]**  
+  Rosenberg, J., Schulzrinne, H., Camarillo, G., Johnston, A., Peterson, J., Sparks, R., Handley, M., and E. Schooler, "SIP: Session Initiation Protocol", RFC 3261, DOI 10.17487/RFC3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
+
+- **[RFC5280]**  
+  Cooper, D., Santesson, S., Farrell, S., Boeyen, S., Housley, R., and W. Polk, "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
+
+- **[I-D.ietf-stir-passport-rcd]**  
+  Wendt, C., Peterson, J., and A. Rescorla, "PASSporT Extension for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-stir-passport-rcd-21, July 2023, <https://datatracker.ietf.org/doc/draft-ietf-stir-passport-rcd/>.
+
+- **[ISO.17442-1]**  
+  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
+
+- **[ISO.17442-3]**  
+  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)", ISO 17442-3:2024, 2024.
+
+- **[TOIP.CESR]**  
+  Trust Over IP Foundation, "Composable Event Streaming Representation (CESR)", 7 Nov 2023, <https://trustoverip.github.io/tswg-cesr-specification/>
+
+- **[TOIP.ACDC]**  
+  Trust Over IP Foundation, "Authentic Chained Data Containers (ACDC)", 6 Nov 2023, <https://trustoverip.github.io/tswg-acdc-specification/>
+
+- **[TOIP.KERI]**  
+  Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
+
+
+### Informative References
+
+- **[W3C.REC-did-core-20220719]**  
+  World Wide Web Consortium, "Decentralized Identifiers (DIDs) v1.0", W3C Recommendation, 19 July 2022, <https://www.w3.org/TR/2022/REC-did-core-20220719/>.
+
+- **[W3C.REC-vc-data-model-20220303]**  
+  World Wide Web Consortium, "Verifiable Credentials Data Model v1.1", W3C Recommendation, 3 March 2022, <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/>.
+
+- **[ATIS.1000074]**  
+  Alliance for Telecommunications Industry Solutions, "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)", ATIS-1000074, 2020.
+
+- **[I-D.ietf-oauth-selective-disclosure-jwt]**  
+  Jones, M., Bradley, J., and N. Sakimura, "Selective Disclosure of Claims in JWTs", Work in Progress, Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-05, October 2024, <https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/>.
+
+- **[I-D.ietf-sipcore-callinfo-spam]**  
+  Johnston, A., "A Mechanism for Indicating Spam in the SIP Call-Info Header Field", Work in Progress, Internet-Draft, draft-ietf-sipcore-callinfo-spam-02, October 2024, <https://datatracker.ietf.org/doc/draft-ietf-sipcore-callinfo-spam/>.
