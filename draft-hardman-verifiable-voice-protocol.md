@@ -55,15 +55,70 @@ In theory, the remaining gap could be eliminated by requiring a perfect authenti
 
 VVP solves these problems by applying two crucial innovations:
 
-* It uses an evidence format called an ACDC (Authentic Chained Data Containers). The chaining feature in ACDCs is far more powerful, far safer, and far easier to maintain than certificates. It is also capable of modeling delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be easily built and maintained by X and Y and does not need to be published in a central registry. Further, when evidence about X and Y is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs are lossless with respect to identity relationships, whereas formats like W3C Verifiable Credentials and SD-JWTs are lossy; this means ACDCs can be used to generate derivative forms of evidence for subsets of an ecosystem that prefer to consume evidence differnetly. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period.
+* It uses an evidence format called an ACDC (Authentic Chained Data Containers). The chaining feature in ACDCs is far more powerful, far safer, and far easier to maintain than certificates. It is also capable of modeling delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be easily built and maintained by X and Y and does not need to be published in a central registry. Further, when evidence about X and Y is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs are lossless with respect to identity relationships, whereas formats like W3C Verifiable Credentials and SD-JWTs are lossy; this means ACDCs can be used to generate derivative forms of evidence for subsets of an ecosystem that prefer to consume evidence differnetly. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.
 
-* Although VVP can work inside the governance frameworks such as SHAKEN, it dramatically upgrades at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in ISO 17442. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI that's globally required in cross-border banking. This means the basis of vLEI trust is already adopted, and it is not limited to any particular jurisdiction or to telecom contexts. VVP offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistics, regulatory, web, email, and social media contexts.  
+* Although VVP can work inside the governance frameworks such as SHAKEN, it dramatically upgrades at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in ISO 17442. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI that's globally required in cross-border banking. This means the basis of vLEI trust is already adopted, and it is not limited to any particular jurisdiction or to telecom. VVP offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistics, regulatory, web, email, and social media contexts.
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
 # Overview
+
+## Roles
+
+For a given phone call, the Terminating Party (TP) is the party that receives the call. The direct service provider of the TP is the Terminating Service Provider (TSP). 
+
+The Originating Party (OP) is the caller. The direct service provider of the OP is commonly called the Originating Service Provider (OSP). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
+
+Accountable Parties (AP) are organizations or individuals who hold the right to use (RTU) in the eyes of a regulator. APs can be OPs, but this relationship does not always hold. A business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP.
+
+Checkers (CH) are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be checkers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance. 
+
+## Evidence
+
+A digital signature over arbitrary data D constitutes evidence that the signer processed D. The proof can be verified by checking that the signature is associated with the public key of the signer. Assuming that the signer has not lost unique control of the corresponding private key, and that cryptography is appropriately strong, we are justified in the belief that the signer acted to process the data.
+
+VVP uses digital signatures as one form of evidence.
+
+Most other evidence in VVP uses the ACDC format. This is a normalized, serialized form of data that contains references to signatures anchored elsewhere. See the ACDC spec.
+
+Some formal definitions will help to characterize ACDC-based evidence.
+
+Cryptographically verifiable data (CVD) is data that's associated with a digital signature and a claim about who signed it.
+
+When CVD is an assertion, we make the additional assumption that the signer intends whatever the data asserts, since they took an affirmative action to create non-repudiable evidence that they processed it.
+
+A Credential is a special kind of CVD that asserts the entitlement of its bearer -- *and only its bearer* -- to a privilege. CVD that says Organization X exists with a particular ID number in government registers, and with a particular legal name, is not necessarily a credential. In order to be a credential, it would have to include an assertion that its bearer -- *and only its bearer* -- is entitled to use the identity of Organization X. If signed data merely enumerates properties without conferring privileges on a specific party, it is just CVD.
+
+A Bearer Token is a Credential that satisfies the binding requirements by trivial possession -- like a movie ticket, the first party that presents the artifact to a verifier gets the privilege. Since Bearer Credentials can be stolen, this is risky. Although they can be protected by secure channels and expiration dates, JWTs, session cookies, and other artifacts in mainstream identity technology are typically bearer tokens.
+
+A Targeted Credential is CVD that identifies an Issuee as the bearer, and that requires the Issuee to prove their identity cryptographically (e.g., to produce a proper digital signature) in order to claim the associated privilege.
+
+A Justifying Link (JL) is a reference, inside of one CVD, to another CVD that justifies what the first CVD is asserting.
+
+With this background, we can now say that VVP depends on the following types of evidence:
+
+* A Vetting Credential. This is a targeted credential that enumerates the formal and legal attributes of a unique legal entity. It MUST include a legal identifier that makes the entity unique in its home jurisdiction, and it MUST include a cryptographic identifier that is unique globally. It is called a vetting credential because it MUST be issued according to a documented vetting process that offers formal assurance that is is only issued with accurate information, and only to the AP it describes. A vetting credential confers the privilege of acting with the associated legal identity if and only if the bearer can prove their identity as issuee via a digital signature. A vetting credential MUST include a JL to a credential that qualifies the issuer as a party trusted to do vetting. This linked credential that qualifies the issuer of the vetting credential MAY contain a JL that qualifies its own issuer, and such JLs MAY be repeated through as many layers as desired. In VVP, the reference type of a Vetting Credential is a vLEI. This implies both a schema and a governance framework. Other Vetting Credential types are possible, but they MUST be true credentials that meet the normative requirements here. They MUST NOT be bearer tokens.
+
+* A Brand Credential. This is a targeted credential that enumerates brand properties such as a brand name and a logo. It MUST be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issue the right to use the described brand. This credential MUST be issued according to a documented brand research process that offers formal assurance that it is only issued with accurate information, and only to an AP that has the right to use the described brand. A single AP MAY have multiple brand credentials (e.g., Coca Cola Holdings Germany, Gmbh holds a brand credential for Coke and for Sprite), and rights to use the same brand MAY be conferred to on multiple APs (Coca Cola Holdings Germany, Gmbh and Coca Cola Canada, Ltd may both possess brand credentials for Sprite). A brand credential MUST contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.
+
+* A TNAlloc Credential. This is a targeted credential that confers on its issuee the right to use one or more telephone numbers. If the issuer is not a regulator, it MUST contain a JL to an TNAlloc credential that justifies the issuer's right to pass a right to use downstream. 
+
+Some Not all CVD The signer of a Credential is called an Issuer.
+
+A Bearer Credential confers entitlement through simple possession.
+
+
+VVP is built from three interrelated activities:
+
+* Curating evidence
+* Citing evidence
+* Checking evidence
+
+Each Accountable Party (AP) that wants to associate its reputation with phone calls MUST maintain evidence, and they MUST cite evidence. Some maintainence MUST occur before the first time evidence is cited; thereafter, these two activities can overlap one another. Citing evidence is what allows 
+
+## Curation
 
 
 # Security Considerations
