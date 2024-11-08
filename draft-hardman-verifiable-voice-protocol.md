@@ -43,7 +43,7 @@ Verifiable Voice Protocol (VVP) proves the identity and authorization of parties
 
 # Introduction
 
-When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context. 
+When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context.
 
 Unfortunately, providing quality answers is much harder than it seems. Scammers love to impersonate, and they succeed more often than we'd like.
 
@@ -67,13 +67,13 @@ VVP solves these problems by applying two crucial innovations:
 
 ## Roles
 
-For a given phone call, the Terminating Party (TP) is the party that receives the call. The direct service provider of the TP is the Terminating Service Provider (TSP). 
+For a given phone call, the Terminating Party (TP) is the party that receives the call. The direct service provider of the TP is the Terminating Service Provider (TSP).
 
 The Originating Party (OP) is the caller. The direct service provider of the OP is commonly called the Originating Service Provider (OSP). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
 Accountable Parties (AP) are organizations or individuals who hold the right to use (RTU) in the eyes of a regulator. APs can be OPs, but this relationship does not always hold. A business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP.
 
-Checkers (CH) are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be checkers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance. 
+Checkers (CH) are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be checkers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
 
 ## Evidence
 
@@ -103,7 +103,7 @@ With this background, we can now say that VVP depends on the following types of 
 
 * A Brand Credential. This is a targeted credential that enumerates brand properties such as a brand name and a logo. It MUST be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issue the right to use the described brand. This credential MUST be issued according to a documented brand research process that offers formal assurance that it is only issued with accurate information, and only to an AP that has the right to use the described brand. A single AP MAY have multiple brand credentials (e.g., Coca Cola Holdings Germany, Gmbh holds a brand credential for Coke and for Sprite), and rights to use the same brand MAY be conferred to on multiple APs (Coca Cola Holdings Germany, Gmbh and Coca Cola Canada, Ltd may both possess brand credentials for Sprite). A brand credential MUST contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.
 
-* A TNAlloc Credential. This is a targeted credential that confers on its issuee the right to use one or more telephone numbers. If the issuer is not a regulator, it MUST contain a JL to an TNAlloc credential that justifies the issuer's right to pass a right to use downstream. 
+* A TNAlloc Credential. This is a targeted credential that confers on its issuee the right to use one or more telephone numbers. If the issuer is not a regulator, it MUST contain a JL to an TNAlloc credential that justifies the issuer's right to pass a right to use downstream.
 
 Some Not all CVD The signer of a Credential is called an Issuer.
 
@@ -116,7 +116,7 @@ VVP is built from three interrelated activities:
 * Citing evidence
 * Checking evidence
 
-Each Accountable Party (AP) that wants to associate its reputation with phone calls MUST maintain evidence, and they MUST cite evidence. Some maintainence MUST occur before the first time evidence is cited; thereafter, these two activities can overlap one another. Citing evidence is what allows 
+Each Accountable Party (AP) that wants to associate its reputation with phone calls MUST maintain evidence, and they MUST cite evidence. Some maintainence MUST occur before the first time evidence is cited; thereafter, these two activities can overlap one another. Citing evidence is what allows
 
 ## Curation
 
@@ -137,3 +137,4 @@ This document has no IANA actions.
 {:numbered="false"}
 
 TODO acknowledge.
+
