@@ -35,19 +35,19 @@ normative:
   RFC3261:
   RFC5280:
   RFC4648:
-  ISO.17442-1:
-  ISO.17442-3:
-  TOIP.CESR:
-  TOIP.ACDC:
-  TOIP.KERI:
 
 informative:
+  ISO-17442-1:
+  ISO-17442-3:
+  TOIP-CESR:
+  TOIP-ACDC:
+  TOIP-KERI:
   RFC3986:
   RFC7519:
   I-D.ietf-stir-passport-rcd:
   I-D.ietf-oauth-selective-disclosure-jwt:
   I-D.ietf-sipcore-callinfo-rcd:
-  ATIS.1000074:
+  ATIS-1000074:
   W3C.REC-did-core-20220719:
   W3C.REC-vc-data-model-20220303:
 
