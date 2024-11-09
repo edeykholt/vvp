@@ -35,8 +35,6 @@ normative:
   RFC3261:
   RFC5280:
   RFC4648:
-
-informative:
   TOIP-CESR:
     target: https://trustoverip.github.io/tswg-cesr-specification/
     title: "Composable Event Streaming Representation (CESR)"
@@ -67,12 +65,19 @@ informative:
     author:
       org: International Organization for Standardization
     date: 2024
+
+informative:
   RFC3986:
   RFC7519:
   I-D.ietf-stir-passport-rcd:
   I-D.ietf-oauth-selective-disclosure-jwt:
   I-D.ietf-sipcore-callinfo-rcd:
   ATIS-1000074:
+    target: https://atis.org/resources/signature-based-handling-of-asserted-information-using-tokens-shaken-atis-1000074-e/
+    title: "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)"
+    author:
+      org: Alliance for Telecommunications Industry Solutions
+    date: Feb 2019
   W3C.REC-did-core-20220719:
   W3C.REC-vc-data-model-20220303:
 
@@ -263,9 +268,6 @@ This document has no IANA actions.
 
 - **[W3C.REC-vc-data-model-20220303]**
   World Wide Web Consortium, "Verifiable Credentials Data Model v1.1", W3C Recommendation, 3 March 2022, <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/>.
-
-- **[ATIS-1000074]**
-  Alliance for Telecommunications Industry Solutions, "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)", ATIS-1000074, 2020.
 
 - **[I-D.ietf-oauth-selective-disclosure-jwt]**
   Jones, M., Bradley, J., and N. Sakimura, "Selective Disclosure of Claims in JWTs", Work in Progress, Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-05, October 2024, <https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/>.
