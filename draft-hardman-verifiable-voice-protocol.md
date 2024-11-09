@@ -37,7 +37,7 @@ normative:
   RFC4648:
 
 informative:
-  TOIP-CESR:
+  TOIP-CESR: "https://trustoverip.github.io/tswg-cesr-specification/"
   TOIP-KERI:
   TOIP-ACDC:
   RFC3986:
@@ -54,66 +54,6 @@ informative:
 Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR ({{I-D.ietf-stir-passport-rcd}}), SHAKEN ({{ATIS-1000074}}), RCD ({{I-D.ietf-stir-passport-rcd}}, {{I-D.ietf-sipcore-callinfo-rcd}}), and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, and the nature of its evidence is different. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. It can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives.
 
 --- middle
-
-# References
-
-## Normative References
-
-- **[RFC3261]**
-  Rosenberg, J., Schulzrinne, H., Camarillo, G., Johnston, A., Peterson, J., Sparks, R., Handley, M., and E. Schooler, "SIP: Session Initiation Protocol", RFC 3261, DOI 10.17487/RFC3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
-
-- **[RFC4648]**
-  Josefsson, S., "The Base16, Base32, and Base64 Data Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006, <https://www.rfc-editor.org/info/rfc4648>.
-
-- **[RFC5280]**
-  Cooper, D., Santesson, S., Farrell, S., Boeyen, S., Housley, R., and W. Polk, "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
-
-- **[I-D.ietf-stir-passport-rcd]**
-  Wendt, C., Peterson, J., and A. Rescorla, "PASSporT Extension for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-stir-passport-rcd-21, July 2023, <https://datatracker.ietf.org/doc/draft-ietf-stir-passport-rcd/>.
-
-## Informative References
-
-- **[RFC3261]**
-  Rosenberg, J., et al., "SIP: Session Initiation Protocol", RFC 3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
-
-- **[RFC5280]**
-  Cooper, D., et al., "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
-
-- **[ISO-17442-1]**
-  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
-
-- **[ISO-17442-3]**
-  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)", ISO 17442-3:2024, 2024.
-
-- **[TOIP-CESR]**
-  Trust Over IP Foundation, "Composable Event Streaming Representation (CESR)", 7 Nov 2023, <https://trustoverip.github.io/tswg-cesr-specification/>
-
-- **[TOIP-ACDC]**
-  Trust Over IP Foundation, "Authentic Chained Data Containers (ACDC)", 6 Nov 2023, <https://trustoverip.github.io/tswg-acdc-specification/>
-
-- **[TOIP-KERI]**
-  Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
-
-- **[RFC3986]**
-  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource Identifier (URI): Generic Syntax", RFC 3986, DOI 10.17487/RFC3986, January 2005, <https://www.rfc-editor.org/info/rfc3986>.
-
-- **[RFC7519]**
-  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015, <https://www.rfc-editor.org/info/rfc7519>.
-
-- **[W3C.REC-did-core-20220719]**
-  World Wide Web Consortium, "Decentralized Identifiers (DIDs) v1.0", W3C Recommendation, 19 July 2022, <https://www.w3.org/TR/2022/REC-did-core-20220719/>.
-
-- **[W3C.REC-vc-data-model-20220303]**
-  World Wide Web Consortium, "Verifiable Credentials Data Model v1.1", W3C Recommendation, 3 March 2022, <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/>.
-
-- **[ATIS-1000074]**
-  Alliance for Telecommunications Industry Solutions, "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)", ATIS-1000074, 2020.
-
-- **[I-D.ietf-oauth-selective-disclosure-jwt]**
-  Jones, M., Bradley, J., and N. Sakimura, "Selective Disclosure of Claims in JWTs", Work in Progress, Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-05, October 2024, <https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/>.
-
-- **[I-D.ietf-sipcore-callinfo-rcd]**
-  Wendt, C. and Peterson, J., "SIP Call-Info Parameters for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-sipcore-callinfo-rcd-12, July 2024, <https://datatracker.ietf.org/doc/draft-ietf-sipcore-callinfo-rcd/>.
 
 # Introduction
 
@@ -259,6 +199,67 @@ TODO Security
 # IANA Considerations
 
 This document has no IANA actions.
+
+
+# References
+
+## Normative References
+
+- **[RFC3261]**
+  Rosenberg, J., Schulzrinne, H., Camarillo, G., Johnston, A., Peterson, J., Sparks, R., Handley, M., and E. Schooler, "SIP: Session Initiation Protocol", RFC 3261, DOI 10.17487/RFC3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
+
+- **[RFC4648]**
+  Josefsson, S., "The Base16, Base32, and Base64 Data Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006, <https://www.rfc-editor.org/info/rfc4648>.
+
+- **[RFC5280]**
+  Cooper, D., Santesson, S., Farrell, S., Boeyen, S., Housley, R., and W. Polk, "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
+
+- **[I-D.ietf-stir-passport-rcd]**
+  Wendt, C., Peterson, J., and A. Rescorla, "PASSporT Extension for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-stir-passport-rcd-21, July 2023, <https://datatracker.ietf.org/doc/draft-ietf-stir-passport-rcd/>.
+
+## Informative References
+
+- **[RFC3261]**
+  Rosenberg, J., et al., "SIP: Session Initiation Protocol", RFC 3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
+
+- **[RFC5280]**
+  Cooper, D., et al., "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
+
+- **[ISO-17442-1]**
+  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
+
+- **[ISO-17442-3]**
+  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)", ISO 17442-3:2024, 2024.
+
+- **[TOIP-CESR]**
+  Trust Over IP Foundation, "Composable Event Streaming Representation (CESR)", 7 Nov 2023, <https://trustoverip.github.io/tswg-cesr-specification/>
+
+- **[TOIP-ACDC]**
+  Trust Over IP Foundation, "Authentic Chained Data Containers (ACDC)", 6 Nov 2023, <https://trustoverip.github.io/tswg-acdc-specification/>
+
+- **[TOIP-KERI]**
+  Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
+
+- **[RFC3986]**
+  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource Identifier (URI): Generic Syntax", RFC 3986, DOI 10.17487/RFC3986, January 2005, <https://www.rfc-editor.org/info/rfc3986>.
+
+- **[RFC7519]**
+  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015, <https://www.rfc-editor.org/info/rfc7519>.
+
+- **[W3C.REC-did-core-20220719]**
+  World Wide Web Consortium, "Decentralized Identifiers (DIDs) v1.0", W3C Recommendation, 19 July 2022, <https://www.w3.org/TR/2022/REC-did-core-20220719/>.
+
+- **[W3C.REC-vc-data-model-20220303]**
+  World Wide Web Consortium, "Verifiable Credentials Data Model v1.1", W3C Recommendation, 3 March 2022, <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/>.
+
+- **[ATIS-1000074]**
+  Alliance for Telecommunications Industry Solutions, "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)", ATIS-1000074, 2020.
+
+- **[I-D.ietf-oauth-selective-disclosure-jwt]**
+  Jones, M., Bradley, J., and N. Sakimura, "Selective Disclosure of Claims in JWTs", Work in Progress, Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-05, October 2024, <https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/>.
+
+- **[I-D.ietf-sipcore-callinfo-rcd]**
+  Wendt, C. and Peterson, J., "SIP Call-Info Parameters for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-sipcore-callinfo-rcd-12, July 2024, <https://datatracker.ietf.org/doc/draft-ietf-sipcore-callinfo-rcd/>.
 
 --- back
 
