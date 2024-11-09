@@ -37,9 +37,36 @@ normative:
   RFC4648:
 
 informative:
-  TOIP-CESR: "https://trustoverip.github.io/tswg-cesr-specification/"
+  TOIP-CESR:
+    target: https://trustoverip.github.io/tswg-cesr-specification/
+    title: "Composable Event Streaming Representation (CESR)"
+    author:
+      org: Trust Over IP Foundation
+    date: 7 Nov 2023
   TOIP-KERI:
+    target: https://trustoverip.github.io/tswg-keri-specification/
+    title: "Key Event Receipt Infrastructure (KERI)"
+    author:
+      org: Trust Over IP Foundation
+    date: 5 Jan 2024
   TOIP-ACDC:
+    target: https://trustoverip.github.io/tswg-acdc-specification/
+    title: "Authentic Chained Data Containers (ACDC)"
+    author:
+      org: Trust Over IP Foundation
+    date: 6 Nov 2023
+  ISO-17442-1:
+    target: https://www.iso.org/standard/78829.html
+    title: "Financial services – Legal entity identifier (LEI) – Part 1: Assignment"
+    author:
+      org: International Organization for Standardization
+    date: 2020
+  ISO-17442-3:
+    target: https://www.iso.org/standard/85628.html
+    title: "inancial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)"
+    author:
+      org: International Organization for Standardization
+    date: 2024
   RFC3986:
   RFC7519:
   I-D.ietf-stir-passport-rcd:
@@ -224,21 +251,6 @@ This document has no IANA actions.
 
 - **[RFC5280]**
   Cooper, D., et al., "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
-
-- **[ISO-17442-1]**
-  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
-
-- **[ISO-17442-3]**
-  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)", ISO 17442-3:2024, 2024.
-
-- **[TOIP-CESR]**
-  Trust Over IP Foundation, "Composable Event Streaming Representation (CESR)", 7 Nov 2023, <https://trustoverip.github.io/tswg-cesr-specification/>
-
-- **[TOIP-ACDC]**
-  Trust Over IP Foundation, "Authentic Chained Data Containers (ACDC)", 6 Nov 2023, <https://trustoverip.github.io/tswg-acdc-specification/>
-
-- **[TOIP-KERI]**
-  Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
 
 - **[RFC3986]**
   Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource Identifier (URI): Generic Syntax", RFC 3986, DOI 10.17487/RFC3986, January 2005, <https://www.rfc-editor.org/info/rfc3986>.
