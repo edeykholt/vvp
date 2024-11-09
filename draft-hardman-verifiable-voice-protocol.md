@@ -35,13 +35,13 @@ normative:
   RFC3261:
   RFC5280:
   RFC4648:
+
+informative:
   ISO-17442-1:
   ISO-17442-3:
   TOIP-CESR:
   TOIP-ACDC:
   TOIP-KERI:
-
-informative:
   RFC3986:
   RFC7519:
   I-D.ietf-stir-passport-rcd:
@@ -231,6 +231,8 @@ TODO acknowledge.
 - **[I-D.ietf-stir-passport-rcd]**
   Wendt, C., Peterson, J., and A. Rescorla, "PASSporT Extension for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-stir-passport-rcd-21, July 2023, <https://datatracker.ietf.org/doc/draft-ietf-stir-passport-rcd/>.
 
+### Informative References
+
 - **[ISO-17442-1]**
   International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
 
@@ -245,9 +247,6 @@ TODO acknowledge.
 
 - **[TOIP-KERI]**
   Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
-
-
-### Informative References
 
 - **[RFC3986]**
   Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource Identifier (URI): Generic Syntax", RFC 3986, DOI 10.17487/RFC3986, January 2005, <https://www.rfc-editor.org/info/rfc3986>.
