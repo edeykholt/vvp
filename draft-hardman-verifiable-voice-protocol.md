@@ -212,17 +212,55 @@ TODO acknowledge.
 
 ### Informative References
 
-- **[ISO-17442-1]**
-  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
+## References
 
-- **[ISO-17442-3]**
-  International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)", ISO 17442-3:2024, 2024.
+### Normative References
+
+- **[RFC3261]**  
+  Rosenberg, J., et al., "SIP: Session Initiation Protocol", RFC 3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
+
+- **[RFC5280]**  
+  Cooper, D., et al., "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile", RFC 5280, May 2008, <https://www.rfc-editor.org/info/rfc5280>.
+
+<!-- ISO 17442-1 -->
+<reference anchor="ISO-17442-1">
+    <front>
+        <title>Financial services – Legal entity identifier (LEI) – Part 1: Assignment of the LEI</title>
+        <author>
+            <organization>International Organization for Standardization</organization>
+        </author>
+        <date year="2020"/>
+    </front>
+    <seriesInfo name="ISO" value="ISO 17442-1:2020"/>
+</reference>
+
+<!-- ISO 17442-3 -->
+<reference anchor="ISO-17442-3">
+    <front>
+        <title>Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)</title>
+        <author>
+            <organization>International Organization for Standardization</organization>
+        </author>
+        <date year="2024"/>
+    </front>
+    <seriesInfo name="ISO" value="ISO 17442-3:2024"/>
+    <format type="text/html" target="https://www.iso.org/standard/ISO-17442-3.html"/>
+</reference>
+
+<!-- TOIP ACDC -->
+<reference anchor="TOIP-ACDC">
+    <front>
+        <title>Authentic Chained Data Containers (ACDC)</title>
+        <author>
+            <organization>Trust Over IP Foundation</organization>
+        </author>
+        <date day="6" month="November" year="2023"/>
+    </front>
+    <format type="text/html" target="https://trustoverip.github.io/tswg-acdc-specification/"/>
+</reference>
 
 - **[TOIP-CESR]**
   Trust Over IP Foundation, "Composable Event Streaming Representation (CESR)", 7 Nov 2023, <https://trustoverip.github.io/tswg-cesr-specification/>
-
-- **[TOIP-ACDC]**
-  Trust Over IP Foundation, "Authentic Chained Data Containers (ACDC)", 6 Nov 2023, <https://trustoverip.github.io/tswg-acdc-specification/>
 
 - **[TOIP-KERI]**
   Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
