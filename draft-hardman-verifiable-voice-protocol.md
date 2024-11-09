@@ -205,13 +205,9 @@ This document has no IANA actions.
 
 TODO acknowledge.
 
-## References
+# References
 
-### Normative References
-
-## References
-
-### Normative References
+## Normative References
 
 - **[RFC3261]**
   Rosenberg, J., Schulzrinne, H., Camarillo, G., Johnston, A., Peterson, J., Sparks, R., Handley, M., and E. Schooler, "SIP: Session Initiation Protocol", RFC 3261, DOI 10.17487/RFC3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
@@ -225,11 +221,7 @@ TODO acknowledge.
 - **[I-D.ietf-stir-passport-rcd]**
   Wendt, C., Peterson, J., and A. Rescorla, "PASSporT Extension for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-stir-passport-rcd-21, July 2023, <https://datatracker.ietf.org/doc/draft-ietf-stir-passport-rcd/>.
 
-### Informative References
-
-## References
-
-### Normative References
+## Informative References
 
 - **[RFC3261]**
   Rosenberg, J., et al., "SIP: Session Initiation Protocol", RFC 3261, June 2002, <https://www.rfc-editor.org/info/rfc3261>.
