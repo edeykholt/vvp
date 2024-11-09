@@ -228,7 +228,7 @@ A TNAlloc credential is a targeted credential that confers on its issuee the rig
 #### Brand proxy credential
 A brand proxy credential confers on an OP the right to project the brand of an AP when making phone calls, subject to a carefully selected set of constraints. This is different from the simple RTU conferred by TNAlloc. Without a brand proxy credential, a call center could make calls on behalf of an AP, using the AP's allocated phone number, but would be forced to do so under its own name or brand, because it lacks evidence that the AP intended anything different. If an AP intends for phone calls to be made by a proxy, and wants the proxy to project the AP's brand, the AP MUST issue this credential.
 
-## Curation
+## Curating
 The evidence that's available in today's telecom ecosystems resembles some of the evidence described above, in concept. However, it has gaps, and its format is fragile. Furthermore, if it is organized for discovery, it is typically assembled into large, centralized registries at a regional or national level. These registries become a trusted third party, which defeats some of the purpose of creating decentralized and independently verifiable evidence in the first place. Sharing such evidence across jurisdiction boundaries requires regulatory compatibility and bilateral agreements. Sharing at scale is impractical at best, if not downright illegal.
 
 How evidence is issued, propagated, and reference is therefore an important concern for this specification.
@@ -257,7 +257,7 @@ Issuance and revocation of all other credentials is self-service at every level,
 
 ## Verifying
 
-(TODO: Verifier has a cache that was populated by monitoring the witnesses of known issuer AIDs. (If a new issuer is encountered, it can look up the witnesses and begin monitoring.) This cache does not contain the evidence itself, but rather precomputed combinations of call metadata and evidence that would justify it. For example, based on evidence previously seen, it is known that OP Y is authorized to call on behalf of Org X, with a particular phone number. These attributes look up an item in the cache. If there is no such item in the cache, the call is not known to be authorized. If it is found, then only business rules have to be checked (time of day, dest phone number, etc).
+(TODO: Verifier has a cache that was populated by monitoring the witnesses of known issuer AIDs. (If a new issuer is encountered, it can look up the witnesses and begin monitoring.) Etc.
 
 Also discuss deploying in a hybrid mode to extend S/S.)
 
