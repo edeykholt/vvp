@@ -37,11 +37,6 @@ normative:
   RFC4648:
 
 informative:
-  ISO-17442-1:
-  ISO-17442-3:
-  TOIP-CESR:
-  TOIP-ACDC:
-  TOIP-KERI:
   RFC3986:
   RFC7519:
   I-D.ietf-stir-passport-rcd:
