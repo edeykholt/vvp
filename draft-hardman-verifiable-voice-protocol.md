@@ -31,27 +31,6 @@ author:
     organization: Provenant, Inc
     email: "daniel.hardman@gmail.com"
 
-normative:
-  RFC3261:
-  RFC5280:
-  RFC4648:
-
-informative:
-  ISO-17442-1:
-  ISO-17442-3:
-  TOIP-CESR:
-  TOIP-ACDC:
-  TOIP-KERI:
-  RFC3986:
-  RFC7519:
-  I-D.ietf-stir-passport-rcd:
-  I-D.ietf-oauth-selective-disclosure-jwt:
-  I-D.ietf-sipcore-callinfo-rcd:
-  ATIS-1000074:
-  W3C.REC-did-core-20220719:
-  W3C.REC-vc-data-model-20220303:
-
-
 --- abstract
 
 Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR ({{I-D.ietf-stir-passport-rcd}}), SHAKEN ({{ATIS-1000074}}), RCD ({{I-D.ietf-stir-passport-rcd}}, {{I-D.ietf-sipcore-callinfo-rcd}}), and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, and the nature of its evidence is different. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. It can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives.
