@@ -35,11 +35,11 @@ normative:
   RFC3261:
   RFC5280:
   RFC4648:
-  ISO.17442-1:
-  ISO.17442-3:
-  TOIP.CESR:
-  TOIP.ACDC:
-  TOIP.KERI:
+  ISO-17442-1:
+  ISO-17442-3:
+  TOIP-CESR:
+  TOIP-ACDC:
+  TOIP-KERI:
 
 informative:
   RFC3986:
@@ -47,14 +47,14 @@ informative:
   I-D.ietf-stir-passport-rcd:
   I-D.ietf-oauth-selective-disclosure-jwt:
   I-D.ietf-sipcore-callinfo-rcd:
-  ATIS.1000074:
+  ATIS-1000074:
   W3C.REC-did-core-20220719:
   W3C.REC-vc-data-model-20220303:
 
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR ({{I-D.ietf-stir-passport-rcd}}), SHAKEN ({{ATIS.1000074}}), RCD ({{I-D.ietf-stir-passport-rcd}}, {{I-D.ietf-sipcore-callinfo-rcd}}), and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, and the nature of its evidence is different. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. It can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives.
+Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR ({{I-D.ietf-stir-passport-rcd}}), SHAKEN ({{ATIS-1000074}}), RCD ({{I-D.ietf-stir-passport-rcd}}, {{I-D.ietf-sipcore-callinfo-rcd}}), and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, and the nature of its evidence is different. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. It can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives.
 
 --- middle
 
@@ -72,9 +72,9 @@ In theory, the remaining gap could be eliminated by requiring a perfect authenti
 
 VVP solves these problems by applying two crucial innovations:
 
-* It uses an evidence format called Authentic Chained Data Container (ACDC) -- {{TOIP.ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates ({{RFC5280}}). It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be built and maintained by X and Y and does not need to be published in a central registry. Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials ({{W3C.REC-vc-data-model-20220303}}) and SD-JWTs ({{I-D.ietf-oauth-selective-disclosure-jwt}}) require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.
+* It uses an evidence format called Authentic Chained Data Container (ACDC) -- {{TOIP-ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates ({{RFC5280}}). It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be built and maintained by X and Y and does not need to be published in a central registry. Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials ({{W3C.REC-vc-data-model-20220303}}) and SD-JWTs ({{I-D.ietf-oauth-selective-disclosure-jwt}}) require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.
 
-* Although VVP can work inside governance frameworks such as SHAKEN {{ATIS.1000074}}, it dramatically upgrades at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO.17442-3}}. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI ({{ISO.17442-1}}) that's globally required in cross-border banking. This means the basis of vLEI trust is already adopted, and it is not limited to any particular jurisdiction or to telecom. VVP offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
+* Although VVP can work inside governance frameworks such as SHAKEN {{ATIS-1000074}}, it dramatically upgrades at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO-17442-3}}. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI ({{ISO-17442-1}}) that's globally required in cross-border banking. This means the basis of vLEI trust is already adopted, and it is not limited to any particular jurisdiction or to telecom. VVP offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
 
 # Conventions and Definitions
 
@@ -111,7 +111,7 @@ Verifiers (V) are parties that want to know who's calling, and why, and that eva
 The term "credential" has a fuzzy meaning in casual conversation. However, understanding how evidence is built from credentials in VVP requires considerably more precision. We will start from lower-level concepts.
 
 #### SAID
-A self-addressing identifier (SAID) is the hash of a JSON object, encoded in CESR format ({{TOIP.CESR}}). The raw bytes from the digest function are left-padded to nearest 24-bit boundary, transformed to base64url ({{RFC4648}}), and prefixed with a character that tells which digest function was used. SAIDs are evidence that hashed data has not changed. They can also function like a reference, hyperlink, or placeholder for the data that was hashed to produce them, though they are more similar to URNs than to URLs ({{RFC3986}}), since they contain no location information.
+A self-addressing identifier (SAID) is the hash of a JSON object, encoded in CESR format ({{TOIP-CESR}}). The raw bytes from the digest function are left-padded to nearest 24-bit boundary, transformed to base64url ({{RFC4648}}), and prefixed with a character that tells which digest function was used. SAIDs are evidence that hashed data has not changed. They can also function like a reference, hyperlink, or placeholder for the data that was hashed to produce them, though they are more similar to URNs than to URLs ({{RFC3986}}), since they contain no location information.
 
 #### Signature
 A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs. The evidence can be verified by checking that the signature is associated with the public key of the signer. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.
@@ -128,7 +128,7 @@ VVP uses SAIDs and digital signatures as primitive forms of evidence.
 VVP does not depend on X509 certificates ({{RFC5280}}) for any of its evidence. (However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)
 
 #### ACDCs
-Besides digital signatures and SAIDs, VVP's other evidence uses the ACDC format ({{TOIP.ACDC}}). This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This indirection has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs ({{RFC7519}}), and W3C Verifiable Credentials ({{W3C.REC-vc-data-model-20220303}}), signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a Key Event Log or KEL ({{TOIP.KERI}}). The KEL is somewhat like a blockchain. However, it specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
+Besides digital signatures and SAIDs, VVP's other evidence uses the ACDC format ({{TOIP-ACDC}}). This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This indirection has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs ({{RFC7519}}), and W3C Verifiable Credentials ({{W3C.REC-vc-data-model-20220303}}), signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a Key Event Log or KEL ({{TOIP-KERI}}). The KEL is somewhat like a blockchain. However, it specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
 
 ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. An ACDC is also uniquely identified by its SAID, which means that a SAID can take the place of a full ACDC in certain data structures and processes. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable.
 
@@ -231,19 +231,19 @@ TODO acknowledge.
 - **[I-D.ietf-stir-passport-rcd]**
   Wendt, C., Peterson, J., and A. Rescorla, "PASSporT Extension for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-stir-passport-rcd-21, July 2023, <https://datatracker.ietf.org/doc/draft-ietf-stir-passport-rcd/>.
 
-- **[ISO.17442-1]**
+- **[ISO-17442-1]**
   International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 1: Assignment", ISO 17442-1:2020, 2020.
 
-- **[ISO.17442-3]**
+- **[ISO-17442-3]**
   International Organization for Standardization, "Financial services – Legal entity identifier (LEI) – Part 3: Verifiable LEIs (vLEIs)", ISO 17442-3:2024, 2024.
 
-- **[TOIP.CESR]**
+- **[TOIP-CESR]**
   Trust Over IP Foundation, "Composable Event Streaming Representation (CESR)", 7 Nov 2023, <https://trustoverip.github.io/tswg-cesr-specification/>
 
-- **[TOIP.ACDC]**
+- **[TOIP-ACDC]**
   Trust Over IP Foundation, "Authentic Chained Data Containers (ACDC)", 6 Nov 2023, <https://trustoverip.github.io/tswg-acdc-specification/>
 
-- **[TOIP.KERI]**
+- **[TOIP-KERI]**
   Trust Over IP Foundation, "Key Event Receipt Infrastructure (KERI)", 5 Jan 2024, <https://trustoverip.github.io/tswg-keri-specification/>
 
 
@@ -261,7 +261,7 @@ TODO acknowledge.
 - **[W3C.REC-vc-data-model-20220303]**
   World Wide Web Consortium, "Verifiable Credentials Data Model v1.1", W3C Recommendation, 3 March 2022, <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/>.
 
-- **[ATIS.1000074]**
+- **[ATIS-1000074]**
   Alliance for Telecommunications Industry Solutions, "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)", ATIS-1000074, 2020.
 
 - **[I-D.ietf-oauth-selective-disclosure-jwt]**
