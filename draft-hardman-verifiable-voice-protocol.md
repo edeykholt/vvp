@@ -198,13 +198,6 @@ TODO Security
 This document has no IANA actions.
 
 
---- back
-
-# Acknowledgments
-{:numbered="false"}
-
-TODO acknowledge.
-
 # References
 
 ## Normative References
@@ -292,3 +285,11 @@ TODO acknowledge.
 
 - **[I-D.ietf-sipcore-callinfo-rcd]**
   Wendt, C. and Peterson, J., "SIP Call-Info Parameters for Rich Call Data", Work in Progress, Internet-Draft, draft-ietf-sipcore-callinfo-rcd-12, July 2024, <https://datatracker.ietf.org/doc/draft-ietf-sipcore-callinfo-rcd/>.
+
+--- back
+
+# Acknowledgments
+{:numbered="false"}
+
+TODO acknowledge.
+
