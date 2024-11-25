@@ -277,21 +277,70 @@ A sample VVP PASSporT might look like this, in its non-compact form:
 }
 ```
 
-* `alg` [required] MUST be "EdDSA". Standardizing on one scheme maximizes interoperability. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which uses the Montgomery-to-Edwards transformation.)
-* `typ` [required] MUST be "JWT".
-* `ppt` [required] MUST be "passport".
-* `kid` [required] MUST be an AID controlled by the OP. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. This AID MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence.)
-* `orig` [required] MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
-* `dest` [required] MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
-* `evd` [required] MUST be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type `application/json+cesr`. Such a URL can be hosted on any convenient web server, and is analogous to the `x5u` header in X509 contexts. See below for details.
+* `alg` *(required)* MUST be "EdDSA". Standardizing on one scheme maximizes interoperability. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which uses the Montgomery-to-Edwards transformation.)
+* `typ` *(required)* MUST be "JWT".
+* `ppt` *(required)* MUST be "passport".
+* `kid` *(required)* MUST be an AID controlled by the OP. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. This AID MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence.)
+* `orig` *(required)* MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
+* `dest` *(required)* MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
+* `evd` *(required)* MUST be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type `application/json+cesr`. Such a URL can be hosted on any convenient web server, and is analogous to the `x5u` header in X509 contexts. See below for details.
 * `origId` [optional] Follows SHAKEN semantics.
-* `iat` [required] Follows standard JWT semantics.
-* `jti` [required] Follows standard JWT semantics.
+* `iat` *(required)* Follows standard JWT semantics.
+* `jti` *(required)* Follows standard JWT semantics.
 
 #### ACDCs
 Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-lasting evidence uses the ACDC format {{TOIP-ACDC}}. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}}, signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a Key Event Log or KEL {{TOIP-KERI}}.
 
-```
+<figure>
+<name>Figure 2: X509 compared to ACDC</name>
+<artset>
+  <artwork type="svg" src="https://www.rfc-editor.org/materials/format/svg/stream.svg ">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="456" viewBox="0 0 456 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+    <path d="M 8,32 L 8,192" fill="none" stroke="black"/>
+    <path d="M 200,32 L 200,192" fill="none" stroke="black"/>
+    <path d="M 248,32 L 248,192" fill="none" stroke="black"/>
+    <path d="M 248,240 L 248,288" fill="none" stroke="black"/>
+    <path d="M 376,240 L 376,288" fill="none" stroke="black"/>
+    <path d="M 432,64 L 432,272" fill="none" stroke="black"/>
+    <path d="M 448,32 L 448,192" fill="none" stroke="black"/>
+    <path d="M 8,32 L 200,32" fill="none" stroke="black"/>
+    <path d="M 248,32 L 448,32" fill="none" stroke="black"/>
+    <path d="M 400,64 L 432,64" fill="none" stroke="black"/>
+    <path d="M 8,192 L 200,192" fill="none" stroke="black"/>
+    <path d="M 248,192 L 448,192" fill="none" stroke="black"/>
+    <path d="M 248,240 L 376,240" fill="none" stroke="black"/>
+    <path d="M 376,272 L 432,272" fill="none" stroke="black"/>
+    <path d="M 248,288 L 376,288" fill="none" stroke="black"/>
+    <polygon class="arrowhead" points="408,64 396,58.4 396,69.6" fill="black" transform="rotate(180,400,64)"/>
+    <g class="text">
+    <text x="28" y="20">X509</text>
+    <text x="268" y="20">ACDC</text>
+    <text x="36" y="52">Data</text>
+    <text x="304" y="52">v (version)</text>
+    <text x="64" y="68">Version</text>
+    <text x="324" y="68">d (SAID of item)</text>
+    <text x="88" y="84">Serial Number</text>
+    <text x="328" y="84">i (AID of issuer)</text>
+    <text x="100" y="100">Issuer: DN of issuer</text>
+    <text x="340" y="100">ri (status registry)</text>
+    <text x="52" y="116">Validity</text>
+    <text x="300" y="116">s (schema)</text>
+    <text x="104" y="132">Subject: DN of issuee</text>
+    <text x="316" y="132">a (attributes)</text>
+    <text x="104" y="148">Sub PubKey Info: KeyX</text>
+    <text x="336" y="148">i (AID of issuee)</text>
+    <text x="60" y="164">Extensions</text>
+    <text x="340" y="164">dt (issuance date)</text>
+    <text x="56" y="180">Signature</text>
+    <text x="292" y="180">...etc</text>
+    <text x="256" y="228">KEL</text>
+    <text x="312" y="260">signed anchor</text>
+    <text x="292" y="276">for SAID</text>
+    </g>
+    </svg>
+  </artwork>
+  <artwork type="ascii-art">
+<![CDATA[
  X509                          ACDC                     
 +-----------------------+     +------------------------+
 | Data                  |     | v (version)            |
@@ -310,8 +359,10 @@ Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-las
                               | signed anchor |      |  
                               | for SAID      +------+  
                               +---------------+         
-```
-Figure 2: X509 compared to ACDC
+]]>
+    </artwork>
+  </artset>
+</figure>
 
 The KEL is somewhat like a blockchain. However, it is specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
 
@@ -347,7 +398,118 @@ The signature is the result of running a signing function over input data that c
 
 APE consists of several credentials, detailed below. It MUST include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it MUST include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. If no brand credential is present, verifiers MUST NOT impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE MUST also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.
 
-```
+<figure>
+<name>Figure 3: sample evidence graph; OP kid could bind to APE or DE</name>
+<artset>
+  <artwork type="svg" src="https://www.rfc-editor.org/materials/format/svg/stream.svg ">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="528" width="512" viewBox="0 0 512 528" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+    <path d="M 24,32 L 24,128" fill="none" stroke="black"/>
+    <path d="M 24,240 L 24,272" fill="none" stroke="black"/>
+    <path d="M 24,304 L 24,352" fill="none" stroke="black"/>
+    <path d="M 24,400 L 24,432" fill="none" stroke="black"/>
+    <path d="M 24,464 L 24,512" fill="none" stroke="black"/>
+    <path d="M 128,192 L 128,208" fill="none" stroke="black"/>
+    <path d="M 216,32 L 216,88" fill="none" stroke="black"/>
+    <path d="M 216,104 L 216,128" fill="none" stroke="black"/>
+    <path d="M 224,240 L 224,272" fill="none" stroke="black"/>
+    <path d="M 224,304 L 224,352" fill="none" stroke="black"/>
+    <path d="M 224,400 L 224,512" fill="none" stroke="black"/>
+    <path d="M 248,192 L 248,416" fill="none" stroke="black"/>
+    <path d="M 272,240 L 272,272" fill="none" stroke="black"/>
+    <path d="M 272,304 L 272,336" fill="none" stroke="black"/>
+    <path d="M 272,400 L 272,496" fill="none" stroke="black"/>
+    <path d="M 288,496 L 288,512" fill="none" stroke="black"/>
+    <path d="M 296,80 L 296,128" fill="none" stroke="black"/>
+    <path d="M 320,128 L 320,144" fill="none" stroke="black"/>
+    <path d="M 360,192 L 360,208" fill="none" stroke="black"/>
+    <path d="M 400,80 L 400,128" fill="none" stroke="black"/>
+    <path d="M 448,400 L 448,496" fill="none" stroke="black"/>
+    <path d="M 464,240 L 464,336" fill="none" stroke="black"/>
+    <path d="M 464,440 L 464,512" fill="none" stroke="black"/>
+    <path d="M 488,112 L 488,144" fill="none" stroke="black"/>
+    <path d="M 488,192 L 488,464" fill="none" stroke="black"/>
+    <path d="M 24,32 L 216,32" fill="none" stroke="black"/>
+    <path d="M 296,80 L 312,80" fill="none" stroke="black"/>
+    <path d="M 360,80 L 400,80" fill="none" stroke="black"/>
+    <path d="M 88,96 L 296,96" fill="none" stroke="black"/>
+    <path d="M 400,112 L 488,112" fill="none" stroke="black"/>
+    <path d="M 24,128 L 216,128" fill="none" stroke="black"/>
+    <path d="M 296,128 L 400,128" fill="none" stroke="black"/>
+    <path d="M 128,192 L 360,192" fill="none" stroke="black"/>
+    <path d="M 24,240 L 224,240" fill="none" stroke="black"/>
+    <path d="M 272,240 L 464,240" fill="none" stroke="black"/>
+    <path d="M 272,336 L 464,336" fill="none" stroke="black"/>
+    <path d="M 24,352 L 224,352" fill="none" stroke="black"/>
+    <path d="M 24,400 L 224,400" fill="none" stroke="black"/>
+    <path d="M 272,400 L 448,400" fill="none" stroke="black"/>
+    <path d="M 224,416 L 248,416" fill="none" stroke="black"/>
+    <path d="M 448,416 L 464,416" fill="none" stroke="black"/>
+    <path d="M 448,432 L 488,432" fill="none" stroke="black"/>
+    <path d="M 464,464 L 488,464" fill="none" stroke="black"/>
+    <path d="M 272,496 L 448,496" fill="none" stroke="black"/>
+    <path d="M 24,512 L 224,512" fill="none" stroke="black"/>
+    <path d="M 288,512 L 464,512" fill="none" stroke="black"/>
+    <circle cx="320" cy="80" r="6" class="opendot" fill="white" stroke="black"/>
+    <g class="text">
+    <text x="124" y="20">VVP PASSporT</text>
+    <text x="72" y="52">protected</text>
+    <text x="12" y="68">..</text>
+    <text x="96" y="68">...kid: AID of OP</text>
+    <text x="8" y="84">:</text>
+    <text x="64" y="84">payload</text>
+    <text x="340" y="84">f-OP</text>
+    <text x="8" y="100">:</text>
+    <text x="64" y="100">evd</text>
+    <text x="336" y="100">SAID of</text>
+    <text x="8" y="116">:</text>
+    <text x="96" y="116">signature of OP</text>
+    <text x="348" y="116">data graph</text>
+    <text x="8" y="132">:</text>
+    <text x="8" y="148">:</text>
+    <text x="8" y="164">:</text>
+    <text x="228" y="164">Accountable Party Evidence</text>
+    <text x="424" y="164">Delegation Evidence</text>
+    <text x="12" y="180">v?</text>
+    <text x="312" y="180">(APE)</text>
+    <text x="484" y="180">(DE)</text>
+    <text x="100" y="228">vetting credential</text>
+    <text x="348" y="228">TNAlloc credential</text>
+    <text x="52" y="260">SAID</text>
+    <text x="300" y="260">SAID</text>
+    <text x="104" y="276">AID of issuer</text>
+    <text x="352" y="276">AID of issuer</text>
+    <text x="124" y="292">..:...AID of AP............:..</text>
+    <text x="312" y="292">..:...AID of AP</text>
+    <text x="8" y="308">:</text>
+    <text x="92" y="308">legal name</text>
+    <text x="344" y="308">TNAllocList</text>
+    <text x="8" y="324">:</text>
+    <text x="116" y="324">legal identifier</text>
+    <text x="372" y="324">...more attributes</text>
+    <text x="8" y="340">:</text>
+    <text x="124" y="340">...more attributes</text>
+    <text x="8" y="356">:</text>
+    <text x="8" y="372">:</text>
+    <text x="8" y="388">:</text>
+    <text x="92" y="388">brand credential</text>
+    <text x="340" y="388">more credentials</text>
+    <text x="8" y="404">:</text>
+    <text x="8" y="420">:</text>
+    <text x="52" y="420">SAID</text>
+    <text x="8" y="436">:</text>
+    <text x="104" y="436">AID of issuer</text>
+    <text x="360" y="436">e.g., delegate RTU,</text>
+    <text x="64" y="452">:.:...AID of AP</text>
+    <text x="352" y="452">vet for call ctr,</text>
+    <text x="92" y="468">brand name</text>
+    <text x="364" y="468">proxy right to brand</text>
+    <text x="68" y="484">logo</text>
+    <text x="124" y="500">...more attributes</text>
+    </g>
+    </svg>
+  </artwork>
+  <artwork type="ascii-art">
+<![CDATA[
          VVP PASSporT                                         
   +-----------------------+                                   
   | protected             |                                   
@@ -380,8 +542,10 @@ v?                                  (APE)                 (DE)
   |   logo                 |     |                     | |    
   |   ...more attributes   |     +-+-------------------+ |    
   +------------------------+       +---------------------+     
-```
-Figure 3: sample evidence graph; OP kid could bind to APE or DE
+]]>
+    </artwork>
+  </artset>
+</figure>
 
 If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence MUST bind the AP to the APE (e.g., by referencing the AP as issuee). Otherwise, the data graph referenced by the `evd` claim in the PASSporT MUST also include Delegation Evidence (DE), and the OP MUST be the issuee of key pieces of the DE. The DE MUST include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also MUST include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE MUST also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.
 
