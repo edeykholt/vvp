@@ -185,30 +185,52 @@ VVP uses SAIDs and digital signatures as primitive forms of evidence.
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. (However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)
 
 #### Passport
-VVP emits a STIR PASSporT {{RFC8225}}. Conceptually, it is similar to a SHAKEN passport {{RFC8588}}. It MUST be secured by an EdDSA digital signature {{RFC8032}}. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
+VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evaluation during the brief interval when a call is being initiated. Conceptually, it is similar to a SHAKEN passport {{RFC8588}}. It MUST be secured by an EdDSA digital signature {{RFC8032}}. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
-```                                                                    
-     SHAKEN PASSporT                         VVP PASSporT              
-┌───────────────────────┐             ┌───────────────────────┐        
-│ protected             │             │ protected             │        
-│   kid: pubkey of OSP ─┼───┐         │   kid: AID of caller ─┼───┐    
-│ payload               │   │         │ payload               │   │    
-│   iat                 │   │         │   iat                 │   ▼    
-│   orig                │   │         │   orig                │ TEL+KEL
-│   dest                │   │         │   dest                │        
-│   attest              │   │         │   evd (SAID = ref to)─┼───┐    
-│   ...more claims      │   │         │ signature             │   │    
-│ signature             │   │         └───────────────────────┘   │    
-└───────────────────────┘   │                                     │    
-                            │                                     │    
-    pubkey in cert ◄────────┘          data graph of evidence ◄───┘
+```
+     SHAKEN PASSporT                       VVP PASSporT          
++-----------------------+           +-----------------------+    
+| protected             |           | protected             |    
+|   kid: pubkey of OSP -+---+       |   kid: AID of OP      |    
+| payload               |   |       | payload               |    
+|   iat                 |   |       |   iat                 |    
+|   orig                |   |       |   orig                |    
+|   dest                |   |       |   dest                |    
+|   attest              |   |       |   evd (SAID = ref to)-+---+
+|   ...more claims      |   |       | signature of OP       |   |
+| signature of OSP      |   |       +-----------------------+   |
++-----------------------+   |                                   |
+                            |                                   |
+    pubkey in cert <--------+        data graph of evidence <---+
 ```
 Figure 1: SHAKEN PASSporT compared to VVP PASSporT
 
 #### ACDCs
 Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-lasting evidence uses the ACDC format {{TOIP-ACDC}}. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}}, signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a Key Event Log or KEL {{TOIP-KERI}}.
 
-The KEL is somewhat like a blockchain. However, it specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
+```
+ X509                          ACDC                     
++-----------------------+     +------------------------+
+| Data                  |     | v (version)            |
+|   Version             |     | d (SAID of item) <---+ |
+|   Serial Number       |     | i (AID of issuer)    | |
+| Issuer: DN of issuer  |     | ri (status registry) | |
+| Validity              |     | s (schema)           | |
+| Subject: DN of issuee |     | a (attributes)       | |
+| Sub PubKey Info: KeyX |     |  i (AID of issuee)   | |
+| Extensions            |     |  dt (issuance date)  | |
+| Signature             |     |  ...etc              | |
++-----------------------+     +----------------------+-+
+                                                     |  
+                              KEL                    |  
+                              +---------------+      |  
+                              | signed anchor |      |  
+                              | for SAID      +------+  
+                              +---------------+         
+```
+Figure 2: X509 compared to ACDC
+
+The KEL is somewhat like a blockchain. However, it is specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
 
 ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. An ACDC is also uniquely identified by its SAID, which means that a SAID can take the place of a full ACDC in certain data structures and processes. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable.
 
@@ -234,17 +256,49 @@ A Justifying Link (JL) is a reference, inside of one CVD, to another CVD that ju
 ### Specific evidence
 
 #### Message-specific signature
-Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE MUST contain a message-specific signature (MSS) from the OP. This signature MUST be the result of running a signing function over input data that consists of the following metadata about a call: the source phone number, the destination phone number, an identifier for the AP, a timestamp, and a reference to Accountable Party Evidence (APE).
+Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE MUST contain a message-specific signature (MSS) from the OP. This signature MUST be the result of running a signing function over input data that consists of the following metadata about a call: the source phone number, the destination phone number, an identifier for the AP, a timestamp, and a reference to evidence. This evidence MUST include at least Accountable Party Evidence (APE).
 
-APE consists of several credentials, detailed below. It MUST include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it MUST include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. If no brand credential is present, verifiers MUST NOT impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE MUST also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.
+APE consists of several credentials, detailed below. It MUST include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it MUST include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. If no brand credential is present, verifiers MUST NOT impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE MUST also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.
 
-If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence MUST bind the AP to the APE. Otherwise, the input data for the signature MUST also include an additional AID for the OP, plus a reference to Delegation Evidence (DE). The DE MUST include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also MUST include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE MUST also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.
+If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence MUST bind the AP to the APE (e.g., by referencing the AP as issuee). Otherwise, the data graph referenced by the `evd` claim in the PASSporT MUST also include Delegation Evidence (DE). The DE MUST include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also MUST include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE MUST also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.
 
-(TODO: diagram)
+```
+         VVP PASSporT                                         
+  +-----------------------+                                   
+  | protected             |                                   
+......kid: AID of OP      |                                   
+: | payload               |         +--of-OP-----+            
+: |   evd --------------------------+ SAID of    |            
+: | signature of OP       |         | data graph +----------+ 
+: +-----------------------+         +--+---------+          | 
+:                                      |                    | 
+:              Accountable Party Evidence  Delegation Evidence
+v                                   (APE)                 (DE)
+               +--------------+--------+----+               | 
+               |              |             |               | 
+   vetting credential         |   TNAlloc credential        | 
+  +------------------------+  |  +-----------------------+  | 
+  | SAID                   |  |  | SAID                  |  | 
+  |   AID of issuer        |  |  |   AID of issuer       |  | 
+..:...AID of AP    ........:..|..:...AID of AP           |  | 
+: |   legal name           |  |  |   TNAllocList         |  | 
+: |   legal identifier     |  |  |   ...more attributes  |  | 
+: |   ...more attributes   |  |  +-----------------------+  | 
+: +------------------------+  |                             | 
+:                             |                             | 
+:  brand credential           |   more credentials          | 
+: +------------------------+  |  +---------------------+    | 
+: | SAID                   +--+  |                     +-+  | 
+: |   AID of issuer        |     | e.g., delegate RTU, +----+ 
+:.:...AID of AP            |     | vet for call ctr,   | |  | 
+  |   brand name           |     | proxy right to brand| +--+ 
+  |   logo                 |     |                     | |    
+  |   ...more attributes   |     +-+-------------------+ |    
+  +------------------------+       +---------------------+     
+```
+Figure 3: sample evidence graph
 
 It is crucial that this message-specific signature come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is also crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.
-
-(TODO: finish Verifiers that are capable of understanding delegations It is also vital that verification algorithms This allows  software, is crucial, and is different from alternative approaches. The fact that the the , that closes the attestation gap in existing approaches. Closing this gap is only practical because of the chaining and disclosure features of ACDCs.)
 
 #### Vetting credential
 A vetting credential is a targeted credential that enumerates the formal and legal attributes of a unique legal entity. It MUST include a legal identifier that makes the entity unique in its home jurisdiction, and it MUST include an AID for the legal entity. This AID is unique globally. It is called a vetting credential because it MUST be issued according to a documented vetting process that offers formal assurance that is is only issued with accurate information, and only to the AP it describes. A vetting credential confers the privilege of acting with the associated legal identity if and only if the bearer can prove their identity as issuee via a digital signature.
