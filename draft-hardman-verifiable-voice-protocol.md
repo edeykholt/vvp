@@ -260,8 +260,6 @@ Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains a
 
 APE consists of several credentials, detailed below. It MUST include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it MUST include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. If no brand credential is present, verifiers MUST NOT impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE MUST also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.
 
-If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence MUST bind the AP to the APE (e.g., by referencing the AP as issuee). Otherwise, the data graph referenced by the `evd` claim in the PASSporT MUST also include Delegation Evidence (DE). The DE MUST include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also MUST include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE MUST also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.
-
 ```
          VVP PASSporT                                         
   +-----------------------+                                   
@@ -273,14 +271,14 @@ If the OP and the AP are the same party, the digital signature and the relations
 : +-----------------------+         +--+---------+          | 
 :                                      |                    | 
 :              Accountable Party Evidence  Delegation Evidence
-v                                   (APE)                 (DE)
+v?                                  (APE)                 (DE)
                +--------------+--------+----+               | 
                |              |             |               | 
    vetting credential         |   TNAlloc credential        | 
   +------------------------+  |  +-----------------------+  | 
   | SAID                   |  |  | SAID                  |  | 
   |   AID of issuer        |  |  |   AID of issuer       |  | 
-..:...AID of AP    ........:..|..:...AID of AP           |  | 
+..:...AID of AP............:..|..:...AID of AP           |  | 
 : |   legal name           |  |  |   TNAllocList         |  | 
 : |   legal identifier     |  |  |   ...more attributes  |  | 
 : |   ...more attributes   |  |  +-----------------------+  | 
@@ -296,7 +294,9 @@ v                                   (APE)                 (DE)
   |   ...more attributes   |     +-+-------------------+ |    
   +------------------------+       +---------------------+     
 ```
-Figure 3: sample evidence graph
+Figure 3: sample evidence graph; OP kid could bind to APE or DE
+
+If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence MUST bind the AP to the APE (e.g., by referencing the AP as issuee). Otherwise, the data graph referenced by the `evd` claim in the PASSporT MUST also include Delegation Evidence (DE), and the OP MUST be the issuee of key pieces of the DE. The DE MUST include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also MUST include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE MUST also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.
 
 The PASSporT-specific signature MUST come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.
 
