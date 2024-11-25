@@ -205,6 +205,39 @@ VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evalua
 ```
 Figure 1: SHAKEN PASSporT compared to VVP PASSporT
 
+A sample VVP PASSporT might look like this, in its non-compact form:
+
+```json
+{
+  "header": {
+    "alg": "EdDSA",
+    "typ": "JWT",
+    "ppt": "passport",
+    "kid": "E0F9C28367E4011E7BA587831C1B8DEBA",
+  }
+  "payload": {
+    "orig": {"tn": ["+17035550001"]},
+    "dest": {"tn": ["+15715550000"]},
+    "evd": "https://acme.com/mytncreds.cesr",
+    "origId": "e0ac7b44-1fc3-4794-8edd-34b83c018fe9",
+    "iat": 1699840000,
+    "exp": 1699840030,
+    "jti": "70664125-c88d-49d6-b66f-0510c20fc3a6"
+  }
+}
+```
+
+* `alg` [required] MUST be "EdDSA". Standardizing on one scheme maximizes interoperability. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which uses the Montgomery-to-Edwards transformation.)
+* `typ` [required] MUST be "JWT".
+* `ppt` [required] MUST be "passport".
+* `kid` [required] MUST be an AID controlled by the OP. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. This AID MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence.)
+* `orig` [required] MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
+* `dest` [required] MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
+* `evd` [required] MUST be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type `application/json+cesr`. Such a URL can be hosted on any convenient web server, and is analogous to the `x5u` header in X509 contexts. See below for details.
+* `origId` [optional] Follows SHAKEN semantics.
+* `iat` [required] Follows standard JWT semantics.
+* `jti` [required] Follows standard JWT semantics.
+
 #### ACDCs
 Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-lasting evidence uses the ACDC format {{TOIP-ACDC}}. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}}, signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a Key Event Log or KEL {{TOIP-KERI}}.
 
@@ -256,7 +289,11 @@ A Justifying Link (JL) is a reference, inside of one CVD, to another CVD that ju
 ### Specific evidence
 
 #### PASSporT-specific signature
-Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a from the call's OP. This signature MUST be the result of running a signing function over input data that consists of the following metadata about a call: the source phone number (`orig` claim), the destination phone number (`dest` claim), an identifier for the AP (`kid`), a timestamp (`iat`), and a reference to evidence (`evd`). This reference is the SAID of an ACDC data graph. The data graph MUST include at least Accountable Party Evidence (APE).
+Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP. This signature MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value is:
+
+    0BNzaC1lZDI1NTE5AAXMCYrQqWyRLAYeKNQvYekmcKcNFzGlgBcatE5mhK3kDNDhQM4tXMCYrQqWyRLAYeKNQvYx
+
+The signature is the result of running a signing function over input data that consists of the following metadata about a call: the source phone number (`orig` claim), the destination phone number (`dest` claim), an identifier for the AP (`kid`), a timestamp (`iat`), and a reference to evidence (`evd`). This reference is the SAID of an ACDC data graph. The data graph MUST include at least Accountable Party Evidence (APE).
 
 APE consists of several credentials, detailed below. It MUST include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it MUST include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. If no brand credential is present, verifiers MUST NOT impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE MUST also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.
 
