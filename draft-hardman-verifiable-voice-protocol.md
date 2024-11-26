@@ -284,7 +284,7 @@ A sample VVP PASSporT might look like this, in its non-compact form:
 * `orig` *(required)* MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
 * `dest` *(required)* MUST conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?
 * `evd` *(required)* MUST be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type `application/json+cesr`. Such a URL can be hosted on any convenient web server, and is analogous to the `x5u` header in X509 contexts. See below for details.
-* `origId` [optional] Follows SHAKEN semantics.
+* `origId` *(optional)* Follows SHAKEN semantics.
 * `iat` *(required)* Follows standard JWT semantics.
 * `jti` *(required)* Follows standard JWT semantics.
 
@@ -390,9 +390,7 @@ A Justifying Link (JL) is a reference, inside of one CVD, to another CVD that ju
 ### Specific evidence
 
 #### PASSporT-specific signature
-Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP. This signature MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value is:
-
-    0BNzaC1lZDI1NTE5AAXMCYrQqWyRLAYeKNQvYekmcKcNFzGlgBcatE5mhK3kDNDhQM4tXMCYrQqWyRLAYeKNQvYx
+Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP. This signature MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
 
 The signature is the result of running a signing function over input data that consists of the following metadata about a call: the source phone number (`orig` claim), the destination phone number (`dest` claim), an identifier for the AP (`kid`), a timestamp (`iat`), and a reference to evidence (`evd`). This reference is the SAID of an ACDC data graph. The data graph MUST include at least Accountable Party Evidence (APE).
 
