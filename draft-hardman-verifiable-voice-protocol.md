@@ -167,7 +167,7 @@ SAIDs are evidence that hashed data has not changed. They can also function like
 #### Signature
 A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs: `signature = sign(D, privkey)`. The evidence can be verified by checking that the signature is bound to D and the public key of the signer: `valid = verify(signature, D, pubkey)`. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.
 
-The assumption that a signer has control over their private keys may often be true at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes. VVP explicitly addresses this concern. 
+The assumption that a signer has control over their private keys may often be true at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes. VVP explicitly addresses this concern.
 
 #### AID
 An autonomic identifier (AID) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. AIDs are like W3C DIDs {{W3C.REC-did-core-20220719}}}, and can be transformed into DIDs.
@@ -236,14 +236,14 @@ VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evalua
   </artwork>
   <artwork type="ascii-art" name="fig1.txt">
 <![CDATA[
-     SHAKEN PASSporT                       VVP PASSporT          
-+-----------------------+           +-----------------------+    
-| protected             |           | protected             |    
-|   kid: pubkey of OSP -+---+       |   kid: AID of OP      |    
-| payload               |   |       | payload               |    
-|   iat                 |   |       |   iat                 |    
-|   orig                |   |       |   orig                |    
-|   dest                |   |       |   dest                |    
+     SHAKEN PASSporT                       VVP PASSporT
++-----------------------+           +-----------------------+
+| protected             |           | protected             |
+|   kid: pubkey of OSP -+---+       |   kid: AID of OP      |
+| payload               |   |       | payload               |
+|   iat                 |   |       |   iat                 |
+|   orig                |   |       |   orig                |
+|   dest                |   |       |   dest                |
 |   attest              |   |       |   evd (SAID = ref to)-+---+
 |   ...more claims      |   |       | signature of OP       |   |
 | signature of OSP      |   |       +-----------------------+   |
@@ -341,7 +341,7 @@ Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-las
   </artwork>
   <artwork type="ascii-art" name="fig2.txt">
 <![CDATA[
- X509                          ACDC                     
+ X509                          ACDC
 +-----------------------+     +------------------------+
 | Data                  |     | v (version)            |
 |   Version             |     | d (SAID of item) <---+ |
@@ -353,12 +353,12 @@ Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-las
 | Extensions            |     |  dt (issuance date)  | |
 | Signature             |     |  ...etc              | |
 +-----------------------+     +----------------------+-+
-                                                     |  
-                              KEL                    |  
-                              +---------------+      |  
-                              | signed anchor |      |  
-                              | for SAID      +------+  
-                              +---------------+         
+                                                     |
+                              KEL                    |
+                              +---------------+      |
+                              | signed anchor |      |
+                              | for SAID      +------+
+                              +---------------+
 ]]>
     </artwork>
   </artset>
@@ -508,38 +508,38 @@ APE consists of several credentials, detailed below. It MUST include a vetting c
   </artwork>
   <artwork type="ascii-art" name="fig3.txt">
 <![CDATA[
-         VVP PASSporT                                         
-  +-----------------------+                                   
-  | protected             |                                   
-......kid: AID of OP      |                                   
-: | payload               |         +--of-OP-----+            
-: |   evd --------------------------+ SAID of    |            
-: | signature of OP       |         | data graph +----------+ 
-: +-----------------------+         +--+---------+          | 
-:                                      |                    | 
+         VVP PASSporT
+  +-----------------------+
+  | protected             |
+......kid: AID of OP      |
+: | payload               |         +--of-OP-----+
+: |   evd --------------------------+ SAID of    |
+: | signature of OP       |         | data graph +----------+
+: +-----------------------+         +--+---------+          |
+:                                      |                    |
 :              Accountable Party Evidence  Delegation Evidence
 v?                                  (APE)                 (DE)
-               +--------------+--------+----+               | 
-               |              |             |               | 
-   vetting credential         |   TNAlloc credential        | 
-  +------------------------+  |  +-----------------------+  | 
-  | SAID                   |  |  | SAID                  |  | 
-  |   AID of issuer        |  |  |   AID of issuer       |  | 
-..:...AID of AP............:..|..:...AID of AP           |  | 
-: |   legal name           |  |  |   TNAllocList         |  | 
-: |   legal identifier     |  |  |   ...more attributes  |  | 
-: |   ...more attributes   |  |  +-----------------------+  | 
-: +------------------------+  |                             | 
-:                             |                             | 
-:  brand credential           |   more credentials          | 
-: +------------------------+  |  +---------------------+    | 
-: | SAID                   +--+  |                     +-+  | 
-: |   AID of issuer        |     | e.g., delegate RTU, +----+ 
-:.:...AID of AP            |     | vet for call ctr,   | |  | 
-  |   brand name           |     | proxy right to brand| +--+ 
-  |   logo                 |     |                     | |    
-  |   ...more attributes   |     +-+-------------------+ |    
-  +------------------------+       +---------------------+     
+               +--------------+--------+----+               |
+               |              |             |               |
+   vetting credential         |   TNAlloc credential        |
+  +------------------------+  |  +-----------------------+  |
+  | SAID                   |  |  | SAID                  |  |
+  |   AID of issuer        |  |  |   AID of issuer       |  |
+..:...AID of AP............:..|..:...AID of AP           |  |
+: |   legal name           |  |  |   TNAllocList         |  |
+: |   legal identifier     |  |  |   ...more attributes  |  |
+: |   ...more attributes   |  |  +-----------------------+  |
+: +------------------------+  |                             |
+:                             |                             |
+:  brand credential           |   more credentials          |
+: +------------------------+  |  +---------------------+    |
+: | SAID                   +--+  |                     +-+  |
+: |   AID of issuer        |     | e.g., delegate RTU, +----+
+:.:...AID of AP            |     | vet for call ctr,   | |  |
+  |   brand name           |     | proxy right to brand| +--+
+  |   logo                 |     |                     | |
+  |   ...more attributes   |     +-+-------------------+ |
+  +------------------------+       +---------------------+
 ]]>
     </artwork>
   </artset>
