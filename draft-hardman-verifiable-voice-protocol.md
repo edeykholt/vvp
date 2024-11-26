@@ -185,12 +185,12 @@ VVP uses SAIDs and digital signatures as primitive forms of evidence.
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. (However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)
 
 #### Passport
-VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evaluation during the brief interval when a call is being initiated. Conceptually, it is similar to a SHAKEN passport {{RFC8588}}. It MUST be secured by an EdDSA digital signature {{RFC8032}}. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
+VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evaluation during the brief interval when a call is being initiated. Conceptually, it is similar to a SHAKEN passport {{RFC8588}}. It MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
 <figure>
 <name>Figure 1: SHAKEN PASSporT compared to VVP PASSporT</name>
 <artset>
-  <artwork type="svg" src="https://www.rfc-editor.org/materials/format/svg/stream.svg ">
+  <artwork type="svg" name="fig1.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="528" viewBox="0 0 528 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
     <path d="M 8,32 L 8,192" fill="none" stroke="black"/>
     <path d="M 200,32 L 200,192" fill="none" stroke="black"/>
@@ -234,7 +234,7 @@ VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evalua
     </g>
     </svg>
   </artwork>
-  <artwork type="ascii-art">
+  <artwork type="ascii-art" name="fig1.txt">
 <![CDATA[
      SHAKEN PASSporT                       VVP PASSporT          
 +-----------------------+           +-----------------------+    
@@ -294,7 +294,7 @@ Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-las
 <figure>
 <name>Figure 2: X509 compared to ACDC</name>
 <artset>
-  <artwork type="svg" src="https://www.rfc-editor.org/materials/format/svg/stream.svg ">
+  <artwork type="svg" name="fig2.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="456" viewBox="0 0 456 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
     <path d="M 8,32 L 8,192" fill="none" stroke="black"/>
     <path d="M 200,32 L 200,192" fill="none" stroke="black"/>
@@ -339,7 +339,7 @@ Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-las
     </g>
     </svg>
   </artwork>
-  <artwork type="ascii-art">
+  <artwork type="ascii-art" name="fig2.txt">
 <![CDATA[
  X509                          ACDC                     
 +-----------------------+     +------------------------+
@@ -399,7 +399,7 @@ APE consists of several credentials, detailed below. It MUST include a vetting c
 <figure>
 <name>Figure 3: sample evidence graph; OP kid could bind to APE or DE</name>
 <artset>
-  <artwork type="svg" src="https://www.rfc-editor.org/materials/format/svg/stream.svg ">
+  <artwork type="svg" name="fig3.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="528" width="512" viewBox="0 0 512 528" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
     <path d="M 24,32 L 24,128" fill="none" stroke="black"/>
     <path d="M 24,240 L 24,272" fill="none" stroke="black"/>
@@ -506,7 +506,7 @@ APE consists of several credentials, detailed below. It MUST include a vetting c
     </g>
     </svg>
   </artwork>
-  <artwork type="ascii-art">
+  <artwork type="ascii-art" name="fig3.txt">
 <![CDATA[
          VVP PASSporT                                         
   +-----------------------+                                   
