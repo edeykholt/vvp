@@ -1,4 +1,4 @@
- X509                          ACDC                     
+ X509                          ACDC
 +-----------------------+     +------------------------+
 | Data                  |     | v (version)            |
 |   Version             |     | d (SAID of item) <---+ |
@@ -10,9 +10,9 @@
 | Extensions            |     |  dt (issuance date)  | |
 | Signature             |     |  ...etc              | |
 +-----------------------+     +----------------------+-+
-                                                     |  
-                              KEL                    |  
-                              +---------------+      |  
-                              | signed anchor |      |  
-                              | for SAID      +------+  
-                              +---------------+         
+                                                     |
+                              KEL                    |
+                              +---------------+      |
+                              | signed anchor |      |
+                              | for SAID      +------+
+                              +---------------+
