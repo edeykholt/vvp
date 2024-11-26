@@ -7,8 +7,7 @@
 <title>Verifiable Voice Protocol</title>
 <meta content="Daniel Hardman" name="author">
 <meta content="
-       Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR  , SHAKEN  , RCD  , and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP   INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, and the nature of its evidence is different. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. 
-       VVP can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives. 
+       Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR  , SHAKEN  , RCD  , and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP   INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different evidence. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives. 
     " name="description">
 <meta content="xml2rfc 3.24.0" name="generator">
 <meta content="voip" name="keyword">
@@ -283,6 +282,12 @@ body {
 }
 
 /* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-title);
   font-weight: 680;
@@ -314,6 +319,7 @@ h4, h5, h6 {
 /* general structure */
 .author {
   padding-bottom: 0.3em;
+  vertical-align: top;
 }
 #abstract+p {
   font-size: 18px;
@@ -391,25 +397,26 @@ svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
 ol, ul {
   padding: 0;
   margin: 0 0 0.5em 2em;
-}
-:is(ol, ul) :is(ol, ul) {
-  margin-left: 1em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
 }
 li {
   margin: 0 0 0.25em 0;
 }
-.ulCompact li {
-  margin: 0;
-}
 ul.empty, .ulEmpty {
   list-style-type: none;
-}
-ul.empty li, .ulEmpty li {
-  margin-top: 0.5em;
+  & li {
+    margin-top: 0.5em;
+  }
 }
 :is(ul, ol).compact, .ulCompact, .olCompact {
-  line-height: 1;
   margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
 }
 
 /* definition lists */
@@ -417,38 +424,39 @@ dl {
   clear: left;
   --indent: 3ch;
   /* --indent: attr(indent ch); not supported in any browser, but we can dream */
-}
-dl.olPercent {
-  --indent: 5ch;
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
 }
 dl > dt {
   float: left;
   margin-right: 2ch;
   min-width: 8ch;
 }
-dl.dlNewline > dt {
-  float: none;
-}
 dl > dd {
   margin-bottom: .8em;
   margin-left: var(--indent) !important; /* stupid element overrides */
   min-height: 2ex;
 }
-dl.olPercent > dt {
-  min-width: calc(var(--indent) - 2ch);
-}
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
-}
-:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
-  margin-top: 0;
-}
-:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
-  margin-bottom: 0;
-}
-dl > dd > dl {
-  margin-top: 0.5em;
-  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
 }
 :is(dd, span).break {
   display: none;
@@ -512,6 +520,7 @@ figcaption, caption {
   font-style: italic;
   margin: 0.5em 1.5em;
   text-align: left;
+  caption-side: bottom;
 }
 @media screen {
   /* Auto-collapse boilerplate. */
@@ -566,6 +575,7 @@ cite {
 
 /* tables */
 table {
+  width: auto;
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
@@ -580,6 +590,16 @@ table.center {
 table.left {
   margin-right: auto;
 }
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
 thead, tbody {
   border: 1px solid var(--line-color);
 }
@@ -610,9 +630,11 @@ a.pilcrow {
   margin-left: 3px;
   opacity: 0.2;
   user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
 }
-a.pilcrow[href] { color: var(--pilcrow-weak); }
-a.pilcrow[href]:hover { text-decoration: none; }
 @media not print {
   :hover > a.pilcrow {
     opacity: 1;
@@ -652,26 +674,28 @@ sub, sup {
   font-size: var(--small-font-size);
   line-height: 18px;
   --identifier-width: 15ch;
-}
-#identifiers dt {
-  width: var(--identifier-width);
-  min-width: var(--identifier-width);
-  clear: left;
-  float: left;
-  text-align: right;
-  margin-right: 1ch;
-}
-#identifiers dd {
-  margin: 0;
-  margin-left: calc(1em + var(--identifier-width)) !important;
-  min-width: 5em;
-}
-#identifiers .authors .author {
-  display: inline-block;
-  margin-right: 1.5em;
-}
-#identifiers .authors .org {
-  font-style: italic;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
 }
 
 /* The prepared/rendered info at the very bottom of the page */
@@ -682,9 +706,6 @@ sub, sup {
   margin-top: 2em;
 }
 .docInfo .prepared {
-  float: left;
-}
-.docInfo .prepared {
   float: right;
 }
 
@@ -692,53 +713,48 @@ sub, sup {
 #toc {
   padding: 0.75em 0 2em 0;
   margin-bottom: 1em;
-}
-@media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
   }
 }
-#toc nav ul {
-  margin: 0 0.5em 0 0;
-  padding: 0;
-  list-style: none;
-}
-#toc nav li {
-  line-height: 1.3em;
-  margin: 2px 0;
-  padding-left: 1.2em;
-  text-indent: -1.2em;
-}
-#toc a.xref {
-  white-space: normal;
-}
-/* references */
-.references dt {
-  text-align: right;
-  font-weight: bold;
-  min-width: 10ch;
-  margin-right: 1.5ch;
-}
-.references dt:target::before {
-  content: "⇒";
-  width: 15px;
-  margin: 0 10px 0 -25px;
-}
-.references dd {
-  margin-left: 12ch !important;
-  overflow: auto;
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
 }
 
-.refInstance {
-  margin-bottom: 1.25em;
-}
-
-.references .ascii {
-  margin-bottom: 0.25em;
-}
-
-/* index */
 #rfc\.index\.index + ul {
   margin-left: 0;
 }
@@ -746,21 +762,33 @@ sub, sup {
 /* authors */
 address.vcard {
   font-style: normal;
-  margin: 1em 0;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
 }
-address.vcard .nameRole {
-  font-weight: 700;
-  margin-left: 0;
-}
-address.vcard .label {
-  margin: 0.5em 0;
-}
-address.vcard .type {
-  display: none;
-}
-.alternative-contact {
-  margin: 1.5em 0 1em;
-}
+
 hr.addr {
   border-top: 1px dashed;
   margin: 0;
@@ -782,6 +810,7 @@ hr.addr {
   }
 }
 
+/* Comments */
 .rfcEditorRemove p:first-of-type {
   font-style: italic;
 }
@@ -792,7 +821,31 @@ hr.addr {
 .crefSource {
   font-style: italic;
 }
-/* alternative layout for smaller screens */
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
 @media screen and (max-width: 929px) {
   #toc {
     position: fixed;
@@ -803,9 +856,6 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc.active {
-      opacity: 1;
   }
   #toc h2 {
     margin: 0;
@@ -818,17 +868,17 @@ hr.addr {
     background-color: #444;
     color: white;
     cursor: pointer;
-  }
-  #toc h2::before { /* css hamburger */
-    float: right;
-    position: relative;
-    width: 1em;
-    height: 1px;
-    left: -164px;
-    margin: 8px 0 0 0;
-    background: white none repeat scroll 0 0;
-    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-    content: "";
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
   }
   #toc nav {
     display: none;
@@ -839,14 +889,13 @@ hr.addr {
     height: calc(100vh - 48px);
     border-left: 1px solid #ddd;
   }
-  #toc.active nav {
-    display: block;
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
   }
   /* Make the collapsed ToC header render white on gray also when it's a link */
   #toc h2 a,
-  #toc h2 a:link,
-  #toc h2 a:focus,
-  #toc h2 a:hover,
+  #toc h2 a:is(:link, :focus, :hover),
   #toc a.toplink,
   #toc a.toplink:hover {
     color: white;
@@ -854,11 +903,11 @@ hr.addr {
     text-decoration: none;
   }
   #toc a.toplink {
-    margin-top: 2px;
+    margin: 2px 0.5em 0;
   }
 }
 
-/* alternative layout for wide screens */
+/* TOC layout for wide screens */
 @media screen and (min-width: 930px) {
   body {
     padding-right: 360px;
@@ -887,20 +936,12 @@ hr.addr {
     overscroll-behavior: contain;
     scrollbar-width: thin;
   }
-  #toc nav > ul  {
-    margin-bottom: 2em;
-  }
-  #toc ul {
-    margin: 0 0 0 4px;
-    font-size: var(--small-font-size);
-  }
-  #toc ul :is(p, li) {
-    margin: 2px 0;
-    line-height: 22px;
-  }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
   }
 }
 
@@ -943,9 +984,6 @@ hr.addr {
   td {
     border-top: 1px solid #ddd;
   }
-  .toplink {
-    display: none;
-  }
 }
 
 @page :first {
@@ -968,82 +1006,6 @@ hr.addr {
   size: A4;
   margin-bottom: 45mm;
   padding-top: 20px;
-}
-
-/* Changes introduced to fix issues found during implementation */
-
-/* Separate body from document info even without intervening H1 */
-section {
-  clear: both;
-}
-
-/* Top align author divs, to avoid names without organization dropping level with org names */
-.author {
-  vertical-align: top;
-}
-
-/* Style section numbers with more space between number and title */
-.section-number {
-  padding-right: 0.5em;
-}
-
-/* Add styling for a link in the ToC that points to the top of the document */
-a.toplink {
-  float: right;
-  margin: 8px 0.5em 0;
-}
-
-/* Provide styling for table cell text alignment */
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
-}
-
-/* Make the alternative author contact information look less like just another
-   author, and group it closer with the primary author contact information */
-.alternative-contact {
-  margin: 0.5em 0 0.25em 0;
-}
-address .non-ascii {
-  margin: 0 0 0 2em;
-}
-
-/* With it being possible to set tables with alignment
-  left, center, and right, { width: 100%; } does not make sense */
-table {
-  width: auto;
-}
-
-/* Avoid reference text that sits in a block with very wide left margin,
-   because of a long floating dt label.*/
-.references dd {
-  overflow: visible;
-}
-
-/* Control caption placement */
-caption {
-  caption-side: bottom;
-}
-
-/* Limit the width of the author address vcard, so names in right-to-left
-   script don't end up on the other side of the page. */
-
-address.vcard {
-  max-width: 20em;
-  margin-right: auto;
-}
-
-/* For address alignment dependent on LTR or RTL scripts */
-address div.left {
-  text-align: left;
-}
-address div.right {
-  text-align: right;
 }
 
 /* Dark mode. */
@@ -1086,7 +1048,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Hardman</td>
-<td class="center">Expires 13 May 2025</td>
+<td class="center">Expires 30 May 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1099,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-hardman-verifiable-voice-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-09" class="published">9 November 2024</time>
+<time datetime="2024-11-26" class="published">26 November 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-13">13 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-05-30">30 May 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,8 +1079,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Verifiable Voice Protocol</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR <span>[<a href="#I-D.ietf-stir-passport-rcd" class="cite xref">I-D.ietf-stir-passport-rcd</a>]</span>, SHAKEN <span>[<a href="#ATIS-1000074" class="cite xref">ATIS-1000074</a>]</span>, RCD <span>[<a href="#I-D.ietf-sipcore-callinfo-rcd" class="cite xref">I-D.ietf-sipcore-callinfo-rcd</a>]</span>, and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP <span>[<a href="#RFC3261" class="cite xref">RFC3261</a>]</span> INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, and the nature of its evidence is different. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">VVP can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP aims at roughly the same target as STIR <span>[<a href="#I-D.ietf-stir-passport-rcd" class="cite xref">I-D.ietf-stir-passport-rcd</a>]</span>, SHAKEN <span>[<a href="#ATIS-1000074" class="cite xref">ATIS-1000074</a>]</span>, RCD <span>[<a href="#I-D.ietf-sipcore-callinfo-rcd" class="cite xref">I-D.ietf-sipcore-callinfo-rcd</a>]</span>, and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP <span>[<a href="#RFC3261" class="cite xref">RFC3261</a>]</span> INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different evidence. This foundation makes VVP simpler, more decentralized and cross-jurisdictional, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can be used by itself, or as a lightweight supplement to bridge gaps in these alternatives.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1150,7 +1111,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1290,15 +1251,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-1">When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Unfortunately, providing quality answers is much harder than it seems. Scammers love to impersonate, and they succeed more often than we'd like.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">Regulators are mandating increased transparency to address this risk. This is wise, and it can be effective. However, it introduces some heavy burdens. Reliably vetting the identity of every possible caller is an ambitious task. Maintaining a comprehensive, up-to-date graph of certificates and cryptographic keys to attest vetted identities is harder. Operating a central registry of such identities and evidence, especially as phone calls increasingly cross jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting technical standards, variety in PSTNs and system interconnects, and many other factors further complexify.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">However, the inherent limit in today's transparency efforts is more fundamental: there exists a pernicious gap between the party accountable for a phone call, and the party that provides evidence about who's calling. A decade ago, the TSP told us who's calling in a probabilistic way, based on unreliable metadata about a call's source. More recently, approaches like STIR/SHAKEN move the evidence source closer to the origin, and add tamper protections. However, there is still a gap: the signer of a SHAKEN passport is the OSP, not the caller, and the OSP may not know what's happening in this gap. A high percentage of STIR/SHAKEN traffic does not receive an A attestation, and even the traffic that does receive it may receive it on imperfect evidence.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-4">Yet the inherent limit in today's transparency efforts is even more fundamental: there exists a pernicious gap between the party accountable for a phone call, and the party that provides evidence about who's calling. A decade ago, the TSP told us who's calling in a probabilistic way, based on unreliable metadata about a call's source. More recently, approaches like STIR/SHAKEN move the evidence source closer to the origin, and add tamper protections. However, there is still a gap: the signer of a SHAKEN passport is the OSP, not the caller, and the OSP may not know what's happening in this gap. A high percentage of STIR/SHAKEN traffic does not receive an A attestation, and even the traffic that does receive it may receive it on imperfect evidence.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In theory, the remaining gap could be eliminated by requiring a perfect authentication and authorization between callers and OSPs, for every phone call -- simply refuse to connect calls that do not match an ideal profile for trust. However, this is impractical for many legitimate business reasons. To cite one obvious example, Organization X might hire Call Center Y to call on their behalf, using X's reputation/brand and X's phone number. In such a situation, X is the relevant answer to the "who's calling" question, but Y is the originator of the call -- and there's no good way to guarantee that everyone knows the existence and status of that relationship. In addition, the market manifests a demand for wholesalers/aggregators of phone numbers, and is characterized by complex system layers and interconnects, that further challenge transparency.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">VVP solves these problems by applying two crucial innovations:<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">VVP solves these problems by applying two crucial innovations.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <div id="evidence-format">
 <section id="section-1.1">
         <h3 id="name-evidence-format">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-evidence-format" class="section-name selfRef">Evidence format</a>
         </h3>
-<p id="section-1.1-1">It uses an evidence format called Authentic Chained Data Container (ACDC) -- <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be built and maintained by X and Y and does not need to be published in a central registry. Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials <span>[<a href="#W3C.REC-vc-data-model-20220303" class="cite xref">W3C.REC-vc-data-model-20220303</a>]</span> and SD-JWTs <span>[<a href="#I-D.ietf-oauth-selective-disclosure-jwt" class="cite xref">I-D.ietf-oauth-selective-disclosure-jwt</a>]</span> require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">VVP uses an evidence format called Authentic Chained Data Container (ACDC) -- <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be built and maintained by X and Y, and does not need to be published in a central registry. Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials <span>[<a href="#W3C.REC-vc-data-model-20220303" class="cite xref">W3C.REC-vc-data-model-20220303</a>]</span> and SD-JWTs <span>[<a href="#I-D.ietf-oauth-selective-disclosure-jwt" class="cite xref">I-D.ietf-oauth-selective-disclosure-jwt</a>]</span> require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="vetting-refinements">
@@ -1339,7 +1300,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-3-2.3.1">Verifying<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-3">Citing and verifying evidence occur in realtime during phone calls, and are therefore the heart of VVP. However, curated evidence must exist before it can be cited; curating is an ongoing, parallel activity as phone calls occur; and citing and verifying must react properly to changes in evidence. Further, existing approaches have trust gaps precisely because they impose too few requirements on the evidence that backs their ecosystems. Therefore, this specification includes normative statements about the nature of evidence and the processes that create and maintain it.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-3">The second and third items in this list, citing and verifying evidence. occur in realtime during phone calls. They are the heart of VVP. However, curated evidence must exist before it can be cited; curating is an ongoing, parallel activity as phone calls occur; and citing and verifying must react properly to changes in evidence. Further, some existing trust gaps occur precisely because too few requirements are imposed on evidence. Therefore, this specification also includes normative statements about the nature of evidence and the processes that create and maintain it.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">Before we explain the evidence, however, we must define some roles.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="roles">
 <section id="section-3.1">
@@ -1351,7 +1312,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-allocation-holder-tnu">
 <a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-allocation-holder-tnu" class="section-name selfRef">Allocation Holder, TNU</a>
           </h4>
-<p id="section-3.1.1-1">An Allocation Holder (AH) is a party that controls how a telephone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct telephone number users (TNUs). TNUs are customers of range holders -- enterprises and consumers. Range holders are service providers; although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges. It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding them as intermediaries.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-1">An Allocation Holder (AH) is a party that controls how a telephone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct telephone number users (TNUs). TNUs are customers of range holders -- enterprises and consumers. Range holders are service providers; although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges. It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminating-party-terminating-service-provider">
@@ -1359,7 +1320,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-terminating-party-terminati">
 <a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-terminating-party-terminati" class="section-name selfRef">Terminating Party, Terminating Service Provider</a>
           </h4>
-<p id="section-3.1.2-1">For a given phone call, the Terminating Party (TP) is the party that receives the call. The direct service provider of the TP is the Terminating Service Provider (TSP).<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-1">For a given phone call, the Terminating Party (TP) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the Terminating Service Provider (TSP).<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="originating-party-originating-service-provider">
@@ -1375,7 +1336,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-accountable-party">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-accountable-party" class="section-name selfRef">Accountable Party</a>
           </h4>
-<p id="section-3.1.4-1">Accountable Parties (AP) are organizations or individuals who hold the right to use a telephone number (RTU) in the eyes of a regulator. APs <span class="bcp14">MAY</span> be OPs, but this relationship does not always hold. A business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">Accountable Parties (AP) are TNUs -- organizations or individuals who hold the right to use a telephone number (RTU) in the eyes of a regulator. APs <span class="bcp14">MAY</span> be OPs, but this relationship does not always hold. For example, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="verifiers">
@@ -1383,7 +1344,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-verifiers">
 <a href="#section-3.1.5" class="section-number selfRef">3.1.5. </a><a href="#name-verifiers" class="section-name selfRef">Verifiers</a>
           </h4>
-<p id="section-3.1.5-1">Verifiers are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance. The verifier role in VVP does not just check the validity of cryptographic evidence; it also considers how that evidence matches business rules and external conditions. For example, a verfier may do more than decide whether Call Center Y has the right to make calls on behalf of Organization X; it may decide whether Y has this right at a particular time of day, when calling into a particular jurisdiction, for a particular business purpose.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-1">Verifiers are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-2">The verifier role in VVP does not just check the validity of cryptographic evidence; it also considers how that evidence matches business rules and external conditions. For example, a verfier may do more than decide whether Call Center Y has the right to make calls on behalf of Organization X; it may decide whether Y has this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.<a href="#section-3.1.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1404,7 +1366,9 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <h5 id="name-said">
 <a href="#section-3.2.1.1" class="section-number selfRef">3.2.1.1. </a><a href="#name-said" class="section-name selfRef">SAID</a>
             </h5>
-<p id="section-3.2.1.1-1">A self-addressing identifier (SAID) is the hash of a JSON object, encoded in CESR format <span>[<a href="#TOIP-CESR" class="cite xref">TOIP-CESR</a>]</span>. The raw bytes from the digest function are left-padded to the nearest 24-bit boundary, transformed to base64url <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>, and prefixed with a character that tells which digest function was used. SAIDs are evidence that hashed data has not changed. They can also function like a reference, hyperlink, or placeholder for the data that was hashed to produce them, though they are more similar to URNs than to URLs <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, since they contain no location information.<a href="#section-3.2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.1-1">A self-addressing identifier (SAID) is the hash of a JSON object, encoded in CESR format <span>[<a href="#TOIP-CESR" class="cite xref">TOIP-CESR</a>]</span>. The raw bytes from the digest function are left-padded to the nearest 24-bit boundary, transformed to base64url <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>, and prefixed with a character that tells which digest function was used.<a href="#section-3.2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.1-2">An example of a SAID is <code>E81Wmjyz5nXMCYrQqWyRLAYeKNQvYLYqMLYv_qm-qP7a</code>, and a regex that matches all valid SAIDs is: <code>[EFGHI][-_\w]{43}|0[DEFG][-_\w]{86}</code>. The <code>E</code> prefix in this example indicates that it is a Blake3-256 hash.<a href="#section-3.2.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.1-3">SAIDs are evidence that hashed data has not changed. They can also function like a reference, hyperlink, or placeholder for the data that was hashed to produce them, though they are more similar to URNs than to URLs <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, since they contain no location information.<a href="#section-3.2.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signature">
@@ -1412,7 +1376,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <h5 id="name-signature">
 <a href="#section-3.2.1.2" class="section-number selfRef">3.2.1.2. </a><a href="#name-signature" class="section-name selfRef">Signature</a>
             </h5>
-<p id="section-3.2.1.2-1">A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs. The evidence can be verified by checking that the signature is associated with the public key of the signer. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.<a href="#section-3.2.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.2-1">A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs: <code>signature = sign(D, privkey)</code>. The evidence can be verified by checking that the signature is bound to D and the public key of the signer: <code>valid = verify(signature, D, pubkey)</code>. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.<a href="#section-3.2.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.2-2">The assumption that a signer has control over their private keys may often be true at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes. VVP explicitly addresses this concern.<a href="#section-3.2.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="aid">
@@ -1420,7 +1385,9 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <h5 id="name-aid">
 <a href="#section-3.2.1.3" class="section-number selfRef">3.2.1.3. </a><a href="#name-aid" class="section-name selfRef">AID</a>
             </h5>
-<p id="section-3.2.1.3-1">An autonomic identifier (AID) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. AIDs are like W3C DIDs <span>[<a href="#W3C.REC-did-core-20220719" class="cite xref">W3C.REC-did-core-20220719</a>]</span>}, and can be transformed into DIDs. However, they possess several security properties that are not guaranteed by DIDs in general (self-certification, support for prerotation and multisig, support for witnesses, cooperative delegation, and so forth). Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures.<a href="#section-3.2.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.3-1">An autonomic identifier (AID) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. AIDs are like W3C DIDs <span>[<a href="#W3C.REC-did-core-20220719" class="cite xref">W3C.REC-did-core-20220719</a>]</span>}, and can be transformed into DIDs.<a href="#section-3.2.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.3-2">An example of an AID is <code>EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa</code>. AIDs are created by calculating the hash of the identifier's inception event data structure; they therefore match the same regex as SAIDs in general.<a href="#section-3.2.1.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.3-3">AIDs possess several security properties that are not guaranteed by DIDs in general (self-certification, support for prerotation and multisig, support for witnesses, cooperative delegation, and so forth). Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures.<a href="#section-3.2.1.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signatures-over-saids">
@@ -1440,57 +1407,217 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.1.5-1">VVP does not depend on X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> for any of its evidence. (However, if deployed in a hybrid mode, it <span class="bcp14">MAY</span> be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)<a href="#section-3.2.1.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="acdcs">
+<div id="passport">
 <section id="section-3.2.1.6">
-            <h5 id="name-acdcs">
-<a href="#section-3.2.1.6" class="section-number selfRef">3.2.1.6. </a><a href="#name-acdcs" class="section-name selfRef">ACDCs</a>
+            <h5 id="name-passport">
+<a href="#section-3.2.1.6" class="section-number selfRef">3.2.1.6. </a><a href="#name-passport" class="section-name selfRef">Passport</a>
             </h5>
-<p id="section-3.2.1.6-1">Besides digital signatures and SAIDs, VVP's other evidence uses the ACDC format <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This indirection has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, and W3C Verifiable Credentials <span>[<a href="#W3C.REC-vc-data-model-20220303" class="cite xref">W3C.REC-vc-data-model-20220303</a>]</span>, signatures over ACDC data are not <em>contained</em> inside the ACDC; rather, they are <em>referenced by</em> the ACDC and <em>anchored in</em> a verifiable data structure called a Key Event Log or KEL <span>[<a href="#TOIP-KERI" class="cite xref">TOIP-KERI</a>]</span>.<a href="#section-3.2.1.6-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.6-2">(TODO: diagram)<a href="#section-3.2.1.6-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.6-3">The KEL is somewhat like a blockchain. However, it specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.<a href="#section-3.2.1.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.6-4">ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. An ACDC is also uniquely identified by its SAID, which means that a SAID can take the place of a full ACDC in certain data structures and processes. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable.<a href="#section-3.2.1.6-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.6-5">The revocation of a given ACDC can be detected via the witnesses declared in its issuer's KEL. Discovering, detecting, and reacting to such events can be very efficient. Any number of aggregated views can be built on demand, for any subset of an ecosystem's evidence, by any party. This requires no special authority or access, and does not create a central registry as a source of truth, since such views can be served by untrusted parties. Further, different views of the evidence can contain or elide different fields of the evidence data, to address privacy, regulatory, and legal requirements.<a href="#section-3.2.1.6-5" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.6-6">ACDCs are capable of holding more generic categories of data than just credentials.<a href="#section-3.2.1.6-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.6-1">VVP emits a STIR PASSporT <span>[<a href="#RFC8225" class="cite xref">RFC8225</a>]</span>, as a form of evidence suitable for evaluation during the brief interval when a call is being initiated. Conceptually, it is similar to a SHAKEN passport <span>[<a href="#RFC8588" class="cite xref">RFC8588</a>]</span>. It <span class="bcp14">MUST</span> be secured by an EdDSA digital signature <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>, <span>[<a href="#FIPS186-4" class="cite xref">FIPS186-4</a>]</span>. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.<a href="#section-3.2.1.6-1" class="pilcrow">¶</a></p>
+<span id="name-figure-1-shaken-passport-co"></span><figure id="figure-1">
+              <div id="section-3.2.1.6-2.1">
+                <div class="alignLeft art-svg artwork" id="section-3.2.1.6-2.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="528" viewBox="0 0 528 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                    <path d="M 8,32 L 8,192" fill="none" stroke="black"></path>
+                    <path d="M 200,32 L 200,192" fill="none" stroke="black"></path>
+                    <path d="M 232,64 L 232,224" fill="none" stroke="black"></path>
+                    <path d="M 296,32 L 296,176" fill="none" stroke="black"></path>
+                    <path d="M 488,32 L 488,176" fill="none" stroke="black"></path>
+                    <path d="M 520,144 L 520,224" fill="none" stroke="black"></path>
+                    <path d="M 8,32 L 200,32" fill="none" stroke="black"></path>
+                    <path d="M 296,32 L 488,32" fill="none" stroke="black"></path>
+                    <path d="M 192,64 L 232,64" fill="none" stroke="black"></path>
+                    <path d="M 472,144 L 520,144" fill="none" stroke="black"></path>
+                    <path d="M 296,176 L 488,176" fill="none" stroke="black"></path>
+                    <path d="M 8,192 L 200,192" fill="none" stroke="black"></path>
+                    <path d="M 160,224 L 232,224" fill="none" stroke="black"></path>
+                    <path d="M 488,224 L 520,224" fill="none" stroke="black"></path>
+                    <polygon class="arrowhead" points="496,224 484,218.4 484,229.6" fill="black" transform="rotate(180,488,224)"></polygon>
+                    <polygon class="arrowhead" points="168,224 156,218.4 156,229.6" fill="black" transform="rotate(180,160,224)"></polygon>
+                    <circle cx="464" cy="144" r="6" class="opendot" fill="white" stroke="black"></circle>
+                    <g class="text">
+                      <text x="104" y="20">SHAKEN PASSporT</text>
+                      <text x="396" y="20">VVP PASSporT</text>
+                      <text x="56" y="52">protected</text>
+                      <text x="344" y="52">protected</text>
+                      <text x="108" y="68">kid: pubkey of OSP</text>
+                      <text x="380" y="68">kid: AID of OP</text>
+                      <text x="48" y="84">payload</text>
+                      <text x="336" y="84">payload</text>
+                      <text x="48" y="100">iat</text>
+                      <text x="336" y="100">iat</text>
+                      <text x="52" y="116">orig</text>
+                      <text x="340" y="116">orig</text>
+                      <text x="52" y="132">dest</text>
+                      <text x="340" y="132">dest</text>
+                      <text x="60" y="148">attest</text>
+                      <text x="392" y="148">evd (SAID = ref t</text>
+                      <text x="92" y="164">...more claims</text>
+                      <text x="368" y="164">signature of OP</text>
+                      <text x="84" y="180">signature of OSP</text>
+                      <text x="92" y="228">pubkey in cert</text>
+                      <text x="388" y="228">data graph of evidence</text>
+                    </g>
+                  </svg><a href="#section-3.2.1.6-2.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-figure-1-shaken-passport-co" class="selfRef">Figure 1: SHAKEN PASSporT compared to VVP PASSporT</a>
+              </figcaption></figure>
+<p id="section-3.2.1.6-3">A sample VVP PASSporT might look like this, in its non-compact form:<a href="#section-3.2.1.6-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.6-4"><code>json
+{
+  "header": {
+    "alg": "EdDSA",
+    "typ": "JWT",
+    "ppt": "passport",
+    "kid": "E0F9C28367E4011E7BA587831C1B8DEBA",
+  }
+  "payload": {
+    "orig": {"tn": ["+17035550001"]},
+    "dest": {"tn": ["+15715550000"]},
+    "evd": "https://acme.com/mytncreds.cesr",
+    "origId": "e0ac7b44-1fc3-4794-8edd-34b83c018fe9",
+    "iat": 1699840000,
+    "exp": 1699840030,
+    "jti": "70664125-c88d-49d6-b66f-0510c20fc3a6"
+  }
+}
+</code><a href="#section-3.2.1.6-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2.1.6-5.1">
+                <p id="section-3.2.1.6-5.1.1"><code>alg</code> <em>(required)</em> <span class="bcp14">MUST</span> be "EdDSA". Standardizing on one scheme maximizes interoperability. The RSA, HMAC, and ES256 algorithms <span class="bcp14">MUST NOT</span> be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which uses the Montgomery-to-Edwards transformation.)<a href="#section-3.2.1.6-5.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.2">
+                <p id="section-3.2.1.6-5.2.1"><code>typ</code> <em>(required)</em> <span class="bcp14">MUST</span> be "JWT".<a href="#section-3.2.1.6-5.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.3">
+                <p id="section-3.2.1.6-5.3.1"><code>ppt</code> <em>(required)</em> <span class="bcp14">MUST</span> be "passport".<a href="#section-3.2.1.6-5.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.4">
+                <p id="section-3.2.1.6-5.4.1"><code>kid</code> <em>(required)</em> <span class="bcp14">MUST</span> be an AID controlled by the OP. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. This AID <span class="bcp14">MUST</span> be singlesig and, in the common case where it is not the legal entity AID, <span class="bcp14">MUST</span> have a delegate relationship with the legal entity AID, proved through Delegate Evidence.)<a href="#section-3.2.1.6-5.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.5">
+                <p id="section-3.2.1.6-5.5.1"><code>orig</code> <em>(required)</em> <span class="bcp14">MUST</span> conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?<a href="#section-3.2.1.6-5.5.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.6">
+                <p id="section-3.2.1.6-5.6.1"><code>dest</code> <em>(required)</em> <span class="bcp14">MUST</span> conform to SHAKEN requirements. TODO: only phone nums; use plus? what about multiple vals?<a href="#section-3.2.1.6-5.6.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.7">
+                <p id="section-3.2.1.6-5.7.1"><code>evd</code> <em>(required)</em> <span class="bcp14">MUST</span> be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type <code>application/json+cesr</code>. Such a URL can be hosted on any convenient web server, and is analogous to the <code>x5u</code> header in X509 contexts. See below for details.<a href="#section-3.2.1.6-5.7.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.8">
+                <p id="section-3.2.1.6-5.8.1"><code>origId</code> <em>(optional)</em> Follows SHAKEN semantics.<a href="#section-3.2.1.6-5.8.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.9">
+                <p id="section-3.2.1.6-5.9.1"><code>iat</code> <em>(required)</em> Follows standard JWT semantics.<a href="#section-3.2.1.6-5.9.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.2.1.6-5.10">
+                <p id="section-3.2.1.6-5.10.1"><code>jti</code> <em>(required)</em> Follows standard JWT semantics.<a href="#section-3.2.1.6-5.10.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</section>
+</div>
+<div id="acdcs">
+<section id="section-3.2.1.7">
+            <h5 id="name-acdcs">
+<a href="#section-3.2.1.7" class="section-number selfRef">3.2.1.7. </a><a href="#name-acdcs" class="section-name selfRef">ACDCs</a>
+            </h5>
+<p id="section-3.2.1.7-1">Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-lasting evidence uses the ACDC format <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, and W3C Verifiable Credentials <span>[<a href="#W3C.REC-vc-data-model-20220303" class="cite xref">W3C.REC-vc-data-model-20220303</a>]</span>, signatures over ACDC data are not <em>contained</em> inside the ACDC; rather, they are <em>referenced by</em> the ACDC and <em>anchored in</em> a verifiable data structure called a Key Event Log or KEL <span>[<a href="#TOIP-KERI" class="cite xref">TOIP-KERI</a>]</span>.<a href="#section-3.2.1.7-1" class="pilcrow">¶</a></p>
+<span id="name-figure-2-x509-compared-to-a"></span><figure id="figure-2">
+              <div id="section-3.2.1.7-2.1">
+                <div class="alignLeft art-svg artwork" id="section-3.2.1.7-2.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="456" viewBox="0 0 456 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                    <path d="M 8,32 L 8,192" fill="none" stroke="black"></path>
+                    <path d="M 200,32 L 200,192" fill="none" stroke="black"></path>
+                    <path d="M 248,32 L 248,192" fill="none" stroke="black"></path>
+                    <path d="M 248,240 L 248,288" fill="none" stroke="black"></path>
+                    <path d="M 376,240 L 376,288" fill="none" stroke="black"></path>
+                    <path d="M 432,64 L 432,272" fill="none" stroke="black"></path>
+                    <path d="M 448,32 L 448,192" fill="none" stroke="black"></path>
+                    <path d="M 8,32 L 200,32" fill="none" stroke="black"></path>
+                    <path d="M 248,32 L 448,32" fill="none" stroke="black"></path>
+                    <path d="M 400,64 L 432,64" fill="none" stroke="black"></path>
+                    <path d="M 8,192 L 200,192" fill="none" stroke="black"></path>
+                    <path d="M 248,192 L 448,192" fill="none" stroke="black"></path>
+                    <path d="M 248,240 L 376,240" fill="none" stroke="black"></path>
+                    <path d="M 376,272 L 432,272" fill="none" stroke="black"></path>
+                    <path d="M 248,288 L 376,288" fill="none" stroke="black"></path>
+                    <polygon class="arrowhead" points="408,64 396,58.4 396,69.6" fill="black" transform="rotate(180,400,64)"></polygon>
+                    <g class="text">
+                      <text x="28" y="20">X509</text>
+                      <text x="268" y="20">ACDC</text>
+                      <text x="36" y="52">Data</text>
+                      <text x="304" y="52">v (version)</text>
+                      <text x="64" y="68">Version</text>
+                      <text x="324" y="68">d (SAID of item)</text>
+                      <text x="88" y="84">Serial Number</text>
+                      <text x="328" y="84">i (AID of issuer)</text>
+                      <text x="100" y="100">Issuer: DN of issuer</text>
+                      <text x="340" y="100">ri (status registry)</text>
+                      <text x="52" y="116">Validity</text>
+                      <text x="300" y="116">s (schema)</text>
+                      <text x="104" y="132">Subject: DN of issuee</text>
+                      <text x="316" y="132">a (attributes)</text>
+                      <text x="104" y="148">Sub PubKey Info: KeyX</text>
+                      <text x="336" y="148">i (AID of issuee)</text>
+                      <text x="60" y="164">Extensions</text>
+                      <text x="340" y="164">dt (issuance date)</text>
+                      <text x="56" y="180">Signature</text>
+                      <text x="292" y="180">...etc</text>
+                      <text x="256" y="228">KEL</text>
+                      <text x="312" y="260">signed anchor</text>
+                      <text x="292" y="276">for SAID</text>
+                    </g>
+                  </svg><a href="#section-3.2.1.7-2.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-figure-2-x509-compared-to-a" class="selfRef">Figure 2: X509 compared to ACDC</a>
+              </figcaption></figure>
+<p id="section-3.2.1.7-3">The KEL is somewhat like a blockchain. However, it is specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.<a href="#section-3.2.1.7-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.7-4">ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. An ACDC is also uniquely identified by its SAID, which means that a SAID can take the place of a full ACDC in certain data structures and processes. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable.<a href="#section-3.2.1.7-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.7-5">The revocation of a given ACDC can be detected via the witnesses declared in its issuer's KEL. Discovering, detecting, and reacting to such events can be very efficient. Any number of aggregated views can be built on demand, for any subset of an ecosystem's evidence, by any party. This requires no special authority or access, and does not create a central registry as a source of truth, since such views can be served by untrusted parties. Further, different views of the evidence can contain or elide different fields of the evidence data, to address privacy, regulatory, and legal requirements.<a href="#section-3.2.1.7-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.7-6">ACDCs are capable of holding more generic categories of data than just credentials.<a href="#section-3.2.1.7-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="verifiable-data">
-<section id="section-3.2.1.7">
+<section id="section-3.2.1.8">
             <h5 id="name-verifiable-data">
-<a href="#section-3.2.1.7" class="section-number selfRef">3.2.1.7. </a><a href="#name-verifiable-data" class="section-name selfRef">Verifiable data</a>
+<a href="#section-3.2.1.8" class="section-number selfRef">3.2.1.8. </a><a href="#name-verifiable-data" class="section-name selfRef">Verifiable data</a>
             </h5>
-<p id="section-3.2.1.7-1">Cryptographically verifiable data (CVD) is data that's associated with a digital signature and a claim about who signed it. When CVD is an assertion, we make the additional assumption that the signer intends whatever the data asserts, since they took an affirmative action to create non-repudiable evidence that they processed it. CVD can be embodied in many formats, but in VVP, all instances of CVD are ACDCs.<a href="#section-3.2.1.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.8-1">Cryptographically verifiable data (CVD) is data that's associated with a digital signature and a claim about who signed it. When CVD is an assertion, we make the additional assumption that the signer intends whatever the data asserts, since they took an affirmative action to create non-repudiable evidence that they processed it. CVD can be embodied in many formats, but in VVP, all instances of CVD are ACDCs.<a href="#section-3.2.1.8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="credential">
-<section id="section-3.2.1.8">
+<section id="section-3.2.1.9">
             <h5 id="name-credential">
-<a href="#section-3.2.1.8" class="section-number selfRef">3.2.1.8. </a><a href="#name-credential" class="section-name selfRef">Credential</a>
+<a href="#section-3.2.1.9" class="section-number selfRef">3.2.1.9. </a><a href="#name-credential" class="section-name selfRef">Credential</a>
             </h5>
-<p id="section-3.2.1.8-1">A Credential is a special kind of CVD that asserts entitlements for its legitimate bearer -- <em>and only its bearer</em>. CVD that says Organization X exists with a particular ID number in government registers, and with a particular legal name, is not necessarily a credential. In order to be a credential, it would have to be associated with an assertion that its legitimate bearer -- <em>and only its bearer</em> -- is entitled to use the identity of Organization X. If signed data merely enumerates properties without conferring privileges on a specific party, it is just CVD. Many security gaps in existing solutions arise from conflating CVD and credentials.<a href="#section-3.2.1.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.9-1">A Credential is a special kind of CVD that asserts entitlements for its legitimate bearer -- <em>and only its bearer</em>. CVD that says Organization X exists with a particular ID number in government registers, and with a particular legal name, is not necessarily a credential. In order to be a credential, it would have to be associated with an assertion that its legitimate bearer -- <em>and only its bearer</em> -- is entitled to use the identity of Organization X. If signed data merely enumerates properties without conferring privileges on a specific party, it is just CVD. Many security gaps in existing solutions arise from conflating CVD and credentials.<a href="#section-3.2.1.9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="bearer-token">
-<section id="section-3.2.1.9">
+<section id="section-3.2.1.10">
             <h5 id="name-bearer-token">
-<a href="#section-3.2.1.9" class="section-number selfRef">3.2.1.9. </a><a href="#name-bearer-token" class="section-name selfRef">Bearer token</a>
+<a href="#section-3.2.1.10" class="section-number selfRef">3.2.1.10. </a><a href="#name-bearer-token" class="section-name selfRef">Bearer token</a>
             </h5>
-<p id="section-3.2.1.9-1">VVP never uses bearer tokens, but we define them here to provide a contrast. A bearer token is a credential that satisfies binding requirements by a trivial test of possession -- like a movie ticket, the first party that presents the artifact to a verifier gets the privilege. Since Bearer Credentials can be stolen, this is risky. JWTs, session cookies, and other artifacts in familiar identity technologies are often bearer tokens, even if they carry digital signatures. Although they can be protected to some degree by expiration dates and secure channels, these protections are imperfect. For example, TLS channels can be terminated and recreated at multiple places between call origination and delivery.<a href="#section-3.2.1.9-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.10-1">VVP never uses bearer tokens, but we define them here to provide a contrast. A bearer token is a credential that satisfies binding requirements by a trivial test of possession -- like a movie ticket, the first party that presents the artifact to a verifier gets the privilege. Since Bearer Credentials can be stolen, this is risky. JWTs, session cookies, and other artifacts in familiar identity technologies are often bearer tokens, even if they carry digital signatures. Although they can be protected to some degree by expiration dates and secure channels, these protections are imperfect. For example, TLS channels can be terminated and recreated at multiple places between call origination and delivery.<a href="#section-3.2.1.10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="targeted-credential">
-<section id="section-3.2.1.10">
+<section id="section-3.2.1.11">
             <h5 id="name-targeted-credential">
-<a href="#section-3.2.1.10" class="section-number selfRef">3.2.1.10. </a><a href="#name-targeted-credential" class="section-name selfRef">Targeted credential</a>
+<a href="#section-3.2.1.11" class="section-number selfRef">3.2.1.11. </a><a href="#name-targeted-credential" class="section-name selfRef">Targeted credential</a>
             </h5>
-<p id="section-3.2.1.10-1">A targeted credential is CVD that identifies an issuee as the bearer, and that requires the issuee to prove their identity cryptographically (e.g., to produce a proper digital signature) in order to claim the associated privilege. All credentials in VVP are targeted credentials.<a href="#section-3.2.1.10-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.11-1">A targeted credential is CVD that identifies an issuee as the bearer, and that requires the issuee to prove their identity cryptographically (e.g., to produce a proper digital signature) in order to claim the associated privilege. All credentials in VVP are targeted credentials.<a href="#section-3.2.1.11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="justifying-link">
-<section id="section-3.2.1.11">
+<section id="section-3.2.1.12">
             <h5 id="name-justifying-link">
-<a href="#section-3.2.1.11" class="section-number selfRef">3.2.1.11. </a><a href="#name-justifying-link" class="section-name selfRef">Justifying link</a>
+<a href="#section-3.2.1.12" class="section-number selfRef">3.2.1.12. </a><a href="#name-justifying-link" class="section-name selfRef">Justifying link</a>
             </h5>
-<p id="section-3.2.1.11-1">A Justifying Link (JL) is a reference, inside of one CVD, to another CVD that justifies what the first CVD is asserting. JLs can be SAIDs that identify other ACDCs.<a href="#section-3.2.1.11-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.12-1">A Justifying Link (JL) is a reference, inside of one CVD, to another CVD that justifies what the first CVD is asserting. JLs can be SAIDs that identify other ACDCs.<a href="#section-3.2.1.12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1500,17 +1627,129 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-specific-evidence">
 <a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-specific-evidence" class="section-name selfRef">Specific evidence</a>
           </h4>
-<div id="message-specific-signature">
+<div id="passport-specific-signature">
 <section id="section-3.2.2.1">
-            <h5 id="name-message-specific-signature">
-<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-message-specific-signature" class="section-name selfRef">Message-specific signature</a>
+            <h5 id="name-passport-specific-signature">
+<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-passport-specific-signature" class="section-name selfRef">PASSporT-specific signature</a>
             </h5>
-<p id="section-3.2.2.1-1">Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE <span class="bcp14">MUST</span> contain a message-specific signature (MSS) from the OP. This signature <span class="bcp14">MUST</span> be the result of running a signing function over input data that consists of the following metadata about a call: the source phone number, an identifier for the AP, a timestamp, and a reference to Accountable Party Evidence (APE).<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.1-2">APE consists of several credentials, detailed below. It <span class="bcp14">MUST</span> include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it <span class="bcp14">MUST</span> include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it <span class="bcp14">MUST</span> include a brand credential for the AP. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, it <span class="bcp14">MUST</span> also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.<a href="#section-3.2.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.1-3">If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence <span class="bcp14">MUST</span> bind the AP to the APE. Otherwise, the input data for the signature <span class="bcp14">MUST</span> also include an additional AID for the OP, plus a reference to Delegation Evidence (DE). The DE <span class="bcp14">MUST</span> include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also <span class="bcp14">MUST</span> include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE <span class="bcp14">MUST</span> also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.<a href="#section-3.2.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.1-4">(TODO: diagram)<a href="#section-3.2.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.1-5">It is crucial that this message-specific signature come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is also crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.<a href="#section-3.2.2.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.1-6">(TODO: finish Verifiers that are capable of understanding delegations It is also vital that verification algorithms This allows  software, is crucial, and is different from alternative approaches. The fact that the the , that closes the attestation gap in existing approaches. Closing this gap is only practical because of the chaining and disclosure features of ACDCs.)<a href="#section-3.2.2.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.1-1">Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an <code>Identity</code> header that <span class="bcp14">MUST</span> contain a signature from the call's OP. This signature <span class="bcp14">MUST</span> be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The <code>AA</code> at the front of the result is cut and replaced with <code>0B</code>, giving an 88-character string. A regex that matches the result is: <code>0B[-_\w]{86}</code>, and a sample value (with the middle elided) is: <code>0BNzaC1lZD...yRLAYeKNQvYx</code>.<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.1-2">The signature is the result of running a signing function over input data that consists of the following metadata about a call: the source phone number (<code>orig</code> claim), the destination phone number (<code>dest</code> claim), an identifier for the AP (<code>kid</code>), a timestamp (<code>iat</code>), and a reference to evidence (<code>evd</code>). This reference is the SAID of an ACDC data graph. The data graph <span class="bcp14">MUST</span> include at least Accountable Party Evidence (APE).<a href="#section-3.2.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.1-3">APE consists of several credentials, detailed below. It <span class="bcp14">MUST</span> include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it <span class="bcp14">MUST</span> include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it <span class="bcp14">MUST</span> include a brand credential for the AP. If no brand credential is present, verifiers <span class="bcp14">MUST NOT</span> impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE <span class="bcp14">MUST</span> also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.<a href="#section-3.2.2.1-3" class="pilcrow">¶</a></p>
+<span id="name-figure-3-sample-evidence-gr"></span><figure id="figure-3">
+              <div id="section-3.2.2.1-4.1">
+                <div class="alignLeft art-svg artwork" id="section-3.2.2.1-4.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="528" width="512" viewBox="0 0 512 528" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                    <path d="M 24,32 L 24,128" fill="none" stroke="black"></path>
+                    <path d="M 24,240 L 24,272" fill="none" stroke="black"></path>
+                    <path d="M 24,304 L 24,352" fill="none" stroke="black"></path>
+                    <path d="M 24,400 L 24,432" fill="none" stroke="black"></path>
+                    <path d="M 24,464 L 24,512" fill="none" stroke="black"></path>
+                    <path d="M 128,192 L 128,208" fill="none" stroke="black"></path>
+                    <path d="M 216,32 L 216,88" fill="none" stroke="black"></path>
+                    <path d="M 216,104 L 216,128" fill="none" stroke="black"></path>
+                    <path d="M 224,240 L 224,272" fill="none" stroke="black"></path>
+                    <path d="M 224,304 L 224,352" fill="none" stroke="black"></path>
+                    <path d="M 224,400 L 224,512" fill="none" stroke="black"></path>
+                    <path d="M 248,192 L 248,416" fill="none" stroke="black"></path>
+                    <path d="M 272,240 L 272,272" fill="none" stroke="black"></path>
+                    <path d="M 272,304 L 272,336" fill="none" stroke="black"></path>
+                    <path d="M 272,400 L 272,496" fill="none" stroke="black"></path>
+                    <path d="M 288,496 L 288,512" fill="none" stroke="black"></path>
+                    <path d="M 296,80 L 296,128" fill="none" stroke="black"></path>
+                    <path d="M 320,128 L 320,144" fill="none" stroke="black"></path>
+                    <path d="M 360,192 L 360,208" fill="none" stroke="black"></path>
+                    <path d="M 400,80 L 400,128" fill="none" stroke="black"></path>
+                    <path d="M 448,400 L 448,496" fill="none" stroke="black"></path>
+                    <path d="M 464,240 L 464,336" fill="none" stroke="black"></path>
+                    <path d="M 464,440 L 464,512" fill="none" stroke="black"></path>
+                    <path d="M 488,112 L 488,144" fill="none" stroke="black"></path>
+                    <path d="M 488,192 L 488,464" fill="none" stroke="black"></path>
+                    <path d="M 24,32 L 216,32" fill="none" stroke="black"></path>
+                    <path d="M 296,80 L 312,80" fill="none" stroke="black"></path>
+                    <path d="M 360,80 L 400,80" fill="none" stroke="black"></path>
+                    <path d="M 88,96 L 296,96" fill="none" stroke="black"></path>
+                    <path d="M 400,112 L 488,112" fill="none" stroke="black"></path>
+                    <path d="M 24,128 L 216,128" fill="none" stroke="black"></path>
+                    <path d="M 296,128 L 400,128" fill="none" stroke="black"></path>
+                    <path d="M 128,192 L 360,192" fill="none" stroke="black"></path>
+                    <path d="M 24,240 L 224,240" fill="none" stroke="black"></path>
+                    <path d="M 272,240 L 464,240" fill="none" stroke="black"></path>
+                    <path d="M 272,336 L 464,336" fill="none" stroke="black"></path>
+                    <path d="M 24,352 L 224,352" fill="none" stroke="black"></path>
+                    <path d="M 24,400 L 224,400" fill="none" stroke="black"></path>
+                    <path d="M 272,400 L 448,400" fill="none" stroke="black"></path>
+                    <path d="M 224,416 L 248,416" fill="none" stroke="black"></path>
+                    <path d="M 448,416 L 464,416" fill="none" stroke="black"></path>
+                    <path d="M 448,432 L 488,432" fill="none" stroke="black"></path>
+                    <path d="M 464,464 L 488,464" fill="none" stroke="black"></path>
+                    <path d="M 272,496 L 448,496" fill="none" stroke="black"></path>
+                    <path d="M 24,512 L 224,512" fill="none" stroke="black"></path>
+                    <path d="M 288,512 L 464,512" fill="none" stroke="black"></path>
+                    <circle cx="320" cy="80" r="6" class="opendot" fill="white" stroke="black"></circle>
+                    <g class="text">
+                      <text x="124" y="20">VVP PASSporT</text>
+                      <text x="72" y="52">protected</text>
+                      <text x="12" y="68">..</text>
+                      <text x="96" y="68">...kid: AID of OP</text>
+                      <text x="8" y="84">:</text>
+                      <text x="64" y="84">payload</text>
+                      <text x="340" y="84">f-OP</text>
+                      <text x="8" y="100">:</text>
+                      <text x="64" y="100">evd</text>
+                      <text x="336" y="100">SAID of</text>
+                      <text x="8" y="116">:</text>
+                      <text x="96" y="116">signature of OP</text>
+                      <text x="348" y="116">data graph</text>
+                      <text x="8" y="132">:</text>
+                      <text x="8" y="148">:</text>
+                      <text x="8" y="164">:</text>
+                      <text x="228" y="164">Accountable Party Evidence</text>
+                      <text x="424" y="164">Delegation Evidence</text>
+                      <text x="12" y="180">v?</text>
+                      <text x="312" y="180">(APE)</text>
+                      <text x="484" y="180">(DE)</text>
+                      <text x="100" y="228">vetting credential</text>
+                      <text x="348" y="228">TNAlloc credential</text>
+                      <text x="52" y="260">SAID</text>
+                      <text x="300" y="260">SAID</text>
+                      <text x="104" y="276">AID of issuer</text>
+                      <text x="352" y="276">AID of issuer</text>
+                      <text x="124" y="292">..:...AID of AP............:..</text>
+                      <text x="312" y="292">..:...AID of AP</text>
+                      <text x="8" y="308">:</text>
+                      <text x="92" y="308">legal name</text>
+                      <text x="344" y="308">TNAllocList</text>
+                      <text x="8" y="324">:</text>
+                      <text x="116" y="324">legal identifier</text>
+                      <text x="372" y="324">...more attributes</text>
+                      <text x="8" y="340">:</text>
+                      <text x="124" y="340">...more attributes</text>
+                      <text x="8" y="356">:</text>
+                      <text x="8" y="372">:</text>
+                      <text x="8" y="388">:</text>
+                      <text x="92" y="388">brand credential</text>
+                      <text x="340" y="388">more credentials</text>
+                      <text x="8" y="404">:</text>
+                      <text x="8" y="420">:</text>
+                      <text x="52" y="420">SAID</text>
+                      <text x="8" y="436">:</text>
+                      <text x="104" y="436">AID of issuer</text>
+                      <text x="360" y="436">e.g., delegate RTU,</text>
+                      <text x="64" y="452">:.:...AID of AP</text>
+                      <text x="352" y="452">vet for call ctr,</text>
+                      <text x="92" y="468">brand name</text>
+                      <text x="364" y="468">proxy right to brand</text>
+                      <text x="68" y="484">logo</text>
+                      <text x="124" y="500">...more attributes</text>
+                    </g>
+                  </svg><a href="#section-3.2.2.1-4.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-figure-3-sample-evidence-gr" class="selfRef">Figure 3: sample evidence graph; OP kid could bind to APE or DE</a>
+              </figcaption></figure>
+<p id="section-3.2.2.1-5">If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence <span class="bcp14">MUST</span> bind the AP to the APE (e.g., by referencing the AP as issuee). Otherwise, the data graph referenced by the <code>evd</code> claim in the PASSporT <span class="bcp14">MUST</span> also include Delegation Evidence (DE), and the OP <span class="bcp14">MUST</span> be the issuee of key pieces of the DE. The DE <span class="bcp14">MUST</span> include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also <span class="bcp14">MUST</span> include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE <span class="bcp14">MUST</span> also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.<a href="#section-3.2.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.1-6">The PASSporT-specific signature <span class="bcp14">MUST</span> come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.<a href="#section-3.2.2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="vetting-credential">
@@ -1518,7 +1757,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <h5 id="name-vetting-credential">
 <a href="#section-3.2.2.2" class="section-number selfRef">3.2.2.2. </a><a href="#name-vetting-credential" class="section-name selfRef">Vetting credential</a>
             </h5>
-<p id="section-3.2.2.2-1">A vetting credential is a targeted credential that enumerates the formal and legal attributes of a unique legal entity. It <span class="bcp14">MUST</span> include a legal identifier that makes the entity unique in its home jurisdiction, and it <span class="bcp14">MUST</span> include an AID for the legal entity. This AID is unique globally. It is called a vetting credential because it <span class="bcp14">MUST</span> be issued according to a documented vetting process that offers formal assurance that is is only issued with accurate information, and only to the AP it describes. A vetting credential confers the privilege of acting with the associated legal identity if and only if the bearer can prove their identity as issuee via a digital signature.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.2-1">A vetting credential is a targeted credential that enumerates the formal and legal attributes of a unique legal entity. It <span class="bcp14">MUST</span> include a legal identifier that makes the entity unique in its home jurisdiction (e.g., an LEI), and it <span class="bcp14">MUST</span> include an AID for the legal entity as an AP. This AID is unique globally. The vetting credential is so called because it <span class="bcp14">MUST</span> be issued according to a documented vetting process that offers formal assurance that is is only issued with accurate information, and only to the AP it describes. A vetting credential confers the privilege of acting with the associated legal identity if and only if the bearer can prove their identity as issuee via a digital signature from the issuee's AID.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.2-2">A vetting credential <span class="bcp14">MUST</span> include a JL to a credential that qualifies the issuer as a party trusted to do vetting. This linked credential that qualifies the issuer of the vetting credential <span class="bcp14">MAY</span> contain a JL that qualifies its own issuer, and such JLs <span class="bcp14">MAY</span> be repeated through as many layers as desired. In VVP, the reference type of a vetting credential is an LE vLEI. This implies both a schema and a governance framework. Other vetting credential types are possible, but they <span class="bcp14">MUST</span> be true credentials that meet the normative requirements here. They <span class="bcp14">MUST NOT</span> be bearer tokens.<a href="#section-3.2.2.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.2-3">(TODO: sample vetting credential)<a href="#section-3.2.2.2-3" class="pilcrow">¶</a></p>
 </section>
@@ -1528,9 +1767,9 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <h5 id="name-brand-credential">
 <a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-brand-credential" class="section-name selfRef">Brand credential</a>
             </h5>
-<p id="section-3.2.2.3-1">A brand credential is a targeted credential that enumerates brand properties such as a brand name and a logo. It <span class="bcp14">MUST</span> be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issue the right to use the described brand.<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-1">A brand credential is a targeted credential that enumerates brand properties such as a brand name, logo, chatbot URL, social media handle, and domain name. It <span class="bcp14">MUST</span> be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issuee the right to use the described brand by virtue of research conducted by the issuer (e.g., a trademark search).<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.3-2">(TODO: sample brand credential)<a href="#section-3.2.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.3-3">This credential <span class="bcp14">MUST</span> be issued according to a documented brand research process that offers formal assurance that it is only issued with accurate information, and only to an AP that has the right to use the described brand. A single AP <span class="bcp14">MAY</span> have multiple brand credentials (e.g., Coca Cola Holdings Germany, Gmbh holds a brand credential for Coke and for Sprite), and rights to use the same brand <span class="bcp14">MAY</span> be conferred to on multiple APs (Coca Cola Holdings Germany, Gmbh and Coca Cola Canada, Ltd may both possess brand credentials for Sprite). A brand credential <span class="bcp14">MUST</span> contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.<a href="#section-3.2.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-3">This credential <span class="bcp14">MUST</span> be issued according to a documented process that offers formal assurance that it is only issued with accurate information, and only to a legal entity that has the right to use the described brand. A single AP <span class="bcp14">MAY</span> have multiple brand credentials (e.g., a fictional corporation, <code>Amce Space Travel Deutschland, GmbH</code>, might hold brand credentials for both <code>Sky Ride</code> and for <code>Orbítame Latinoamérica</code>). Rights to use the same brand <span class="bcp14">MAY</span> be conferred on multiple APs (<code>Acme Space Travel Deutschland, Gmbh</code> and <code>Acme Holdings Canada, Ltd</code> may both possess brand credentials for <code>Sky Ride</code>). A brand credential <span class="bcp14">MUST</span> contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.<a href="#section-3.2.2.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="tnalloc-credential">
@@ -1651,6 +1890,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="FIPS186-4">[FIPS186-4]</dt>
+        <dd>
+<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Digital Signature Standard (DSS)"</span>, <time datetime="2013-07" class="refDate">July 2013</time>, <span>&lt;<a href="https://doi.org/10.6028/NIST.FIPS.186-4">https://doi.org/10.6028/NIST.FIPS.186-4</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="ISO-17442-1">[ISO-17442-1]</dt>
         <dd>
 <span class="refAuthor">International Organization for Standardization</span>, <span class="refTitle">"Financial services – Legal entity identifier (LEI) – Part 1: Assignment"</span>, <time datetime="2020" class="refDate">2020</time>, <span>&lt;<a href="https://www.iso.org/standard/78829.html">https://www.iso.org/standard/78829.html</a>&gt;</span>. </dd>
@@ -1675,9 +1918,17 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <dd>
 <span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8032">[RFC8032]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span> and <span class="refAuthor">I. Liusvaara</span>, <span class="refTitle">"Edwards-Curve Digital Signature Algorithm (EdDSA)"</span>, <span class="seriesInfo">RFC 8032</span>, <span class="seriesInfo">DOI 10.17487/RFC8032</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8032">https://www.rfc-editor.org/rfc/rfc8032</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8225">[RFC8225]</dt>
+        <dd>
+<span class="refAuthor">Wendt, C.</span> and <span class="refAuthor">J. Peterson</span>, <span class="refTitle">"PASSporT: Personal Assertion Token"</span>, <span class="seriesInfo">RFC 8225</span>, <span class="seriesInfo">DOI 10.17487/RFC8225</span>, <time datetime="2018-02" class="refDate">February 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8225">https://www.rfc-editor.org/rfc/rfc8225</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="TOIP-ACDC">[TOIP-ACDC]</dt>
         <dd>
@@ -1706,7 +1957,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <dd class="break"></dd>
 <dt id="I-D.ietf-oauth-selective-disclosure-jwt">[I-D.ietf-oauth-selective-disclosure-jwt]</dt>
         <dd>
-<span class="refAuthor">Fett, D.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"Selective Disclosure for JWTs (SD-JWT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-13</span>, <time datetime="2024-10-18" class="refDate">18 October 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-13">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-13</a>&gt;</span>. </dd>
+<span class="refAuthor">Fett, D.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"Selective Disclosure for JWTs (SD-JWT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-14</span>, <time datetime="2024-11-15" class="refDate">15 November 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-14">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-sipcore-callinfo-rcd">[I-D.ietf-sipcore-callinfo-rcd]</dt>
         <dd>
@@ -1723,6 +1974,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <dt id="RFC7519">[RFC7519]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7519">https://www.rfc-editor.org/rfc/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8588">[RFC8588]</dt>
+        <dd>
+<span class="refAuthor">Wendt, C.</span> and <span class="refAuthor">M. Barnes</span>, <span class="refTitle">"Personal Assertion Token (PaSSporT) Extension for Signature-based Handling of Asserted information using toKENs (SHAKEN)"</span>, <span class="seriesInfo">RFC 8588</span>, <span class="seriesInfo">DOI 10.17487/RFC8588</span>, <time datetime="2019-05" class="refDate">May 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8588">https://www.rfc-editor.org/rfc/rfc8588</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="W3C.REC-did-core-20220719">[W3C.REC-did-core-20220719]</dt>
         <dd>
