@@ -4,8 +4,8 @@
 
 Network Working Group                                         D. Hardman
 Internet-Draft                                            Provenant, Inc
-Intended status: Standards Track                        26 November 2024
-Expires: 30 May 2025
+Intended status: Standards Track                         2 December 2024
+Expires: 5 June 2025
 
 
                        Verifiable Voice Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 May 2025.
+   This Internet-Draft will expire on 5 June 2025.
 
 Copyright Notice
 
@@ -410,7 +410,7 @@ Table of Contents
        pubkey in cert <--------+        data graph of evidence <---+
    ]]>
 
-        Figure 1: Figure 1: SHAKEN PASSporT compared to VVP PASSporT
+             Figure 1: SHAKEN PASSporT compared to VVP PASSporT
 
    A sample VVP PASSporT might look like this, in its non-compact form:
 
@@ -496,7 +496,7 @@ Table of Contents
                                  +---------------+
    ]]>
 
-                 Figure 2: Figure 2: X509 compared to ACDC
+                      Figure 2: X509 compared to ACDC
 
    The KEL is somewhat like a blockchain.  However, it is specific to
    one AID only (the AID of the issuer of the ACDC) and thus is not
@@ -653,8 +653,7 @@ Table of Contents
      +------------------------+       +---------------------+
    ]]>
 
-      Figure 3: Figure 3: sample evidence graph; OP kid could bind to
-                                 APE or DE
+      Figure 3: Sample evidence graph; OP kid could bind to APE or DE
 
    If the OP and the AP are the same party, the digital signature and
    the relationship between AIDs in issuer and issuee roles in the
@@ -704,7 +703,24 @@ Table of Contents
 
    (TODO: sample vetting credential)
 
-3.2.2.3.  Brand credential
+3.2.2.3.  TNAlloc credential
+
+   A TNAlloc credential is a targeted credential that confers on its
+   issuee the right to control how one or more telephone numbers are
+   used.  Regulators issue TNAlloc credentials to range holders, who
+   issue them to TNUs.  TNUs often play the AP role in VVP.  If an AP
+   delegates RTU to a proxy (e.g., an employee or call center), the AP
+   MUST also issue a TNAlloc credential to the proxy, to confer the RTU.
+   With each successive reallocation, the set of numbers in the new
+   TNAlloc credential gets smaller.  Except for TNAlloc credentials
+   issued by regulators, all TNAlloc credentials MUST contain a JL to a
+   parent TNAlloc credential, having a bigger set of numbers that
+   includes those in the current credential.  This JL in a child
+   credential documents the fact that the child's issuer possessed an
+   equal or broader RTU, from which the subset RTU in child credential
+   derives.
+
+3.2.2.4.  Brand credential
 
    A brand credential is a targeted credential that enumerates brand
    properties such as a brand name, logo, chatbot URL, social media
@@ -729,23 +745,6 @@ Table of Contents
    brand credential MUST contain a JL to a vetting credential, that
    shows that the right to use the brand was evaluated only after using
    a vetting credential to prove the identity of the issuee.
-
-3.2.2.4.  TNAlloc credential
-
-   A TNAlloc credential is a targeted credential that confers on its
-   issuee the right to control how one or more telephone numbers are
-   used.  Regulators issue TNAlloc credentials to range holders, who
-   issue them to TNUs.  TNUs often play the AP role in VVP.  If an AP
-   delegates RTU to a proxy (e.g., an employee or call center), the AP
-   MUST also issue a TNAlloc credential to the proxy, to confer the RTU.
-   With each successive reallocation, the set of numbers in the new
-   TNAlloc credential gets smaller.  Except for TNAlloc credentials
-   issued by regulators, all TNAlloc credentials MUST contain a JL to a
-   parent TNAlloc credential, having a bigger set of numbers that
-   includes those in the current credential.  This JL in a child
-   credential documents the fact that the child's issuer possessed an
-   equal or broader RTU, from which the subset RTU in child credential
-   derives.
 
 3.2.2.5.  Brand proxy credential
 

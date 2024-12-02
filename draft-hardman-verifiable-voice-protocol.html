@@ -1044,11 +1044,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">VVP</td>
-<td class="right">November 2024</td>
+<td class="right">December 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Hardman</td>
-<td class="center">Expires 30 May 2025</td>
+<td class="center">Expires 5 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-hardman-verifiable-voice-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-26" class="published">26 November 2024</time>
+<time datetime="2024-12-02" class="published">2 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-30">30 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-05">5 June 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1111,7 +1111,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1413,7 +1413,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.2.1.6" class="section-number selfRef">3.2.1.6. </a><a href="#name-passport" class="section-name selfRef">Passport</a>
             </h5>
 <p id="section-3.2.1.6-1">VVP emits a STIR PASSporT <span>[<a href="#RFC8225" class="cite xref">RFC8225</a>]</span>, as a form of evidence suitable for evaluation during the brief interval when a call is being initiated. Conceptually, it is similar to a SHAKEN passport <span>[<a href="#RFC8588" class="cite xref">RFC8588</a>]</span>. It <span class="bcp14">MUST</span> be secured by an EdDSA digital signature <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>, <span>[<a href="#FIPS186-4" class="cite xref">FIPS186-4</a>]</span>. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.<a href="#section-3.2.1.6-1" class="pilcrow">¶</a></p>
-<span id="name-figure-1-shaken-passport-co"></span><figure id="figure-1">
+<span id="name-shaken-passport-compared-to"></span><figure id="figure-1">
               <div id="section-3.2.1.6-2.1">
                 <div class="alignLeft art-svg artwork" id="section-3.2.1.6-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="528" viewBox="0 0 528 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -1461,7 +1461,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-figure-1-shaken-passport-co" class="selfRef">Figure 1: SHAKEN PASSporT compared to VVP PASSporT</a>
+<a href="#name-shaken-passport-compared-to" class="selfRef">SHAKEN PASSporT compared to VVP PASSporT</a>
               </figcaption></figure>
 <p id="section-3.2.1.6-3">A sample VVP PASSporT might look like this, in its non-compact form:<a href="#section-3.2.1.6-3" class="pilcrow">¶</a></p>
 <p id="section-3.2.1.6-4"><code>json
@@ -1523,7 +1523,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.2.1.7" class="section-number selfRef">3.2.1.7. </a><a href="#name-acdcs" class="section-name selfRef">ACDCs</a>
             </h5>
 <p id="section-3.2.1.7-1">Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-lasting evidence uses the ACDC format <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, and W3C Verifiable Credentials <span>[<a href="#W3C.REC-vc-data-model-20220303" class="cite xref">W3C.REC-vc-data-model-20220303</a>]</span>, signatures over ACDC data are not <em>contained</em> inside the ACDC; rather, they are <em>referenced by</em> the ACDC and <em>anchored in</em> a verifiable data structure called a Key Event Log or KEL <span>[<a href="#TOIP-KERI" class="cite xref">TOIP-KERI</a>]</span>.<a href="#section-3.2.1.7-1" class="pilcrow">¶</a></p>
-<span id="name-figure-2-x509-compared-to-a"></span><figure id="figure-2">
+<span id="name-x509-compared-to-acdc"></span><figure id="figure-2">
               <div id="section-3.2.1.7-2.1">
                 <div class="alignLeft art-svg artwork" id="section-3.2.1.7-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="456" viewBox="0 0 456 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -1572,7 +1572,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-figure-2-x509-compared-to-a" class="selfRef">Figure 2: X509 compared to ACDC</a>
+<a href="#name-x509-compared-to-acdc" class="selfRef">X509 compared to ACDC</a>
               </figcaption></figure>
 <p id="section-3.2.1.7-3">The KEL is somewhat like a blockchain. However, it is specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.<a href="#section-3.2.1.7-3" class="pilcrow">¶</a></p>
 <p id="section-3.2.1.7-4">ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. An ACDC is also uniquely identified by its SAID, which means that a SAID can take the place of a full ACDC in certain data structures and processes. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable.<a href="#section-3.2.1.7-4" class="pilcrow">¶</a></p>
@@ -1635,7 +1635,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.2.1-1">Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an <code>Identity</code> header that <span class="bcp14">MUST</span> contain a signature from the call's OP. This signature <span class="bcp14">MUST</span> be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The <code>AA</code> at the front of the result is cut and replaced with <code>0B</code>, giving an 88-character string. A regex that matches the result is: <code>0B[-_\w]{86}</code>, and a sample value (with the middle elided) is: <code>0BNzaC1lZD...yRLAYeKNQvYx</code>.<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.1-2">The signature is the result of running a signing function over input data that consists of the following metadata about a call: the source phone number (<code>orig</code> claim), the destination phone number (<code>dest</code> claim), an identifier for the AP (<code>kid</code>), a timestamp (<code>iat</code>), and a reference to evidence (<code>evd</code>). This reference is the SAID of an ACDC data graph. The data graph <span class="bcp14">MUST</span> include at least Accountable Party Evidence (APE).<a href="#section-3.2.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.1-3">APE consists of several credentials, detailed below. It <span class="bcp14">MUST</span> include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it <span class="bcp14">MUST</span> include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it <span class="bcp14">MUST</span> include a brand credential for the AP. If no brand credential is present, verifiers <span class="bcp14">MUST NOT</span> impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE <span class="bcp14">MUST</span> also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.<a href="#section-3.2.2.1-3" class="pilcrow">¶</a></p>
-<span id="name-figure-3-sample-evidence-gr"></span><figure id="figure-3">
+<span id="name-sample-evidence-graph-op-ki"></span><figure id="figure-3">
               <div id="section-3.2.2.1-4.1">
                 <div class="alignLeft art-svg artwork" id="section-3.2.2.1-4.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="528" width="512" viewBox="0 0 512 528" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -1746,7 +1746,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-figure-3-sample-evidence-gr" class="selfRef">Figure 3: sample evidence graph; OP kid could bind to APE or DE</a>
+<a href="#name-sample-evidence-graph-op-ki" class="selfRef">Sample evidence graph; OP kid could bind to APE or DE</a>
               </figcaption></figure>
 <p id="section-3.2.2.1-5">If the OP and the AP are the same party, the digital signature and the relationship between AIDs in issuer and issuee roles in the evidence <span class="bcp14">MUST</span> bind the AP to the APE (e.g., by referencing the AP as issuee). Otherwise, the data graph referenced by the <code>evd</code> claim in the PASSporT <span class="bcp14">MUST</span> also include Delegation Evidence (DE), and the OP <span class="bcp14">MUST</span> be the issuee of key pieces of the DE. The DE <span class="bcp14">MUST</span> include a vetting credential for the OP. If the OP is using a phone number allocated to the AP, the DE also <span class="bcp14">MUST</span> include a TNAlloc credential issued by the AP to the OP, delegating the right to use the AP's phone number. If the APE includes a brand credential, then the DE <span class="bcp14">MUST</span> also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.<a href="#section-3.2.2.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.1-6">The PASSporT-specific signature <span class="bcp14">MUST</span> come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.<a href="#section-3.2.2.1-6" class="pilcrow">¶</a></p>
@@ -1762,22 +1762,22 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.2.2-3">(TODO: sample vetting credential)<a href="#section-3.2.2.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="brand-credential">
+<div id="tnalloc-credential">
 <section id="section-3.2.2.3">
-            <h5 id="name-brand-credential">
-<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-brand-credential" class="section-name selfRef">Brand credential</a>
+            <h5 id="name-tnalloc-credential">
+<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-tnalloc-credential" class="section-name selfRef">TNAlloc credential</a>
             </h5>
-<p id="section-3.2.2.3-1">A brand credential is a targeted credential that enumerates brand properties such as a brand name, logo, chatbot URL, social media handle, and domain name. It <span class="bcp14">MUST</span> be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issuee the right to use the described brand by virtue of research conducted by the issuer (e.g., a trademark search).<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.3-2">(TODO: sample brand credential)<a href="#section-3.2.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.3-3">This credential <span class="bcp14">MUST</span> be issued according to a documented process that offers formal assurance that it is only issued with accurate information, and only to a legal entity that has the right to use the described brand. A single AP <span class="bcp14">MAY</span> have multiple brand credentials (e.g., a fictional corporation, <code>Amce Space Travel Deutschland, GmbH</code>, might hold brand credentials for both <code>Sky Ride</code> and for <code>Orbítame Latinoamérica</code>). Rights to use the same brand <span class="bcp14">MAY</span> be conferred on multiple APs (<code>Acme Space Travel Deutschland, Gmbh</code> and <code>Acme Holdings Canada, Ltd</code> may both possess brand credentials for <code>Sky Ride</code>). A brand credential <span class="bcp14">MUST</span> contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.<a href="#section-3.2.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-1">A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more telephone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP <span class="bcp14">MUST</span> also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials <span class="bcp14">MUST</span> contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="tnalloc-credential">
+<div id="brand-credential">
 <section id="section-3.2.2.4">
-            <h5 id="name-tnalloc-credential">
-<a href="#section-3.2.2.4" class="section-number selfRef">3.2.2.4. </a><a href="#name-tnalloc-credential" class="section-name selfRef">TNAlloc credential</a>
+            <h5 id="name-brand-credential">
+<a href="#section-3.2.2.4" class="section-number selfRef">3.2.2.4. </a><a href="#name-brand-credential" class="section-name selfRef">Brand credential</a>
             </h5>
-<p id="section-3.2.2.4-1">A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more telephone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP <span class="bcp14">MUST</span> also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials <span class="bcp14">MUST</span> contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.<a href="#section-3.2.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.4-1">A brand credential is a targeted credential that enumerates brand properties such as a brand name, logo, chatbot URL, social media handle, and domain name. It <span class="bcp14">MUST</span> be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issuee the right to use the described brand by virtue of research conducted by the issuer (e.g., a trademark search).<a href="#section-3.2.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.4-2">(TODO: sample brand credential)<a href="#section-3.2.2.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.4-3">This credential <span class="bcp14">MUST</span> be issued according to a documented process that offers formal assurance that it is only issued with accurate information, and only to a legal entity that has the right to use the described brand. A single AP <span class="bcp14">MAY</span> have multiple brand credentials (e.g., a fictional corporation, <code>Amce Space Travel Deutschland, GmbH</code>, might hold brand credentials for both <code>Sky Ride</code> and for <code>Orbítame Latinoamérica</code>). Rights to use the same brand <span class="bcp14">MAY</span> be conferred on multiple APs (<code>Acme Space Travel Deutschland, Gmbh</code> and <code>Acme Holdings Canada, Ltd</code> may both possess brand credentials for <code>Sky Ride</code>). A brand credential <span class="bcp14">MUST</span> contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.<a href="#section-3.2.2.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="brand-proxy-credential">
