@@ -188,7 +188,7 @@ VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. (H
 VVP emits a STIR PASSporT {{RFC8225}}, as a form of evidence suitable for evaluation during the brief interval when a call is being initiated. Conceptually, it is similar to a SHAKEN passport {{RFC8588}}. It MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}. Instead of including granular fields in the claims of its JWT, it cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
 <figure>
-<name>Figure 1: SHAKEN PASSporT compared to VVP PASSporT</name>
+<name>SHAKEN PASSporT compared to VVP PASSporT</name>
 <artset>
   <artwork type="svg" name="fig1.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="528" viewBox="0 0 528 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -292,7 +292,7 @@ A sample VVP PASSporT might look like this, in its non-compact form:
 Besides digital signatures and SAIDs, and the ephemeral PASSporT, VVP's long-lasting evidence uses the ACDC format {{TOIP-ACDC}}. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to AIDs, not to public keys. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs. Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}}, signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a Key Event Log or KEL {{TOIP-KERI}}.
 
 <figure>
-<name>Figure 2: X509 compared to ACDC</name>
+<name>X509 compared to ACDC</name>
 <artset>
   <artwork type="svg" name="fig2.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="456" viewBox="0 0 456 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -397,7 +397,7 @@ The signature is the result of running a signing function over input data that c
 APE consists of several credentials, detailed below. It MUST include a vetting credential for the AP. If the source telephone number is allocated to the AP (which is true unless a proxy is the OP and uses their own telephone number), it MUST include a TNAlloc credential for the AP. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. If no brand credential is present, verifiers MUST NOT impute a brand to the caller on the basis of any VVP guarantees. If there is a nuanced relationship between the AP as a legal entity and the AP in some limited manifestation, the APE MUST also include a delegation credential that nuances the relationship. For example, this could distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company in all contexts; the latter can only sign voice calls on Acme's behalf.
 
 <figure>
-<name>Figure 3: sample evidence graph; OP kid could bind to APE or DE</name>
+<name>Sample evidence graph; OP kid could bind to APE or DE</name>
 <artset>
   <artwork type="svg" name="fig3.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="528" width="512" viewBox="0 0 512 528" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -556,15 +556,15 @@ A vetting credential MUST include a JL to a credential that qualifies the issuer
 
 (TODO: sample vetting credential)
 
+#### TNAlloc credential
+A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more telephone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP MUST also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials MUST contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.
+
 #### Brand credential
 A brand credential is a targeted credential that enumerates brand properties such as a brand name, logo, chatbot URL, social media handle, and domain name. It MUST be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issuee the right to use the described brand by virtue of research conducted by the issuer (e.g., a trademark search).
 
 (TODO: sample brand credential)
 
 This credential MUST be issued according to a documented process that offers formal assurance that it is only issued with accurate information, and only to a legal entity that has the right to use the described brand. A single AP MAY have multiple brand credentials (e.g., a fictional corporation, `Amce Space Travel Deutschland, GmbH`, might hold brand credentials for both `Sky Ride` and for `Orbítame Latinoamérica`). Rights to use the same brand MAY be conferred on multiple APs (`Acme Space Travel Deutschland, Gmbh` and `Acme Holdings Canada, Ltd` may both possess brand credentials for `Sky Ride`). A brand credential MUST contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.
-
-#### TNAlloc credential
-A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more telephone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP MUST also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials MUST contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.
 
 #### Brand proxy credential
 A brand proxy credential confers on an OP the right to project the brand of an AP when making phone calls, subject to a carefully selected set of constraints. This is different from the simple RTU conferred by TNAlloc. Without a brand proxy credential, a call center could make calls on behalf of an AP, using the AP's allocated phone number, but would be forced to do so under its own name or brand, because it lacks evidence that the AP intended anything different. If an AP intends for phone calls to be made by a proxy, and wants the proxy to project the AP's brand, the AP MUST issue this credential.
