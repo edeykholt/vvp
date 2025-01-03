@@ -151,29 +151,28 @@ An *allocation holder* (*AH*) is a party that controls how a telephone number is
 
 It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.
 
-### Terminating Party, Terminating Service Provider
+### Terminating Party, Terminating Service Provider {:#TP}
 For a given phone call, the *terminating party* (*TP*) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
 
-### Originating Party, Originating Service Provider
-The *originating party* (*OP*) is the party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
+### Originating Party, Originating Service Provider {:#OP}
+An *originating party* (*OP*) is a party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
-The direct service provider of the OP is the *originating service provider* (*OSP*). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
+The direct service provider of an OP is its *originating service provider* (*OSP*). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
-### Accountable Party
-Accountable Parties (AP) are TNUs -- organizations or individuals who hold the right to use a telephone number (RTU) in the eyes of a regulator. When a terminating party asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs MAY operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect for logistical reasons. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.
+### Accountable Party {:#AP}
+An *accountable party* (*AP*) is a TNU -- an organization or individual that holds the right to use a telephone number (RTU) in the eyes of a regulator. When a terminating party asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs MAY operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect for logistical reasons. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.
 
-### Verifiers
-Verifiers are parties that want to know who's calling, and why, and that evaluate the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
+### Verifier
+A *verifier* is a party that wants to know who's calling, and why, and that evaluates the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
 
 In addition to checking the validity of cryptographic evidence, the verifier role in VVP MAY also consider how that evidence matches business rules and external conditions. For example, a verifier might begin its analysis by deciding whether Call Center Y has the right, in the abstract, to make calls on behalf of Organization X using a given telephone number. However, VVP evidence allows a verifier to go further: it can also consider whether Y is allowed to exercise this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.
 
 ## Evidence
 
 ### General categories
-
 The term "credential" has a fuzzy meaning in casual conversation. However, understanding how evidence is built from credentials in VVP requires considerably more precision. We will start from lower-level concepts.
 
-#### SAID {:#said}
+#### SAID
 A *self-addressing identifier* (*SAID*) is the hash of a canonicalized JSON object, encoded in self-describing CESR format {{TOIP-CESR}}. The raw bytes from the digest function are left-padded to the nearest 24-bit boundary, transformed to base64url {{RFC4648}}, and prefixed with a character that tells which digest function was used.
 
 An example of a SAID is `E81Wmjyz5nXMCYrQqWyRLAYeKNQvYLYqMLYv_qm-qP7a`, and a regex that matches all valid SAIDs is: `[EFGHI][-_\w]{43}|0[DEFG][-_\w]{86}`. The `E` prefix in the example indicates that it is a Blake3-256 hash.
@@ -185,19 +184,19 @@ A digital signature over arbitrary data D constitutes evidence that the signer p
 
 The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern.
 
-#### AID {:#aid}
+#### AID
 An *autonomic identifier* (*AID*) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures. AIDs are like W3C DIDs {{W3C.REC-did-core-20220719}}}, and can be transformed into DIDs. The information required to resolve an AID to its cryptographic keys is communicated through a special form of URI called an *out-of-band invitation* (*OOBI*). An OOBI points to an HTTP resource that returns IANA content-type `application/json+cesr`; it is somewhat analogous to a combination of the `kid` and `x5u` constructs in many JWTs. AIDs and OOBIs are defined in the KERI spec {{TOIP-KERI}}.
 
 An example of an AID is `EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa`. AIDs are created by calculating the hash of the identifier's inception event data structure; they therefore match the same regex as SAIDs in general. An example of an OOBI is `https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx`. Note the same `EMCY...` IN both strings. Many constructs in KERI may have OOBIs, but when OOBIs are associated with AIDs, such OOBIs always contain their associated AID as the first URL segment that matches the AID regex. They point either to an agent or a witness that provides verifiable state information for the AID.
 
 AIDs possess several security properties that are not guaranteed by DIDs in general (self-certification, support for prerotation and multisig, support for witnesses, cooperative delegation, and so forth). These properties are vital to some of VVP's goals for high assurance.
 
-#### Signatures over SAIDs {:#sig-over-said}
+#### Signatures over SAIDs {:#sig-over-SAID}
 Since neither a SAID value nor the data it hashes can be changed without breaking the correspondence between them, signing over a SAID is equivalent, in how it commits the signer to content and provides tamper evidence, to signing over the data that the SAID hashes. Since SAIDs can function as placeholders for JSON objects, a SAID can represent such an object in a larger data structure. And since SAIDs can function as a reference without making a claim about location, it is possible to combine these properties to achieve some indirections in evidence that are crucial in privacy and regulatory compliance.
 
 VVP uses SAIDs and digital signatures as primitive forms of evidence.
 
-#### X509 certificates {:#x509}
+#### X509 certificates {:#X509}
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. (However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)
 
 #### Passport {:#passport}
@@ -313,8 +312,8 @@ A sample VVP PASSporT might look like this, in its non-compact form:
 #### ACDCs
 Besides digital signatures and SAIDs, and the ephemeral passport, VVP uses long-lasting evidence in the ACDC format {{TOIP-ACDC}}. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to the AIDs of their issuers and issuees, not to public keys of these parties. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs.
 
-#### KELs {:#kel}
-Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}}, signatures over ACDC data are not *contained* inside the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a *key event log* or *KEL* {{TOIP-KERI}}.
+#### KELs {:#KEL}
+Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}}, signatures over ACDC data are not *contained inside* the ACDC; rather, they are *referenced by* the ACDC and *anchored in* a verifiable data structure called a *key event log* or *KEL* {{TOIP-KERI}}.
 
 <figure>
 <name>X509 compared to ACDC</name>
@@ -389,19 +388,19 @@ Unlike X509 certificates, JWTs {{RFC7519}}, and W3C Verifiable Credentials {{W3C
   </artset>
 </figure>
 
-The KEL has some trust characteristics that resemble a blockchain. However, it is specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
+A KEL has some trust characteristics that resemble a blockchain. However, it is specific to one AID only (the AID of the issuer of the ACDC) and thus is not centralized. The KELs for two different AIDs need not (and typically do not) share any common storage or governance, and do not require coordination or administration. KELs thus suffer none of the performance and governance problems of blockchains, and incur none of blockchain's difficulties with regulatory requirements like data locality or right to be forgotten.
 
 ACDCs can be freely converted between text and binary representations, and either type of representation can also be compacted or expanded to support nuanced disclosure goals. An ACDC is also uniquely identified by its SAID, which means that a SAID can take the place of a full ACDC in certain data structures and processes. None of these transformations invalidate the associated digital signatures, which means that any variant of a given ACDC is equivalently verifiable.
 
 The revocation of a given ACDC can be detected via the witnesses declared in its issuer's KEL. Discovering, detecting, and reacting to such events can be very efficient. Any number of aggregated views can be built on demand, for any subset of an ecosystem's evidence, by any party. This requires no special authority or access, and does not create a central registry as a source of truth, since such views are tamper-evident and therefore can be served by untrusted parties. Further, different views of the evidence can contain or elide different fields of the evidence data, to address privacy, regulatory, and legal requirements.
 
-ACDCs are capable of holding more generic categories of data than just credentials.
-
-#### Cryptographically verifiable data {:#cvd}
+#### Cryptographically verifiable data {:#CVD}
 *Cryptographically verifiable data* (*CVD*) is data that's associated with a digital signature and a claim about who signed it. When CVD is an assertion, we make the additional assumption that the signer intends whatever the data asserts, since they took an affirmative action to create non-repudiable evidence that they processed it. CVD can be embodied in many formats, but in the context of VVP, all instances of CVD are ACDCs.
 
-#### Credential
+#### Credential {:#credential}
 A *credential* is a special kind of CVD that asserts entitlements for its legitimate bearer -- *and only its bearer*. CVD that says Organization X exists with a particular ID number in government registers, and with a particular legal name, is not necessarily a credential. In order to be a credential, it would have to be associated with an assertion that its legitimate bearer -- *and only its bearer* -- is entitled to use the identity of Organization X. If signed data merely enumerates properties without conferring privileges on a specific party, it is just CVD. Many security gaps in existing solutions arise from conflating CVD and credentials.
+
+ACDCs can embody any kind of CVD, not just credentials.
 
 #### Bearer token
 VVP never uses bearer tokens, but we define them here to provide a contrast. A *bearer token* is a credential that satisfies binding requirements by a trivial test of possession -- like a movie ticket, the first party that presents the artifact to a verifier gets the privilege. Since Bearer Credentials can be stolen or copied, this is risky. JWTs, session cookies, and other artifacts in familiar identity technologies are often bearer tokens, even if they carry digital signatures. Although they can be protected to some degree by expiration dates and secure channels, these protections are imperfect. For example, TLS channels can be terminated and recreated at multiple places between call origination and delivery.
@@ -414,20 +413,20 @@ A *justifying link* (*JL*) is a reference, inside of one CVD, to another CVD tha
 
 ### Specific evidence
 
-#### PASSporT-specific signature
-Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP. This signature MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
+#### PASSporT-specific signature {:#PSS}
+Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP. This *passpport-specific signature* (*PSS*) MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
 
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
 #### Dossier
-The `evd` field in the passport contains the SAID of an ACDC data graph called the *dossier*. This is a compilation -- a {{<<CVD}} in ACDC format -- of all the permanent, backing evidence that justifies trust in the identity and authorization of the caller.
+The `evd` field in the passport contains the OOBI of an ACDC data graph ({{<<CVD}} asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
 
-#### Accountable Party Evidence {:#ape}
+#### Accountable Party Evidence {:#APE}
 The dossier MUST include at least what is called Accountable Party Evidence (APE).
 
 APE consists of several credentials, explored in detail below. It MUST include a vetting credential for the AP. it MUST include a TNAlloc credential that proves RTU. Normally the RTU MUST be assigned to the AP; however, if a proxy is the OP and uses their own telephone number, the RTU MUST be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard {{RFC6350}} or JCard {{RFC7095}}.) If no brand credential is present, verifiers MUST NOT impute a brand to the call on the basis of any VVP guarantees.
 
-#### Delegation Evidence
+#### Delegation Evidence (:#DE)
 When a private individual makes a call with VVP, they might be both the AP and the OP. In such cases, we expect their AID to be the recipient or issuee of all the APE, and no backing evidence beyond the APE may be necessary. However, in business contexts, it will almost always be true that the OP role is played by a delegate. In such conditions, evidence must also include proof that this indirection is valid. We call this *delegation evidence* (*DE*).
 
 DE is nearly always required when the AP is an organization, because the cryptographic identifier for the organization as a legal entity is typically not the same as the cryptographic identifier for the organization's automated software that prepares SIP INVITEs. DE can thus distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company to publish press releases, prepare invoices, spend money, and make attestations to regulators; the latter should only be able to sign outbound voice calls on Acme's behalf. Failing to make this distinction creates serious cybersecurity risks.
