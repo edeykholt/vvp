@@ -80,7 +80,7 @@ informative:
   RFC8588:
   RFC6350:
   RFC7095:
-  I-D.ietf-stir-passport-rcd:
+  RCD: I-D.ietf-stir-passport-rcd
   I-D.ietf-oauth-selective-disclosure-jwt:
   I-D.ietf-sipcore-callinfo-rcd:
   ATIS-1000074:
@@ -197,7 +197,7 @@ Since neither a SAID value nor the data it hashes can be changed without breakin
 VVP uses SAIDs and digital signatures as primitive forms of evidence.
 
 #### X509 certificates
-VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. (However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)
+VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.
 
 #### PASSporT
 VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see {{<<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{I-D.ietf-stir-passport-rcd}}.
@@ -419,7 +419,7 @@ Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains a
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
 #### Dossier
-The `evd` field in the passport contains the OOBI of an ACDC data graph ([CVD](#name-cvd) asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
+The `evd` field in the passport contains the OOBI of an ACDC data graph ([CVD](#cvd) asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
 
 #### APE
 The dossier MUST include at least what is called *accountable party evidence* (*APE*).
