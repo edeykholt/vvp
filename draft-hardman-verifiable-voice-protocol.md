@@ -419,7 +419,7 @@ Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains a
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
 #### Dossier
-The `evd` field in the passport contains the OOBI of an ACDC data graph ({{<<CVD}} asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
+The `evd` field in the passport contains the OOBI of an ACDC data graph ([CVD](#CVD) asserted to the world, not a [credential](credential) issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
 
 #### Accountable Party Evidence {:#APE}
 The dossier MUST include at least what is called Accountable Party Evidence (APE).
