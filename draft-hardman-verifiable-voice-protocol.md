@@ -101,7 +101,7 @@ informative:
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{RFC8224}} {{RFC8225}} {{RFC8588}}, SHAKEN {{ATIS-1000074}}, RCD {{RCD-DRAFT}} {{RCD-PASSPORT}}, BCID {{CTIA-BCID}}, and related technologies, although it is also usable with individual callers. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
+Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{RFC8224}} {{RFC8225}} {{RFC8588}}, SHAKEN {{ATIS-1000074}}, RCD {{RCD-DRAFT}} {{RCD-PASSPORT}}, BCID {{CTIA-BCID}}, and related technologies, although it is also usable with individual callers. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
 
 --- middle
 
@@ -119,9 +119,13 @@ In theory, the remaining gap could be eliminated by requiring a perfect authenti
 VVP solves these problems by applying two crucial innovations.
 
 ## Evidence format
-VVP uses an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates {{RFC5280}}. It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be built and maintained by X and Y, and does not need to be published in a central registry.
+VVP uses an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates {{RFC5280}}. It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while preserving perfect transparency. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so.
 
-Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}} require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. This is discussed below.)
+The evidence that Y cites can be built and maintained by X and Y, doesn't get stale or require periodic reissuance, and does not need to be published in a central registry.
+
+Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}} require direct trust in the proximate issuer.
+
+The synergies of these properties mean that ACDCs can be permanent, low-maintenance, lossless rather than lossy in delegation, and flexible rather than fragile. When used as VVP requires, no third party has to guess who's accountable for a call; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. See {{<privacy}}.)
 
 ## Vetting refinements
 Although VVP can work inside governance frameworks such as SHAKEN {{ATIS-1000074}}, it allows for a dramatic upgrade of at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO-17442-3}}. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI {{ISO-17442-1}} that's globally required in high-security, high-regulation, cross-border banking.
@@ -134,7 +138,7 @@ To be clear, VVP does not *require* that vLEIs be used for vetting. However, by 
 
 # Overview
 
-Fundamentally, Verifiable Voice Protocol requires a caller to assemble a dossier of evidence that proves identity and authorization. This is done once, in advance, as a configuration precondition. Then, for each call, a STIR-compatible VVP PASSporT is built that cites this dossier. Verifiers examine the dossier to make decisions. PASSporTs are ephemeral and last only as long as an SIP INVITE is being evaluated, but the dossiers that they cite may be permanent and are cacheable. Revocation of dossier details is checked in realtime.
+Fundamentally, Verifiable Voice Protocol requires a caller to assemble a {{<<dossier}} of evidence that proves identity and authorization. This is done once, in advance, as a configuration precondition. Then, for each call, a STIR-compatible VVP PASSporT is built that cites this dossier. Verifiers examine the dossier to make decisions. PASSporTs are ephemeral and last only as long as an SIP INVITE is being evaluated, but the dossiers that they cite may be permanent and are cacheable. Revocation of dossier details is checked in realtime.
 
 ## Roles
 
@@ -145,7 +149,7 @@ An *allocation holder* (*AH*) is a party that controls how a telephone number is
 
 It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.
 
-### Terminating Party, Terminating Service Provider
+### Terminating Party, Terminating Service Provider {#TP}
 For a given phone call, the *terminating party* (*TP*) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
 
 ### Originating Party, Originating Service Provider {#OP}
@@ -173,7 +177,7 @@ Chronologically, evidence must be curated before it can be cited or verified. In
 However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions.
 
 ## Citing
-A call secured by VVP begins when the OP builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
+A call secured by VVP begins when the {{<<#OP}} builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
 
 ```json
 {
@@ -433,7 +437,7 @@ Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains a
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
 #### Dossier
-The `evd` field in the passport contains the OOBI of an ACDC data graph ([CVD](#cvd) asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
+The `evd` field in the passport contains the OOBI of an ACDC data graph ({{<<cvd}} asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
 
 #### APE
 The dossier MUST include at least what is called *accountable party evidence* (*APE*).
