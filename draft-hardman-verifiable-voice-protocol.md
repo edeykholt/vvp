@@ -138,7 +138,7 @@ To be clear, VVP does not *require* that vLEIs be used for vetting. However, by 
 
 # Overview
 
-Fundamentally, Verifiable Voice Protocol requires a caller to assemble a {{<<dossier}} of evidence that proves identity and authorization. This is done once, in advance, as a configuration precondition. Then, for each call, a STIR-compatible VVP PASSporT is built that cites this dossier. Verifiers examine the dossier to make decisions. PASSporTs are ephemeral and last only as long as an SIP INVITE is being evaluated, but the dossiers that they cite may be permanent and are cacheable. Revocation of dossier details is checked in realtime.
+Fundamentally, Verifiable Voice Protocol requires a caller to assemble a dossier ({{<dossier}}) of evidence that proves identity and authorization. This is done once, in advance, as a configuration precondition. Then, for each call, a STIR-compatible VVP PASSporT is built that cites this dossier. Verifiers examine the dossier to make decisions. PASSporTs are ephemeral and last only as long as an SIP INVITE is being evaluated, but the dossiers that they cite may be permanent and are cacheable. Revocation of dossier details is checked in realtime.
 
 ## Roles
 
@@ -254,7 +254,7 @@ VVP uses SAIDs and digital signatures as primitive forms of evidence.
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.
 
 #### PASSporT
-VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see {{<<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{RCD-PASSPORT}}.
+VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan ({{<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{RCD-PASSPORT}}.
 
 Neither VVP's backing evidence nor its passport depends on a certificate authority ecosystem. The passport MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}, rather than the signature variants preferred by the other passport types. Instead of including granular fields in the claims of its JWT, the VVP passport cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
@@ -437,7 +437,7 @@ Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains a
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
 #### Dossier
-The `evd` field in the passport contains the OOBI of an ACDC data graph ({{<<cvd}} asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
+The `evd` field in the passport contains the OOBI ({{<aid}}) of an ACDC data graph called the *dossier*. The dossier is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP. It is CVD ({{<cvd}}) asserted to the world, not a credential ({{<credential}}) issued to a specific party.
 
 #### APE
 The dossier MUST include at least what is called *accountable party evidence* (*APE*).
