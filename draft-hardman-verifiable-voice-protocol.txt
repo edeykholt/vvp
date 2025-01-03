@@ -13,24 +13,24 @@ Expires: 7 July 2025
 
 Abstract
 
-   Verifiable Voice Protocol (VVP) proves the identity and authorization
-   of parties who are accountable for telephone calls, eliminating trust
-   gaps that scammers exploit.  VVP addresses the same problem domain as
-   STIR [I-D.ietf-stir-passport-rcd], SHAKEN [ATIS-1000074], RCD
+   Verifiable Voice Protocol (VVP) authenticates and authorizes parties
+   who are accountable for telephone calls, eliminating trust gaps that
+   scammers exploit.  It adds value in the same problem domain as STIR
+   [RFC8224] [RFC8225] [RFC8588], SHAKEN [ATIS-1000074], RCD
    [I-D.ietf-sipcore-callinfo-rcd], BCID [CTIA-BCID], and related
-   technologies.  Like these approaches, it binds strong cryptographic
-   evidence to headers in the SIP [RFC3261] INVITE that initiates a
-   phone call, and allows this evidence to be verified downstream.
-   However, VVP builds from different technical and governance
-   assumptions, with different backing evidence.  This foundation allows
-   VVP to cross jurisdictional boundaries easily and robustly.  It also
-   makes VVP simpler, more decentralized, cheaper to deploy and
-   maintain, more private, more scalable, and higher assurance than
-   alternatives.  VVP can be used to plug gaps or to build bridges
-   between other technologies in the same space.  For example, it can
-   justify an A attestation in SHAKEN when a call originates outside the
-   regulated certificate ecosystem.  VVP can also be used as a
-   standalone solution.
+   technologies.  Like these other approaches, VVP binds strong
+   cryptographic evidence to headers in the SIP [RFC3261] INVITE that
+   initiates a phone call.  It also allows this evidence to be verified
+   downstream.  However, VVP builds from different technical and
+   governance assumptions, with different backing evidence.  This unique
+   foundation allows VVP to cross jurisdictional boundaries easily and
+   robustly.  It also makes VVP simpler, more decentralized, cheaper to
+   deploy and maintain, more private, more scalable, and higher
+   assurance than alternatives.  VVP can plug gaps or to build bridges
+   between other approaches.  For example, it can justify an A
+   attestation in SHAKEN when a call originates outside the regulated
+   certificate ecosystem.  VVP can also be used as a standalone
+   mechanism to identify and authorize callers.
 
 About This Document
 
@@ -85,9 +85,9 @@ Table of Contents
    3.  Overview
      3.1.  Roles
        3.1.1.  Allocation Holder, TNU
-       3.1.2.  Terminating Party, Terminating Service Provider {:#TP}
-       3.1.3.  Originating Party, Originating Service Provider {:#OP}
-       3.1.4.  Accountable Party {:#AP}
+       3.1.2.  Terminating Party, Terminating Service Provider
+       3.1.3.  Originating Party, Originating Service Provider
+       3.1.4.  Accountable Party
        3.1.5.  Verifier
      3.2.  Evidence
        3.2.1.  General categories
@@ -264,14 +264,14 @@ Table of Contents
    this outcome, and prefer that such parties broker allocations without
    actually holding the allocations as intermediaries.
 
-3.1.2.  Terminating Party, Terminating Service Provider {:#TP}
+3.1.2.  Terminating Party, Terminating Service Provider
 
    For a given phone call, the _terminating party_ (_TP_) is the party
    that receives the call.  These can be individual consumers or
    organizations.  The direct service provider of the TP is the
    _terminating service provider_ (_TSP_).
 
-3.1.3.  Originating Party, Originating Service Provider {:#OP}
+3.1.3.  Originating Party, Originating Service Provider
 
    An _originating party_ (_OP_) is a party that controls the first
    _session border controller_ (_SBC_) that processes a call.  It may be
@@ -285,7 +285,7 @@ Table of Contents
    provider_ (_OSP_).  For a given phone call, there may be many layers,
    boundaries, and transitions between OSP and TSP.
 
-3.1.4.  Accountable Party {:#AP}
+3.1.4.  Accountable Party
 
    An _accountable party_ (_AP_) is a TNU -- an organization or
    individual that holds the right to use a telephone number (RTU) in
@@ -349,7 +349,7 @@ Table of Contents
    that was hashed to produce them (though they are more similar to URNs
    than to URLs [RFC3986], since they contain no location information).
 
-3.2.1.2.  Signature {:#signature}
+3.2.1.2.  Signature
 
    A digital signature over arbitrary data D constitutes evidence that
    the signer processed D with a signing function that took D and the
@@ -404,7 +404,7 @@ Table of Contents
    forth).  These properties are vital to some of VVP's goals for high
    assurance.
 
-3.2.1.4.  Signatures over SAIDs {:#sig-over-SAID}
+3.2.1.4.  Signatures over SAIDs
 
    Since neither a SAID value nor the data it hashes can be changed
    without breaking the correspondence between them, signing over a SAID
@@ -418,19 +418,19 @@ Table of Contents
 
    VVP uses SAIDs and digital signatures as primitive forms of evidence.
 
-3.2.1.5.  X509 certificates {:#X509}
+3.2.1.5.  X509 certificates
 
    VVP does not depend on X509 certificates [RFC5280] for any of its
-   evidence.  (However, if deployed in a hybrid mode, it MAY be used
+   evidence.  However, if deployed in a hybrid mode, it MAY be used
    beside alternative mechanisms that are certificate-based.  In such
    cases, self-signed certificates that never expire might suffice to
    tick certificate boxes, while drastically simplifying the burden of
    maintaining accurate, unexpired, unrevoked views of authorizations
    and reflecting that knowledge in certificates.  This is because deep
    authorization analysis flows through VVP's more rich and flexible
-   evidence chain.)
+   evidence chain.
 
-3.2.1.6.  Passport {:#passport}
+3.2.1.6.  PASSporT
 
    VVP emits and verifies a STIR PASSporT [RFC8225].  This is a form of
    evidence suitable for evaluation during the brief interval when a
@@ -438,7 +438,7 @@ Table of Contents
    a longer lifespan (see Dossier).  Conceptually, VVP's version is
    similar to a SHAKEN passport [RFC8588].  It MAY also reference brand-
    related evidence, allowing it to play an additional role similar to
-   the RCD passport [I-D.ietf-stir-passport-rcd].
+   the RCD passport [RCD-PASSPORT].
 
    Neither VVP's backing evidence nor its passport depends on a
    certificate authority ecosystem.  The passport MUST be secured by an
@@ -596,7 +596,7 @@ Table of Contents
    different fields of the evidence data, to address privacy,
    regulatory, and legal requirements.
 
-3.2.1.9.  Cryptographically verifiable data {:#CVD}
+3.2.1.9.  CVD
 
    _Cryptographically verifiable data_ (_CVD_) is data that's associated
    with a digital signature and a claim about who signed it.  When CVD
@@ -606,7 +606,7 @@ Table of Contents
    can be embodied in many formats, but in the context of VVP, all
    instances of CVD are ACDCs.
 
-3.2.1.10.  Credential {:#credential}
+3.2.1.10.  Credential
 
    A _credential_ is a special kind of CVD that asserts entitlements for
    its legitimate bearer -- _and only its bearer_. CVD that says
@@ -643,7 +643,7 @@ Table of Contents
    order to claim the associated privilege.  All credentials in VVP are
    targeted credentials.
 
-3.2.1.13.  Justifying link
+3.2.1.13.  JL
 
    A _justifying link_ (_JL_) is a reference, inside of one CVD, to
    another CVD that justifies what the first CVD is asserting.  JLs can
@@ -651,7 +651,7 @@ Table of Contents
 
 3.2.2.  Specific evidence
 
-3.2.2.1.  PASSporT-specific signature {:#PSS}
+3.2.2.1.  PSS
 
    Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE
    contains an Identity header that MUST contain a signature from the
@@ -674,16 +674,16 @@ Table of Contents
 3.2.2.2.  Dossier
 
    The evd field in the passport contains the OOBI of an ACDC data graph
-   (<<CVD>> asserted to the world, not a <<credential>> issued to a
+   (Section 3.2.1.9 asserted to the world, not a Credential issued to a
    specific party) called the _dossier_. This is a compilation of all
    the permanent, backing evidence that justifies trust in the identity
    and authorization of the AP and OP.  It is created and must be signed
    by the AP.
 
-3.2.2.3.  Accountable Party Evidence {:#APE}
+3.2.2.3.  APE
 
-   The dossier MUST include at least what is called Accountable Party
-   Evidence (APE).
+   The dossier MUST include at least what is called _accountable party
+   evidence_ (_APE_).
 
    APE consists of several credentials, explored in detail below.  It
    MUST include a vetting credential for the AP. it MUST include a
@@ -1013,6 +1013,12 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
+   [RFC8224]  Peterson, J., Jennings, C., Rescorla, E., and C. Wendt,
+              "Authenticated Identity Management in the Session
+              Initiation Protocol (SIP)", RFC 8224,
+              DOI 10.17487/RFC8224, February 2018,
+              <https://www.rfc-editor.org/rfc/rfc8224>.
+
    [RFC8225]  Wendt, C. and J. Peterson, "PASSporT: Personal Assertion
               Token", RFC 8225, DOI 10.17487/RFC8225, February 2018,
               <https://www.rfc-editor.org/rfc/rfc8225>.
@@ -1060,7 +1066,7 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-sipcore-
               callinfo-rcd-12>.
 
-   [I-D.ietf-stir-passport-rcd]
+   [RCD-PASSPORT]
               Wendt, C. and J. Peterson, "PASSporT Extension for Rich
               Call Data", Work in Progress, Internet-Draft, draft-ietf-
               stir-passport-rcd-26, 5 June 2023,

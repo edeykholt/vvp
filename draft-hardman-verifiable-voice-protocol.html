@@ -7,7 +7,7 @@
 <title>Verifiable Voice Protocol</title>
 <meta content="Daniel Hardman" name="author">
 <meta content="
-       Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP addresses the same problem domain as STIR  , SHAKEN  , RCD  , BCID  , and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP   INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can be used to plug gaps or to build bridges between other technologies in the same space. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone solution. 
+       Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR      , SHAKEN  , RCD  , BCID  , and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP   INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers. 
     " name="description">
 <meta content="xml2rfc 3.25.0" name="generator">
 <meta content="voip" name="keyword">
@@ -1083,7 +1083,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Verifiable Voice Protocol</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP addresses the same problem domain as STIR <span>[<a href="#I-D.ietf-stir-passport-rcd" class="cite xref">I-D.ietf-stir-passport-rcd</a>]</span>, SHAKEN <span>[<a href="#ATIS-1000074" class="cite xref">ATIS-1000074</a>]</span>, RCD <span>[<a href="#I-D.ietf-sipcore-callinfo-rcd" class="cite xref">I-D.ietf-sipcore-callinfo-rcd</a>]</span>, BCID <span>[<a href="#CTIA-BCID" class="cite xref">CTIA-BCID</a>]</span>, and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP <span>[<a href="#RFC3261" class="cite xref">RFC3261</a>]</span> INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can be used to plug gaps or to build bridges between other technologies in the same space. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone solution.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR <span>[<a href="#RFC8224" class="cite xref">RFC8224</a>]</span> <span>[<a href="#RFC8225" class="cite xref">RFC8225</a>]</span> <span>[<a href="#RFC8588" class="cite xref">RFC8588</a>]</span>, SHAKEN <span>[<a href="#ATIS-1000074" class="cite xref">ATIS-1000074</a>]</span>, RCD <span>[<a href="#I-D.ietf-sipcore-callinfo-rcd" class="cite xref">I-D.ietf-sipcore-callinfo-rcd</a>]</span>, BCID <span>[<a href="#CTIA-BCID" class="cite xref">CTIA-BCID</a>]</span>, and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP <span>[<a href="#RFC3261" class="cite xref">RFC3261</a>]</span> INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1168,13 +1168,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-allocation-holder-tnu" class="internal xref">Allocation Holder, TNU</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.2">
-                    <p id="section-toc.1-1.3.2.1.2.2.1"><a href="#section-3.1.2" class="auto internal xref">3.1.2</a>.  <a href="#name-terminating-party-terminati" class="internal xref">Terminating Party, Terminating Service Provider {:#TP}</a></p>
+                    <p id="section-toc.1-1.3.2.1.2.2.1"><a href="#section-3.1.2" class="auto internal xref">3.1.2</a>.  <a href="#name-terminating-party-terminati" class="internal xref">Terminating Party, Terminating Service Provider</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.3">
-                    <p id="section-toc.1-1.3.2.1.2.3.1"><a href="#section-3.1.3" class="auto internal xref">3.1.3</a>.  <a href="#name-originating-party-originati" class="internal xref">Originating Party, Originating Service Provider {:#OP}</a></p>
+                    <p id="section-toc.1-1.3.2.1.2.3.1"><a href="#section-3.1.3" class="auto internal xref">3.1.3</a>.  <a href="#name-originating-party-originati" class="internal xref">Originating Party, Originating Service Provider</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.4">
-                    <p id="section-toc.1-1.3.2.1.2.4.1"><a href="#section-3.1.4" class="auto internal xref">3.1.4</a>.  <a href="#name-accountable-party-ap" class="internal xref">Accountable Party {:#AP}</a></p>
+                    <p id="section-toc.1-1.3.2.1.2.4.1"><a href="#section-3.1.4" class="auto internal xref">3.1.4</a>.  <a href="#name-accountable-party" class="internal xref">Accountable Party</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.5">
                     <p id="section-toc.1-1.3.2.1.2.5.1"><a href="#section-3.1.5" class="auto internal xref">3.1.5</a>.  <a href="#name-verifier" class="internal xref">Verifier</a></p>
@@ -1322,27 +1322,27 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.1.1-2">It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="terminating-party-terminating-service-provider-tp">
+<div id="terminating-party-terminating-service-provider">
 <section id="section-3.1.2">
           <h4 id="name-terminating-party-terminati">
-<a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-terminating-party-terminati" class="section-name selfRef">Terminating Party, Terminating Service Provider {:#TP}</a>
+<a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-terminating-party-terminati" class="section-name selfRef">Terminating Party, Terminating Service Provider</a>
           </h4>
 <p id="section-3.1.2-1">For a given phone call, the <em>terminating party</em> (<em>TP</em>) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the <em>terminating service provider</em> (<em>TSP</em>).<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="originating-party-originating-service-provider-op">
+<div id="originating-party-originating-service-provider">
 <section id="section-3.1.3">
           <h4 id="name-originating-party-originati">
-<a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-originating-party-originati" class="section-name selfRef">Originating Party, Originating Service Provider {:#OP}</a>
+<a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-originating-party-originati" class="section-name selfRef">Originating Party, Originating Service Provider</a>
           </h4>
 <p id="section-3.1.3-1">An <em>originating party</em> (<em>OP</em>) is a party that controls the first <em>session border controller</em> (<em>SBC</em>) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-2">The direct service provider of an OP is its <em>originating service provider</em> (<em>OSP</em>). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="accountable-party-ap">
+<div id="accountable-party">
 <section id="section-3.1.4">
-          <h4 id="name-accountable-party-ap">
-<a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-accountable-party-ap" class="section-name selfRef">Accountable Party {:#AP}</a>
+          <h4 id="name-accountable-party">
+<a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-accountable-party" class="section-name selfRef">Accountable Party</a>
           </h4>
 <p id="section-3.1.4-1">An <em>accountable party</em> (<em>AP</em>) is a TNU -- an organization or individual that holds the right to use a telephone number (RTU) in the eyes of a regulator. When a terminating party asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs <span class="bcp14">MAY</span> operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect for logistical reasons. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
 </section>
@@ -1379,10 +1379,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.1.1-3">SAIDs are evidence that hashed data has not changed. They can also function like a reference, hyperlink, or placeholder for the data that was hashed to produce them (though they are more similar to URNs than to URLs <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, since they contain no location information).<a href="#section-3.2.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="signature-signature">
+<div id="signature">
 <section id="section-3.2.1.2">
-            <h5 id="name-signature-signature">
-<a href="#section-3.2.1.2" class="section-number selfRef">3.2.1.2. </a><a href="#name-signature-signature" class="section-name selfRef">Signature {:#signature}</a>
+            <h5 id="name-signature">
+<a href="#section-3.2.1.2" class="section-number selfRef">3.2.1.2. </a><a href="#name-signature" class="section-name selfRef">Signature</a>
             </h5>
 <p id="section-3.2.1.2-1">A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs: <code>signature = sign(D, privkey)</code>. The evidence can be verified by checking that the signature is bound to D and the public key of the signer: <code>valid = verify(signature, D, pubkey)</code>. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.<a href="#section-3.2.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1.2-2">The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern.<a href="#section-3.2.1.2-2" class="pilcrow">¶</a></p>
@@ -1398,29 +1398,29 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.1.3-3">AIDs possess several security properties that are not guaranteed by DIDs in general (self-certification, support for prerotation and multisig, support for witnesses, cooperative delegation, and so forth). These properties are vital to some of VVP's goals for high assurance.<a href="#section-3.2.1.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="signatures-over-saids-sig-over-said">
+<div id="signatures-over-saids">
 <section id="section-3.2.1.4">
-            <h5 id="name-signatures-over-saids-sig-o">
-<a href="#section-3.2.1.4" class="section-number selfRef">3.2.1.4. </a><a href="#name-signatures-over-saids-sig-o" class="section-name selfRef">Signatures over SAIDs {:#sig-over-SAID}</a>
+            <h5 id="name-signatures-over-saids">
+<a href="#section-3.2.1.4" class="section-number selfRef">3.2.1.4. </a><a href="#name-signatures-over-saids" class="section-name selfRef">Signatures over SAIDs</a>
             </h5>
 <p id="section-3.2.1.4-1">Since neither a SAID value nor the data it hashes can be changed without breaking the correspondence between them, signing over a SAID is equivalent, in how it commits the signer to content and provides tamper evidence, to signing over the data that the SAID hashes. Since SAIDs can function as placeholders for JSON objects, a SAID can represent such an object in a larger data structure. And since SAIDs can function as a reference without making a claim about location, it is possible to combine these properties to achieve some indirections in evidence that are crucial in privacy and regulatory compliance.<a href="#section-3.2.1.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1.4-2">VVP uses SAIDs and digital signatures as primitive forms of evidence.<a href="#section-3.2.1.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="x509-certificates-x509">
+<div id="x509-certificates">
 <section id="section-3.2.1.5">
-            <h5 id="name-x509-certificates-x509">
-<a href="#section-3.2.1.5" class="section-number selfRef">3.2.1.5. </a><a href="#name-x509-certificates-x509" class="section-name selfRef">X509 certificates {:#X509}</a>
+            <h5 id="name-x509-certificates">
+<a href="#section-3.2.1.5" class="section-number selfRef">3.2.1.5. </a><a href="#name-x509-certificates" class="section-name selfRef">X509 certificates</a>
             </h5>
-<p id="section-3.2.1.5-1">VVP does not depend on X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> for any of its evidence. (However, if deployed in a hybrid mode, it <span class="bcp14">MAY</span> be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)<a href="#section-3.2.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.5-1">VVP does not depend on X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> for any of its evidence. However, if deployed in a hybrid mode, it <span class="bcp14">MAY</span> be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.<a href="#section-3.2.1.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="passport-passport">
+<div id="passport">
 <section id="section-3.2.1.6">
-            <h5 id="name-passport-passport">
-<a href="#section-3.2.1.6" class="section-number selfRef">3.2.1.6. </a><a href="#name-passport-passport" class="section-name selfRef">Passport {:#passport}</a>
+            <h5 id="name-passport">
+<a href="#section-3.2.1.6" class="section-number selfRef">3.2.1.6. </a><a href="#name-passport" class="section-name selfRef">PASSporT</a>
             </h5>
-<p id="section-3.2.1.6-1">VVP emits and verifies a STIR PASSporT <span>[<a href="#RFC8225" class="cite xref">RFC8225</a>]</span>. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see <a href="#dossier" class="internal xref">Dossier</a>). Conceptually, VVP's version is similar to a SHAKEN passport <span>[<a href="#RFC8588" class="cite xref">RFC8588</a>]</span>. It <span class="bcp14">MAY</span> also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport <span>[<a href="#I-D.ietf-stir-passport-rcd" class="cite xref">I-D.ietf-stir-passport-rcd</a>]</span>.<a href="#section-3.2.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.6-1">VVP emits and verifies a STIR PASSporT <span>[<a href="#RFC8225" class="cite xref">RFC8225</a>]</span>. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see <a href="#dossier" class="internal xref">Dossier</a>). Conceptually, VVP's version is similar to a SHAKEN passport <span>[<a href="#RFC8588" class="cite xref">RFC8588</a>]</span>. It <span class="bcp14">MAY</span> also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport <span>[<a href="#RCD-PASSPORT" class="cite xref">RCD-PASSPORT</a>]</span>.<a href="#section-3.2.1.6-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1.6-2">Neither VVP's backing evidence nor its passport depends on a certificate authority ecosystem. The passport <span class="bcp14">MUST</span> be secured by an EdDSA digital signature <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>, <span>[<a href="#FIPS186-4" class="cite xref">FIPS186-4</a>]</span>, rather than the signature variants preferred by the other passport types. Instead of including granular fields in the claims of its JWT, the VVP passport cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.<a href="#section-3.2.1.6-2" class="pilcrow">¶</a></p>
 <span id="name-shaken-passport-compared-to"></span><figure id="figure-1">
               <div id="section-3.2.1.6-3.1">
@@ -1599,18 +1599,18 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.1.8-5">The revocation of a given ACDC can be detected via the witnesses declared in its issuer's KEL. Discovering, detecting, and reacting to such events can be very efficient. Any number of aggregated views can be built on demand, for any subset of an ecosystem's evidence, by any party. This requires no special authority or access, and does not create a central registry as a source of truth, since such views are tamper-evident and therefore can be served by untrusted parties. Further, different views of the evidence can contain or elide different fields of the evidence data, to address privacy, regulatory, and legal requirements.<a href="#section-3.2.1.8-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="cryptographically-verifiable-data-cvd">
+<div id="cvd">
 <section id="section-3.2.1.9">
-            <h5 id="name-cryptographically-verifiabl">
-<a href="#section-3.2.1.9" class="section-number selfRef">3.2.1.9. </a><a href="#name-cryptographically-verifiabl" class="section-name selfRef">Cryptographically verifiable data {:#CVD}</a>
+            <h5 id="name-cvd">
+<a href="#section-3.2.1.9" class="section-number selfRef">3.2.1.9. </a><a href="#name-cvd" class="section-name selfRef">CVD</a>
             </h5>
 <p id="section-3.2.1.9-1"><em>Cryptographically verifiable data</em> (<em>CVD</em>) is data that's associated with a digital signature and a claim about who signed it. When CVD is an assertion, we make the additional assumption that the signer intends whatever the data asserts, since they took an affirmative action to create non-repudiable evidence that they processed it. CVD can be embodied in many formats, but in the context of VVP, all instances of CVD are ACDCs.<a href="#section-3.2.1.9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="credential-credential">
+<div id="credential">
 <section id="section-3.2.1.10">
-            <h5 id="name-credential-credential">
-<a href="#section-3.2.1.10" class="section-number selfRef">3.2.1.10. </a><a href="#name-credential-credential" class="section-name selfRef">Credential {:#credential}</a>
+            <h5 id="name-credential">
+<a href="#section-3.2.1.10" class="section-number selfRef">3.2.1.10. </a><a href="#name-credential" class="section-name selfRef">Credential</a>
             </h5>
 <p id="section-3.2.1.10-1">A <em>credential</em> is a special kind of CVD that asserts entitlements for its legitimate bearer -- <em>and only its bearer</em>. CVD that says Organization X exists with a particular ID number in government registers, and with a particular legal name, is not necessarily a credential. In order to be a credential, it would have to be associated with an assertion that its legitimate bearer -- <em>and only its bearer</em> -- is entitled to use the identity of Organization X. If signed data merely enumerates properties without conferring privileges on a specific party, it is just CVD. Many security gaps in existing solutions arise from conflating CVD and credentials.<a href="#section-3.2.1.10-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1.10-2">ACDCs can embody any kind of CVD, not just credentials.<a href="#section-3.2.1.10-2" class="pilcrow">¶</a></p>
@@ -1632,10 +1632,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2.1.12-1">A <em>targeted credential</em> is CVD that identifies an issuee as the bearer, and that requires the issuee to prove their identity cryptographically (e.g., to produce a proper digital signature) in order to claim the associated privilege. All credentials in VVP are targeted credentials.<a href="#section-3.2.1.12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="justifying-link">
+<div id="jl">
 <section id="section-3.2.1.13">
-            <h5 id="name-justifying-link">
-<a href="#section-3.2.1.13" class="section-number selfRef">3.2.1.13. </a><a href="#name-justifying-link" class="section-name selfRef">Justifying link</a>
+            <h5 id="name-jl">
+<a href="#section-3.2.1.13" class="section-number selfRef">3.2.1.13. </a><a href="#name-jl" class="section-name selfRef">JL</a>
             </h5>
 <p id="section-3.2.1.13-1">A <em>justifying link</em> (<em>JL</em>) is a reference, inside of one CVD, to another CVD that justifies what the first CVD is asserting. JLs can be SAIDs that identify other ACDCs.<a href="#section-3.2.1.13-1" class="pilcrow">¶</a></p>
 </section>
@@ -1647,10 +1647,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-specific-evidence">
 <a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-specific-evidence" class="section-name selfRef">Specific evidence</a>
           </h4>
-<div id="passport-specific-signature-pss">
+<div id="pss">
 <section id="section-3.2.2.1">
-            <h5 id="name-passport-specific-signature">
-<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-passport-specific-signature" class="section-name selfRef">PASSporT-specific signature {:#PSS}</a>
+            <h5 id="name-pss">
+<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-pss" class="section-name selfRef">PSS</a>
             </h5>
 <p id="section-3.2.2.1-1">Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an <code>Identity</code> header that <span class="bcp14">MUST</span> contain a signature from the call's OP. This <em>passpport-specific signature</em> (<em>PSS</em>) <span class="bcp14">MUST</span> be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The <code>AA</code> at the front of the result is cut and replaced with <code>0B</code>, giving an 88-character string. A regex that matches the result is: <code>0B[-_\w]{86}</code>, and a sample value (with the middle elided) is: <code>0BNzaC1lZD...yRLAYeKNQvYx</code>.<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.1-2">The signature <span class="bcp14">MUST</span> be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (<code>orig</code> claim in the JWT), the destination phone number (<code>dest</code> claim), an OOBI for the OP (<code>kid</code>), a timestamp (<code>iat</code>), optional brand information (<code>card</code> with value <code>null</code> if missing), optional <code>call-reason</code> (with value <code>null</code> if missing), optional <code>goal</code> (with value <code>null</code> if missing), and a reference to evidence (<code>evd</code>).<a href="#section-3.2.2.1-2" class="pilcrow">¶</a></p>
@@ -1661,15 +1661,15 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <h5 id="name-dossier">
 <a href="#section-3.2.2.2" class="section-number selfRef">3.2.2.2. </a><a href="#name-dossier" class="section-name selfRef">Dossier</a>
             </h5>
-<p id="section-3.2.2.2-1">The <code>evd</code> field in the passport contains the OOBI of an ACDC data graph (&lt;&lt;CVD&gt;&gt; asserted to the world, not a &lt;&lt;credential&gt;&gt; issued to a specific party) called the <em>dossier</em>. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.2-1">The <code>evd</code> field in the passport contains the OOBI of an ACDC data graph (<a href="#cvd" class="auto internal xref">Section 3.2.1.9</a> asserted to the world, not a <a href="#credential" class="internal xref">Credential</a> issued to a specific party) called the <em>dossier</em>. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="accountable-party-evidence-ape">
+<div id="ape">
 <section id="section-3.2.2.3">
-            <h5 id="name-accountable-party-evidence-">
-<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-accountable-party-evidence-" class="section-name selfRef">Accountable Party Evidence {:#APE}</a>
+            <h5 id="name-ape">
+<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-ape" class="section-name selfRef">APE</a>
             </h5>
-<p id="section-3.2.2.3-1">The dossier <span class="bcp14">MUST</span> include at least what is called Accountable Party Evidence (APE).<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-1">The dossier <span class="bcp14">MUST</span> include at least what is called <em>accountable party evidence</em> (<em>APE</em>).<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2.3-2">APE consists of several credentials, explored in detail below. It <span class="bcp14">MUST</span> include a vetting credential for the AP. it <span class="bcp14">MUST</span> include a TNAlloc credential that proves RTU. Normally the RTU <span class="bcp14">MUST</span> be assigned to the AP; however, if a proxy is the OP and uses their own telephone number, the RTU <span class="bcp14">MUST</span> be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it <span class="bcp14">MUST</span> include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard <span>[<a href="#RFC6350" class="cite xref">RFC6350</a>]</span> or JCard <span>[<a href="#RFC7095" class="cite xref">RFC7095</a>]</span>.) If no brand credential is present, verifiers <span class="bcp14">MUST NOT</span> impute a brand to the call on the basis of any VVP guarantees.<a href="#section-3.2.2.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1971,6 +1971,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8224">[RFC8224]</dt>
+        <dd>
+<span class="refAuthor">Peterson, J.</span>, <span class="refAuthor">Jennings, C.</span>, <span class="refAuthor">Rescorla, E.</span>, and <span class="refAuthor">C. Wendt</span>, <span class="refTitle">"Authenticated Identity Management in the Session Initiation Protocol (SIP)"</span>, <span class="seriesInfo">RFC 8224</span>, <span class="seriesInfo">DOI 10.17487/RFC8224</span>, <time datetime="2018-02" class="refDate">February 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8224">https://www.rfc-editor.org/rfc/rfc8224</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8225">[RFC8225]</dt>
         <dd>
 <span class="refAuthor">Wendt, C.</span> and <span class="refAuthor">J. Peterson</span>, <span class="refTitle">"PASSporT: Personal Assertion Token"</span>, <span class="seriesInfo">RFC 8225</span>, <span class="seriesInfo">DOI 10.17487/RFC8225</span>, <time datetime="2018-02" class="refDate">February 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8225">https://www.rfc-editor.org/rfc/rfc8225</a>&gt;</span>. </dd>
@@ -2012,7 +2016,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <dd>
 <span class="refAuthor">Wendt, C.</span> and <span class="refAuthor">J. Peterson</span>, <span class="refTitle">"SIP Call-Info Parameters for Rich Call Data"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-sipcore-callinfo-rcd-12</span>, <time datetime="2024-07-22" class="refDate">22 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-sipcore-callinfo-rcd-12">https://datatracker.ietf.org/doc/html/draft-ietf-sipcore-callinfo-rcd-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-stir-passport-rcd">[I-D.ietf-stir-passport-rcd]</dt>
+<dt id="RCD-PASSPORT">[RCD-PASSPORT]</dt>
         <dd>
 <span class="refAuthor">Wendt, C.</span> and <span class="refAuthor">J. Peterson</span>, <span class="refTitle">"PASSporT Extension for Rich Call Data"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-stir-passport-rcd-26</span>, <time datetime="2023-06-05" class="refDate">5 June 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-stir-passport-rcd-26">https://datatracker.ietf.org/doc/html/draft-ietf-stir-passport-rcd-26</a>&gt;</span>. </dd>
 <dd class="break"></dd>
