@@ -81,9 +81,9 @@ informative:
   RFC8588:
   RFC6350:
   RFC7095:
+  RCD-DRAFT: I-D.ietf-sipcore-callinfo-rcd
   RCD-PASSPORT: I-D.ietf-stir-passport-rcd
-  I-D.ietf-oauth-selective-disclosure-jwt:
-  I-D.ietf-sipcore-callinfo-rcd:
+  SD-JWT-DRAFT: I-D.ietf-oauth-selective-disclosure-jwt
   ATIS-1000074:
     target: https://atis.org/resources/signature-based-handling-of-asserted-information-using-tokens-shaken-atis-1000074-e/
     title: "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)"
@@ -96,12 +96,12 @@ informative:
     author:
       org: CTIA
     date: Nov 2022
-  W3C.REC-did-core-20220719:
-  W3C.REC-vc-data-model-20220303:
+  W3C-DID: W3C.REC-did-core-20220719
+  W3C-VC: W3C.REC-vc-data-model-20220303
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{RFC8224}} {{RFC8225}} {{RFC8588}}, SHAKEN {{ATIS-1000074}}, RCD {{I-D.ietf-sipcore-callinfo-rcd}}, BCID {{CTIA-BCID}}, and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
+Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{RFC8224}} {{RFC8225}} {{RFC8588}}, SHAKEN {{ATIS-1000074}}, RCD {{RCD-DRAFT}} {{RCD-PASSPPORT}}, BCID {{CTIA-BCID}}, and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
 
 --- middle
 
@@ -122,7 +122,7 @@ VVP solves these problems by applying two crucial innovations.
 ## Evidence format
 VVP uses an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates {{RFC5280}}. It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while maintaining perfect transparency. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so. The evidence that Y cites can be built and maintained by X and Y, and does not need to be published in a central registry.
 
-Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials {{W3C.REC-vc-data-model-20220303}} and SD-JWTs {{I-D.ietf-oauth-selective-disclosure-jwt}} require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. This is discussed below.)
+Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}} require direct trust in the proximate issuer. This means ACDCs are lossless in delegation, not lossy, and flexible, not fragile. The result is that no third party has to guess who's accountable; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. This is discussed below.)
 
 ## Vetting refinements
 Although VVP can work inside governance frameworks such as SHAKEN {{ATIS-1000074}}, it allows for a dramatic upgrade of at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO-17442-3}}. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI {{ISO-17442-1}} that's globally required in high-security, high-regulation, cross-border banking.
@@ -186,7 +186,7 @@ A digital signature over arbitrary data D constitutes evidence that the signer p
 The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern.
 
 #### AID
-An *autonomic identifier* (*AID*) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures. AIDs are like W3C DIDs {{W3C.REC-did-core-20220719}}}, and can be transformed into DIDs. The information required to resolve an AID to its cryptographic keys is communicated through a special form of URI called an *out-of-band invitation* (*OOBI*). An OOBI points to an HTTP resource that returns IANA content-type `application/json+cesr`; it is somewhat analogous to a combination of the `kid` and `x5u` constructs in many JWTs. AIDs and OOBIs are defined in the KERI spec {{TOIP-KERI}}.
+An *autonomic identifier* (*AID*) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures. AIDs are like W3C DIDs {{W3C-DID}}}, and can be transformed into DIDs. The information required to resolve an AID to its cryptographic keys is communicated through a special form of URI called an *out-of-band invitation* (*OOBI*). An OOBI points to an HTTP resource that returns IANA content-type `application/json+cesr`; it is somewhat analogous to a combination of the `kid` and `x5u` constructs in many JWTs. AIDs and OOBIs are defined in the KERI spec {{TOIP-KERI}}.
 
 An example of an AID is `EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa`. AIDs are created by calculating the hash of the identifier's inception event data structure; they therefore match the same regex as SAIDs in general. An example of an OOBI is `https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx`. Note the same `EMCY...` IN both strings. Many constructs in KERI may have OOBIs, but when OOBIs are associated with AIDs, such OOBIs always contain their associated AID as the first URL segment that matches the AID regex. They point either to an agent or a witness that provides verifiable state information for the AID.
 
