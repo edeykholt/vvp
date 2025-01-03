@@ -36,7 +36,9 @@ normative:
   RFC5280:
   RFC4648:
   RFC8032:
+  RFC8224:
   RFC8225:
+  RFC8588:
   FIPS186-4:
     target: https://doi.org/10.6028/NIST.FIPS.186-4
     title: Digital Signature Standard (DSS)
@@ -80,7 +82,7 @@ informative:
   RFC8588:
   RFC6350:
   RFC7095:
-  RCD: I-D.ietf-stir-passport-rcd
+  RCD-PASSPORT: I-D.ietf-stir-passport-rcd
   I-D.ietf-oauth-selective-disclosure-jwt:
   I-D.ietf-sipcore-callinfo-rcd:
   ATIS-1000074:
@@ -100,7 +102,7 @@ informative:
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{I-D.ietf-stir-passport-rcd}}, SHAKEN {{ATIS-1000074}}, RCD {{I-D.ietf-sipcore-callinfo-rcd}}, BCID {{CTIA-BCID}}, and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
+Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{RFC8224}} {{RFC8225}} {{RFC8588}}, SHAKEN {{ATIS-1000074}}, RCD {{I-D.ietf-sipcore-callinfo-rcd}}, BCID {{CTIA-BCID}}, and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
 
 --- middle
 
@@ -200,7 +202,7 @@ VVP uses SAIDs and digital signatures as primitive forms of evidence.
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.
 
 #### PASSporT
-VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see {{<<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{I-D.ietf-stir-passport-rcd}}.
+VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see {{<<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{RCD-PASSPORT}}.
 
 Neither VVP's backing evidence nor its passport depends on a certificate authority ecosystem. The passport MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}, rather than the signature variants preferred by the other passport types. Instead of including granular fields in the claims of its JWT, the VVP passport cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
