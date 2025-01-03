@@ -17,14 +17,15 @@ Abstract
    who are accountable for telephone calls, eliminating trust gaps that
    scammers exploit.  It adds value in the same problem domain as STIR
    [RFC8224] [RFC8225] [RFC8588], SHAKEN [ATIS-1000074], RCD [RCD-DRAFT]
-   [RCD-PASSPORT], BCID [CTIA-BCID], and related technologies.  Like
-   these other approaches, VVP binds strong cryptographic evidence to
-   headers in the SIP [RFC3261] INVITE that initiates a phone call.  It
-   also allows this evidence to be verified downstream.  However, VVP
-   builds from different technical and governance assumptions, with
-   different backing evidence.  This unique foundation allows VVP to
-   cross jurisdictional boundaries easily and robustly.  It also makes
-   VVP simpler, more decentralized, cheaper to deploy and maintain, more
+   [RCD-PASSPORT], BCID [CTIA-BCID], and related technologies, although
+   it is also usable with individual callers.  Like these other
+   approaches, VVP binds strong cryptographic evidence to headers in the
+   SIP [RFC3261] INVITE that initiates a phone call.  It also allows
+   this evidence to be verified downstream.  However, VVP builds from
+   different technical and governance assumptions, with different
+   backing evidence.  This unique foundation allows VVP to cross
+   jurisdictional boundaries easily and robustly.  It also makes VVP
+   simpler, more decentralized, cheaper to deploy and maintain, more
    private, more scalable, and higher assurance than alternatives.  VVP
    can plug gaps or to build bridges between other approaches.  For
    example, it can justify an A attestation in SHAKEN when a call
@@ -182,14 +183,14 @@ Table of Contents
    transformed, without altering its robustness or efficiency.  ACDCs
    verify data back to a root through arbitrarily long and complex
    chains of issuers, whereas formats like W3C Verifiable Credentials
-   [W3C.REC-vc-data-model-20220303] and SD-JWTs [SD-JWT-DRAFT] require
-   direct trust in the proximate issuer.  This means ACDCs are lossless
-   in delegation, not lossy, and flexible, not fragile.  The result is
-   that no third party has to guess who's accountable; the accountable
-   party is transparently and provably accountable, period.
-   (Notwithstanding this transparency, ACDCs support a form of
-   pseudonymity and graduated disclosure that satisfies vital privacy
-   and data processing constraints.  This is discussed below.)
+   [W3C-VC] and SD-JWTs [SD-JWT-DRAFT] require direct trust in the
+   proximate issuer.  This means ACDCs are lossless in delegation, not
+   lossy, and flexible, not fragile.  The result is that no third party
+   has to guess who's accountable; the accountable party is
+   transparently and provably accountable, period.  (Notwithstanding
+   this transparency, ACDCs support a form of pseudonymity and graduated
+   disclosure that satisfies vital privacy and data processing
+   constraints.  This is discussed below.)
 
 1.2.  Vetting refinements
 
@@ -536,10 +537,10 @@ Table of Contents
 3.2.1.8.  KELs {:#KEL}
 
    Unlike X509 certificates, JWTs [RFC7519], and W3C Verifiable
-   Credentials [W3C.REC-vc-data-model-20220303], signatures over ACDC
-   data are not _contained inside_ the ACDC; rather, they are
-   _referenced by_ the ACDC and _anchored in_ a verifiable data
-   structure called a _key event log_ or _KEL_ [TOIP-KERI].
+   Credentials [W3C-VC], signatures over ACDC data are not _contained
+   inside_ the ACDC; rather, they are _referenced by_ the ACDC and
+   _anchored in_ a verifiable data structure called a _key event log_ or
+   _KEL_ [TOIP-KERI].
 
    <![CDATA[
     X509                          ACDC
@@ -1099,8 +1100,7 @@ Table of Contents
               19 July 2022,
               <https://www.w3.org/TR/2022/REC-did-core-20220719/>.
 
-   [W3C.REC-vc-data-model-20220303]
-              Zundel, B., Ed., Burnett, D., Ed., Longley, D., Ed.,
+   [W3C-VC]   Zundel, B., Ed., Burnett, D., Ed., Longley, D., Ed.,
               Noble, G., Ed., Hartog, K. D., Ed., and M. Sporny, Ed.,
               "Verifiable Credentials Data Model v1.1", W3C REC REC-vc-
               data-model-20220303, W3C REC-vc-data-model-20220303, 3
