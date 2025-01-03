@@ -100,7 +100,7 @@ informative:
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) proves the identity and authorization of parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. VVP addresses the same problem domain as STIR {{I-D.ietf-stir-passport-rcd}}, SHAKEN {{ATIS-1000074}}, RCD {{I-D.ietf-sipcore-callinfo-rcd}}, BCID {{CTIA-BCID}}, and related technologies. Like these approaches, it binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call, and allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can be used to plug gaps or to build bridges between other technologies in the same space. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone solution.
+Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are accountable for telephone calls, eliminating trust gaps that scammers exploit. It adds value in the same problem domain as STIR {{I-D.ietf-stir-passport-rcd}}, SHAKEN {{ATIS-1000074}}, RCD {{I-D.ietf-sipcore-callinfo-rcd}}, BCID {{CTIA-BCID}}, and related technologies. Like these other approaches, VVP binds strong cryptographic evidence to headers in the SIP {{RFC3261}} INVITE that initiates a phone call. It also allows this evidence to be verified downstream. However, VVP builds from different technical and governance assumptions, with different backing evidence. This unique foundation allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. VVP can plug gaps or to build bridges between other approaches. For example, it can justify an A attestation in SHAKEN when a call originates outside the regulated certificate ecosystem. VVP can also be used as a standalone mechanism to identify and authorize callers.
 
 --- middle
 
@@ -151,15 +151,15 @@ An *allocation holder* (*AH*) is a party that controls how a telephone number is
 
 It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.
 
-### Terminating Party, Terminating Service Provider {:#TP}
+### Terminating Party, Terminating Service Provider
 For a given phone call, the *terminating party* (*TP*) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
 
-### Originating Party, Originating Service Provider {:#OP}
+### Originating Party, Originating Service Provider
 An *originating party* (*OP*) is a party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
 The direct service provider of an OP is its *originating service provider* (*OSP*). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
-### Accountable Party {:#AP}
+### Accountable Party
 An *accountable party* (*AP*) is a TNU -- an organization or individual that holds the right to use a telephone number (RTU) in the eyes of a regulator. When a terminating party asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs MAY operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect for logistical reasons. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.
 
 ### Verifier
@@ -179,7 +179,7 @@ An example of a SAID is `E81Wmjyz5nXMCYrQqWyRLAYeKNQvYLYqMLYv_qm-qP7a`, and a re
 
 SAIDs are evidence that hashed data has not changed. They can also function like a reference, hyperlink, or placeholder for the data that was hashed to produce them (though they are more similar to URNs than to URLs {{RFC3986}}, since they contain no location information).
 
-#### Signature {:#signature}
+#### Signature
 A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs: `signature = sign(D, privkey)`. The evidence can be verified by checking that the signature is bound to D and the public key of the signer: `valid = verify(signature, D, pubkey)`. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.
 
 The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern.
@@ -191,15 +191,15 @@ An example of an AID is `EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa`. AIDs are
 
 AIDs possess several security properties that are not guaranteed by DIDs in general (self-certification, support for prerotation and multisig, support for witnesses, cooperative delegation, and so forth). These properties are vital to some of VVP's goals for high assurance.
 
-#### Signatures over SAIDs {:#sig-over-SAID}
+#### Signatures over SAIDs
 Since neither a SAID value nor the data it hashes can be changed without breaking the correspondence between them, signing over a SAID is equivalent, in how it commits the signer to content and provides tamper evidence, to signing over the data that the SAID hashes. Since SAIDs can function as placeholders for JSON objects, a SAID can represent such an object in a larger data structure. And since SAIDs can function as a reference without making a claim about location, it is possible to combine these properties to achieve some indirections in evidence that are crucial in privacy and regulatory compliance.
 
 VVP uses SAIDs and digital signatures as primitive forms of evidence.
 
-#### X509 certificates {:#X509}
+#### X509 certificates
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. (However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.)
 
-#### Passport {:#passport}
+#### PASSporT
 VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan (see {{<<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{I-D.ietf-stir-passport-rcd}}.
 
 Neither VVP's backing evidence nor its passport depends on a certificate authority ecosystem. The passport MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}, rather than the signature variants preferred by the other passport types. Instead of including granular fields in the claims of its JWT, the VVP passport cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
@@ -394,10 +394,10 @@ ACDCs can be freely converted between text and binary representations, and eithe
 
 The revocation of a given ACDC can be detected via the witnesses declared in its issuer's KEL. Discovering, detecting, and reacting to such events can be very efficient. Any number of aggregated views can be built on demand, for any subset of an ecosystem's evidence, by any party. This requires no special authority or access, and does not create a central registry as a source of truth, since such views are tamper-evident and therefore can be served by untrusted parties. Further, different views of the evidence can contain or elide different fields of the evidence data, to address privacy, regulatory, and legal requirements.
 
-#### Cryptographically verifiable data {:#CVD}
+#### CVD
 *Cryptographically verifiable data* (*CVD*) is data that's associated with a digital signature and a claim about who signed it. When CVD is an assertion, we make the additional assumption that the signer intends whatever the data asserts, since they took an affirmative action to create non-repudiable evidence that they processed it. CVD can be embodied in many formats, but in the context of VVP, all instances of CVD are ACDCs.
 
-#### Credential {:#credential}
+#### Credential
 A *credential* is a special kind of CVD that asserts entitlements for its legitimate bearer -- *and only its bearer*. CVD that says Organization X exists with a particular ID number in government registers, and with a particular legal name, is not necessarily a credential. In order to be a credential, it would have to be associated with an assertion that its legitimate bearer -- *and only its bearer* -- is entitled to use the identity of Organization X. If signed data merely enumerates properties without conferring privileges on a specific party, it is just CVD. Many security gaps in existing solutions arise from conflating CVD and credentials.
 
 ACDCs can embody any kind of CVD, not just credentials.
@@ -408,21 +408,21 @@ VVP never uses bearer tokens, but we define them here to provide a contrast. A *
 #### Targeted credential
 A *targeted credential* is CVD that identifies an issuee as the bearer, and that requires the issuee to prove their identity cryptographically (e.g., to produce a proper digital signature) in order to claim the associated privilege. All credentials in VVP are targeted credentials.
 
-#### Justifying link
+#### JL
 A *justifying link* (*JL*) is a reference, inside of one CVD, to another CVD that justifies what the first CVD is asserting. JLs can be SAIDs that identify other ACDCs.
 
 ### Specific evidence
 
-#### PASSporT-specific signature {:#PSS}
+#### PSS
 Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP. This *passpport-specific signature* (*PSS*) MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
 
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
 #### Dossier
-The `evd` field in the passport contains the OOBI of an ACDC data graph (<<CVD>> asserted to the world, not a <<credential>> issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
+The `evd` field in the passport contains the OOBI of an ACDC data graph ([CVD](#name-cvd) asserted to the world, not a {{<<credential}} issued to a specific party) called the *dossier*. This is a compilation of all the permanent, backing evidence that justifies trust in the identity and authorization of the AP and OP. It is created and must be signed by the AP.
 
-#### Accountable Party Evidence {:#APE}
-The dossier MUST include at least what is called Accountable Party Evidence (APE).
+#### APE
+The dossier MUST include at least what is called *accountable party evidence* (*APE*).
 
 APE consists of several credentials, explored in detail below. It MUST include a vetting credential for the AP. it MUST include a TNAlloc credential that proves RTU. Normally the RTU MUST be assigned to the AP; however, if a proxy is the OP and uses their own telephone number, the RTU MUST be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard {{RFC6350}} or JCard {{RFC7095}}.) If no brand credential is present, verifiers MUST NOT impute a brand to the call on the basis of any VVP guarantees.
 
