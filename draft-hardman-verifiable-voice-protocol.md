@@ -152,8 +152,8 @@ It is possible for an ecosystem to include other parties as AHs (e.g., wholesale
 ### Terminating Party, Terminating Service Provider {#TP}
 For a given phone call, the *terminating party* (*TP*) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
 
-### Originating Party, Originating Service Provider {#OP}
-An *originating party* (*OP*) is a party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
+### Originating Party, Originating Service Provider
+An *originating party* (*<a ID="OP">OP</a>*) is a party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
 The direct service provider of an OP is its *originating service provider* (*OSP*). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
@@ -177,7 +177,7 @@ Chronologically, evidence must be curated before it can be cited or verified. In
 However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions.
 
 ## Citing
-A call secured by VVP begins when the {{<<OP}} builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
+A call secured by VVP begins when the [OP](#OP) builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
 
 ~~~ json
 {
