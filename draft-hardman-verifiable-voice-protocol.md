@@ -106,7 +106,6 @@ Verifiable Voice Protocol (VVP) authenticates and authorizes parties who are acc
 --- middle
 
 # Introduction
-
 When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context.
 
 Unfortunately, providing quality answers is much harder than it seems. Scammers love to impersonate, and they succeed more often than we'd like.
@@ -135,17 +134,11 @@ To be clear, VVP does not *require* that vLEIs be used for vetting. However, by 
 
 # Overview
 
-Verifiable Voice Protocol depends on three interrelated activities with evidence:
-
-* Curating
-* Citing
-* Verifying
-
-The second and third items in this list, citing and verifying evidence, occur in realtime during phone calls. They are the heart of VVP. However, curated evidence must exist before it can be cited; curating is an ongoing, parallel activity as phone calls occur; and citing and verifying must react properly to changes in evidence. Further, some existing trust gaps occur precisely because too few requirements are imposed on evidence. Therefore, this specification also includes normative statements about the nature of evidence and the processes that create and maintain it.
-
-Before we explain the evidence, we must define some roles played by actors in the ecosystem.
+Fundamentally, Verifiable Voice Protocol requires a caller to assemble a dossier of evidence that proves identity and authorization. This is done once, in advance, as a configuration precondition. Then, for each call, a STIR-compatible VVP PASSporT is built that cites this dossier. Verifiers examine the dossier to make decisions. PASSporTs are ephemeral and last only as long as an SIP INVITE is being evaluated, but the dossiers that they cite may be permanent and are cacheable. Revocation of dossier details is checked in realtime.
 
 ## Roles
+
+Carefully defining the roles played by parties that participate in VVP is foundational to the rest of the specification. The following terms have special meaning to VVP and may not match casual usage.
 
 ### Allocation Holder, TNU
 An *allocation holder* (*AH*) is a party that controls how a telephone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct *telephone number users* (*TNUs*). TNUs are customers of range holders -- enterprises and consumers. Range holders are service providers; although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges.
@@ -155,18 +148,74 @@ It is possible for an ecosystem to include other parties as AHs (e.g., wholesale
 ### Terminating Party, Terminating Service Provider
 For a given phone call, the *terminating party* (*TP*) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
 
-### Originating Party, Originating Service Provider
+### Originating Party, Originating Service Provider {#OP}
 An *originating party* (*OP*) is a party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
 The direct service provider of an OP is its *originating service provider* (*OSP*). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
-### Accountable Party
+### Accountable Party {#AP}
 An *accountable party* (*AP*) is a TNU -- an organization or individual that holds the right to use a telephone number (RTU) in the eyes of a regulator. When a terminating party asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs MAY operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect for logistical reasons. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.
 
 ### Verifier
 A *verifier* is a party that wants to know who's calling, and why, and that evaluates the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
 
 In addition to checking the validity of cryptographic evidence, the verifier role in VVP MAY also consider how that evidence matches business rules and external conditions. For example, a verifier might begin its analysis by deciding whether Call Center Y has the right, in the abstract, to make calls on behalf of Organization X using a given telephone number. However, VVP evidence allows a verifier to go further: it can also consider whether Y is allowed to exercise this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.
+
+## Lifecycle note
+VVP depends on three interrelated activities with evidence:
+
+* Curating
+* Citing
+* Verifying
+
+Chronologically, evidence must be curated before it can be cited or verified. In addition, some trust gaps in existing approaches occur precisely because too few requirements are imposed on evidence. Therefore, understanding the nature of backing evidence, and how that evidence is created and maintained, is a crucial consideration for VVP. This specification includes normative statements about evidence.
+
+However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions.
+
+## Citing
+A call secured by VVP begins when the OP builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
+
+```json
+{
+  "header": {
+    "alg": "EdDSA",
+    "typ": "JWT",
+    "ppt": "passport",
+    "kid": "https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx",
+  }
+  "payload": {
+    "orig": {"tn": ["+17035550001"]},
+    "dest": {"tn": ["+15715550000"]},
+    "card": ["NICKNAME:Examples-R-Us", "CHATBOT:https://example.com/chatwithus",
+      "LOGO;HASH=EK2r6EnDXre2pecTBO8s99j4OtNaaDIhVyr7uGugDhmp;VALUE=URI:https://example.com/logo64x48.png"],
+    "call-reason": "schedule next appointment",
+    "evd": "https://acme.com/dossier.cesr",
+    "origId": "e0ac7b44-1fc3-4794-8edd-34b83c018fe9",
+    "iat": 1699840000,
+    "exp": 1699840030,
+    "jti": "70664125-c88d-49d6-b66f-0510c20fc3a6"
+  }
+}
+```
+
+The semantics of the fields are:
+
+* `alg` *(required)* MUST be "EdDSA". Standardizing on one scheme prevents jurisdictions with incompatible or weaker cryptography. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which depends on the Montgomery-to-Edwards transformation.)
+* `typ` *(required)* MUST be "JWT".
+* `ppt` *(required)* Per STIR, MUST be "passport".
+* `kid` *(required)* MUST be the OOBI of an AID controlled by the OP. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. This AID MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence.)
+* `orig` *(required)* MUST conform to SHAKEN requirements, with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
+* `dest` *(required)* MUST conform to SHAKEN requirements.
+* `evd` *(required)* MUST be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type `application/json+cesr`. Such a URL can be hosted on any convenient web server, and is analogous to the `x5u` header in X509 contexts. See below for details.
+* `origId` *(optional)* Follows SHAKEN semantics.
+* `iat` *(required)* Follows standard JWT semantics.
+* `jti` *(required)* Follows standard JWT semantics.
+
+## Verifying
+
+(TODO: Verifier has a cache that was populated by monitoring the witnesses of known issuer AIDs. (If a new issuer is encountered, it can look up the witnesses and begin monitoring.) Etc.
+
+Also discuss deploying in a hybrid mode to extend S/S.)
 
 ## Evidence
 
@@ -273,42 +322,6 @@ Neither VVP's backing evidence nor its passport depends on a certificate authori
     </artwork>
   </artset>
 </figure>
-
-A sample VVP PASSporT might look like this, in its non-compact form:
-
-```json
-{{
-  "header": {
-    "alg": "EdDSA",
-    "typ": "JWT",
-    "ppt": "passport",
-    "kid": "https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx",
-  }
-  "payload": {
-    "orig": {"tn": ["+17035550001"]},
-    "dest": {"tn": ["+15715550000"]},
-    "card": ["NICKNAME:Examples-R-Us", "CHATBOT:https://example.com/chatwithus",
-      "LOGO;HASH=EK2r6EnDXre2pecTBO8s99j4OtNaaDIhVyr7uGugDhmp;VALUE=URI:https://example.com/logo64x48.png"],
-    "call-reason": "schedule next appointment",
-    "evd": "https://acme.com/dossier.cesr",
-    "origId": "e0ac7b44-1fc3-4794-8edd-34b83c018fe9",
-    "iat": 1699840000,
-    "exp": 1699840030,
-    "jti": "70664125-c88d-49d6-b66f-0510c20fc3a6"
-  }
-}
-```
-
-* `alg` *(required)* MUST be "EdDSA". Standardizing on one scheme prevents jurisdictions with incompatible or weaker cryptography. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which depends on the Montgomery-to-Edwards transformation.)
-* `typ` *(required)* MUST be "JWT".
-* `ppt` *(required)* Per STIR, MUST be "passport".
-* `kid` *(required)* MUST be the OOBI of an AID controlled by the OP. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. This AID MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence.)
-* `orig` *(required)* MUST conform to SHAKEN requirements, with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
-* `dest` *(required)* MUST conform to SHAKEN requirements.
-* `evd` *(required)* MUST be the OOBI of a bespoke ACDC that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type `application/json+cesr`. Such a URL can be hosted on any convenient web server, and is analogous to the `x5u` header in X509 contexts. See below for details.
-* `origId` *(optional)* Follows SHAKEN semantics.
-* `iat` *(required)* Follows standard JWT semantics.
-* `jti` *(required)* Follows standard JWT semantics.
 
 #### ACDCs
 Besides digital signatures and SAIDs, and the ephemeral passport, VVP uses long-lasting evidence in the ACDC format {{TOIP-ACDC}}. This is normalized, serialized data with an associated digital signature. Unlike X509 certificates, ACDCs are bound directly to the AIDs of their issuers and issuees, not to public keys of these parties. This has a radical effect on the lifecycle of evidence, because keys can be rotated without invalidating ACDCs.
@@ -627,16 +640,6 @@ Vetting and brand credentials may require large databases of metadata about orga
 Issuance and revocation of all other credentials is self-service at every level, and does not require any large, centralized system.
 
 (TODO: finish. The AIDs of issuers SHOULD be linked to witnesses...)
-
-## Citing
-
-(TODO: OP calls PBX to initiate call, provides message-specific signature. Provide details and example)
-
-## Verifying
-
-(TODO: Verifier has a cache that was populated by monitoring the witnesses of known issuer AIDs. (If a new issuer is encountered, it can look up the witnesses and begin monitoring.) Etc.
-
-Also discuss deploying in a hybrid mode to extend S/S.)
 
 # Security Considerations
 
