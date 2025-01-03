@@ -177,7 +177,7 @@ Chronologically, evidence must be curated before it can be cited or verified. In
 However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions.
 
 ## Citing
-A call secured by VVP begins when the {{<<op}} builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
+A call secured by VVP begins when the {{<<OP}} builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
 
 ~~~ json
 {
