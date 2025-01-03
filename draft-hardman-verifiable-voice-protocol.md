@@ -22,8 +22,8 @@ venue:
 #  type: Working Group
 #  mail: WG@example.com
 #  arch: https://example.com/WG
-  github: "dhh1128/verifiable-voice-protocol"
-  latest: "https://dhh1128.github.io/verifiable-voice-protocol/draft-hardman-verifiable-voice-protocol.html"
+  github: "dhh1128/vvp"
+  latest: "https://dhh1128.github.io/vvp/draft-hardman-verifiable-voice-protocol.html"
 
 author:
  -
