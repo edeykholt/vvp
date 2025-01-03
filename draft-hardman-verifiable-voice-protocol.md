@@ -38,7 +38,6 @@ normative:
   RFC8032:
   RFC8224:
   RFC8225:
-  RFC8588:
   FIPS186-4:
     target: https://doi.org/10.6028/NIST.FIPS.186-4
     title: Digital Signature Standard (DSS)
