@@ -81,28 +81,51 @@ Table of Contents
    2.  Conventions and Definitions
    3.  Overview
      3.1.  Roles
-       3.1.1.  Allocation Holder, TNU
-       3.1.2.  Terminating Party, Terminating Service Provider
-       3.1.3.  Originating Party, Originating Service Provider
+       3.1.1.  Allocation Holder
+       3.1.2.  Terminating Party
+       3.1.3.  Originating Party
        3.1.4.  Accountable Party
        3.1.5.  Verifier
-     3.2.  Lifecycle note
-     3.3.  Citing
-     3.4.  Verifying
-     3.5.  Evidence
-       3.5.1.  General categories
-       3.5.2.  Specific artifacts
-     3.6.  Curating
-       3.6.1.  Vetting
-       3.6.2.  Brand information
-       3.6.3.  TN allocations
-       3.6.4.  Brand proxy
-   4.  Security Considerations
-   5.  Privacy
-   6.  IANA Considerations
-   7.  References
-     7.1.  Normative References
-     7.2.  Informative References
+     3.2.  Lifecycle
+   4.  Citing
+   5.  Verifying
+   6.  Curating
+     6.1.  Activities
+       6.1.1.  Vetting entity identity
+       6.1.2.  Vetting brand
+       6.1.3.  Allocation TNs
+       6.1.4.  Granting brand proxy rights
+       6.1.5.  Revoking
+       6.1.6.  Witnessing and watching
+     6.2.  General evidence categories
+       6.2.1.  SAID
+       6.2.2.  Signature
+       6.2.3.  AID
+       6.2.4.  Signatures over SAIDs
+       6.2.5.  X509 certificates
+       6.2.6.  PASSporT
+       6.2.7.  ACDCs
+       6.2.8.  KELs {:#KEL}
+       6.2.9.  CVD
+       6.2.10. Credential
+       6.2.11. Bearer token
+       6.2.12. Targeted credential
+       6.2.13. JL
+     6.3.  Specific artifacts
+       6.3.1.  PSS
+       6.3.2.  Dossier
+       6.3.3.  Accountable Party Evidence
+       6.3.4.  Delegation Evidence
+       6.3.5.  Vetting credential
+       6.3.6.  TNAlloc credential
+       6.3.7.  Brand credential
+       6.3.8.  Brand proxy credential
+   7.  Security Considerations
+   8.  Privacy
+   9.  IANA Considerations
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -179,7 +202,7 @@ Table of Contents
    for a call; the accountable party is transparently and provably
    accountable, period.  (Notwithstanding this transparency, ACDCs
    support a form of pseudonymity and graduated disclosure that
-   satisfies vital privacy and data processing constraints.  See 5.)
+   satisfies vital privacy and data processing constraints.  See 8.)
 
 1.2.  Vetting refinements
 
@@ -214,20 +237,20 @@ Table of Contents
 
 3.  Overview
 
-   Fundamentally, VVP requires a caller to assemble a dossier (3.5.2.2)
-   of stable evidence that proves identity and authorization.  This is
-   done once or occasionally, in advance, as a configuration
-   precondition.  Then, for each call, an ephemeral STIR-compatible VVP
-   PASSporT (3.5.1.6) is generated that cites the preconfigured dossier.
-   Verifiers check the dossier, including realtime revocation status, to
-   make decisions.
+   Fundamentally, VVP requires a caller to assemble a dossier (6.3.2) of
+   stable evidence that proves identity and authorization.  This is done
+   once or occasionally, in advance, as a configuration precondition.
+   Then, for each call, an ephemeral STIR-compatible VVP PASSporT
+   (6.2.6) is generated that cites the preconfigured dossier.  Verifiers
+   check the dossier, including realtime revocation status, to make
+   decisions.
 
 3.1.  Roles
 
    The following roles require careful definition.  Their meaning in VVP
    may not match casual usage.
 
-3.1.1.  Allocation Holder, TNU
+3.1.1.  Allocation Holder
 
    An _allocation holder_ (_AH_) controls how a telephone number is
    used, in the eyes of a regulator.  Typically, range holders are AHs,
@@ -241,14 +264,14 @@ Table of Contents
    this outcome, and prefer that such parties broker allocations without
    actually holding the allocations as intermediaries.
 
-3.1.2.  Terminating Party, Terminating Service Provider
+3.1.2.  Terminating Party
 
    For a given phone call, the _terminating party_ (_TP_) receives the
    call.  These can be individual consumers or organizations.  The
    direct service provider of the TP is the _terminating service
    provider_ (_TSP_).
 
-3.1.3.  Originating Party, Originating Service Provider
+3.1.3.  Originating Party
 
    An _originating party_ (_OP_) controls the first _session border
    controller_ (_SBC_) that processes a call.
@@ -299,7 +322,7 @@ Table of Contents
    or in the jurisdiction of a particular TP, given the business purpose
    asserted in a particular call.
 
-3.2.  Lifecycle note
+3.2.  Lifecycle
 
    VVP depends on three interrelated activities with evidence:
 
@@ -323,7 +346,7 @@ Table of Contents
    concepts are used, inline references allow easy cross-reference to
    formal definitions.
 
-3.3.  Citing
+4.  Citing
 
    A call secured by VVP begins when the OP (3.1.3) generates a new VVP
    PASSporT that complies with STIR [RFC8224] requirements.  The
@@ -397,7 +420,7 @@ Table of Contents
 
    *  jti _(required)_ Follows standard JWT semantics.
 
-3.4.  Verifying
+5.  Verifying
 
    When a verifier encounters a VVP passport, they use the following
    algorithm to verify:
@@ -416,8 +439,8 @@ Table of Contents
         is at least making a testable assertion and can be held
         accountable for it.
 
-   5.   Extract the evd field, which references the dossier (3.5.2.2)
-        that constitutes backing evidence.
+   5.   Extract the evd field, which references the dossier (6.3.2) that
+        constitutes backing evidence.
 
    6.   Check to see whether the dossier has already been fully
         validated.  Since dossiers are highly stable, caching dossier
@@ -445,7 +468,7 @@ Table of Contents
 
    9.   Assuming that the dossier is valid and has no breakages due to
         revocation, confirm that the OP is authorized to make the phone
-        call.  If there is no DE (3.5.2.4), the OP must be the issuee of
+        call.  If there is no DE (6.3.4), the OP must be the issuee of
         the vetting credential; otherwise, the OP must be the issuee of
         a delegated signing credential for which the issuer is the AP.
 
@@ -494,16 +517,101 @@ Table of Contents
 
    TODO: talk about second-level caching, of revocation status.
 
-3.5.  Evidence
+6.  Curating
 
-3.5.1.  General categories
+   The evidence that's available in today's telecom ecosystems resembles
+   some of the evidence described here, in concept.  However, it has
+   gaps, and its format is fragile.  Furthermore, if it is organized for
+   discovery, it is typically assembled into large, centralized
+   registries at a regional or national level.  These registries become
+   a trusted third party, which defeats some of the purpose of creating
+   decentralized and independently verifiable evidence in the first
+   place.  Sharing such evidence across jurisdiction boundaries requires
+   regulatory compatibility and bilateral agreements.  Sharing at scale
+   is impractical at best, if not downright illegal.
+
+   How evidence is issued, propagated, and reference is therefore an
+   important concern for this specification.
+
+6.1.  Activities
+
+6.1.1.  Vetting entity identity
+
+   The job of vetting legal entities (which includes APs, but also OPs)
+   and issuing vetting credentials is performed by a _legal entity
+   vetter_ (_LEV_).  VVP places few requirements on such vetters, other
+   than the ones already listed for vetting credentials themselves.
+   Vetting credentials do not need to expire, and in fact ACDCs and AIDs
+   facilitate much longer lifecycles than certificates; prophylactic key
+   rotation is recommended but creates no reason to rotate evidence.
+   However, the LEV MUST agree to revoke vetting credentials in a timely
+   manner if the legal status of an entity changes, or if data in a
+   vetting credential becomes invalid.
+
+6.1.2.  Vetting brand
+
+   The job of analyzing the brand assets of a legal entity and issuing
+   brand credentials is performed by a _brand vetter_ (_BV_).  A BV MAY
+   be an LEV, and MAY issue both types of credentials after a composite
+   analysis.  However, the credentials themselves MUST NOT use a
+   combined schema, the credentials MUST have independent lifecycles,
+   and the assurances associated with each credential type MUST remain
+   independent.  A BV MUST verify the canonical properties of a brand,
+   but it MUST do more than this: it MUST issue the brand credential to
+   the AID of an issuee that is also the issuee of a vetting credential
+   that already exists, and it MUST verify that the legal entity in the
+   vetting credential has a right to use the brand in question.  This
+   link MUST NOT be based on mere weak evidence such as an observation
+   that the legal entity's name and the brand name have some or all
+   words in common, or the fact that a single person requested both
+   credentials.  Further, the BV MUST agree to revoke brand credentials
+   in a timely manner if the associated vetting credential is revoked,
+   if the legal entity's right to use the brand changes, or if
+   characteristics of the brand evolve.
+
+6.1.3.  Allocation TNs
+
+   Regulators issue TNAlloc credentials to range holders, and range
+   holders issue them to TNUs, and TNUs MAY issue them to a delegate.
+   If aggregators or other intemediaries hold an RTU in the eyes of a
+   regulator, then intermediate TNAlloc credentials MUST be created to
+   track that RTU as part of the chain.  On the other hand, if TNUs
+   acquire telephone numbers through aggregators, but regulators do not
+   consider aggregators to hold allocations, then aggregators MUST work
+   with range holders to assure that the appropriate TNAlloc credentials
+   are issued to the TNUs.
+
+6.1.4.  Granting brand proxy rights
+
+   APs issue brand proxy credentials to OPs.
+
+   Vetting and brand credentials may require large databases of metadata
+   about organizations and brands, but how such systems work is out of
+   scope.  Once credentials are issued, they are an independent source
+   of truth.  No party has to return to the operators of such databases
+   to validate anything.
+
+   Issuance and revocation of all other credentials is self-service at
+   every level, and does not require any large, centralized system.
+
+   (TODO: finish.  The AIDs of issuers SHOULD be linked to witnesses...)
+
+6.1.5.  Revoking
+
+   TODO
+
+6.1.6.  Witnessing and watching
+
+   TODO
+
+6.2.  General evidence categories
 
    The term "credential" has a fuzzy meaning in casual conversation.
    However, understanding how evidence is built from credentials in VVP
    requires considerably more precision.  We will start from lower-level
    concepts.
 
-3.5.1.1.  SAID
+6.2.1.  SAID
 
    A _self-addressing identifier_ (_SAID_) is the hash of a
    canonicalized JSON object, encoded in self-describing CESR format
@@ -522,7 +630,7 @@ Table of Contents
    that was hashed to produce them (though they are more similar to URNs
    than to URLs [RFC3986], since they contain no location information).
 
-3.5.1.2.  Signature
+6.2.2.  Signature
 
    A digital signature over arbitrary data D constitutes evidence that
    the signer processed D with a signing function that took D and the
@@ -543,7 +651,7 @@ Table of Contents
    undermines the security of many credential schemes, including in
    telecom.  VVP explicitly addresses this concern.
 
-3.5.1.3.  AID
+6.2.3.  AID
 
    An _autonomic identifier_ (_AID_) is a short string that can be
    resolved to one or more cryptographic keys at a specific version of
@@ -576,7 +684,7 @@ Table of Contents
    forth).  These properties are vital to some of VVP's goals for high
    assurance.
 
-3.5.1.4.  Signatures over SAIDs
+6.2.4.  Signatures over SAIDs
 
    Since neither a SAID value nor the data it hashes can be changed
    without breaking the correspondence between them, signing over a SAID
@@ -590,7 +698,7 @@ Table of Contents
 
    VVP uses SAIDs and digital signatures as primitive forms of evidence.
 
-3.5.1.5.  X509 certificates
+6.2.5.  X509 certificates
 
    VVP does not depend on X509 certificates [RFC5280] for any of its
    evidence.  However, if deployed in a hybrid mode, it MAY be used
@@ -602,13 +710,13 @@ Table of Contents
    authorization analysis flows through VVP's more rich and flexible
    evidence chain.
 
-3.5.1.6.  PASSporT
+6.2.6.  PASSporT
 
    VVP emits and verifies a STIR PASSporT [RFC8225].  This is a form of
    evidence suitable for evaluation during the brief interval when a
    call is being initiated, and it is carefully backed by evidence with
-   a longer lifespan (3.5.2.2).  Conceptually, VVP's version is similar
-   to a SHAKEN passport [RFC8588].  It MAY also reference brand-related
+   a longer lifespan (6.3.2).  Conceptually, VVP's version is similar to
+   a SHAKEN passport [RFC8588].  It MAY also reference brand-related
    evidence, allowing it to play an additional role similar to the RCD
    passport [RCD-PASSPORT].
 
@@ -641,7 +749,7 @@ Table of Contents
 
              Figure 1: SHAKEN PASSporT compared to VVP PASSporT
 
-3.5.1.7.  ACDCs
+6.2.7.  ACDCs
 
    Besides digital signatures and SAIDs, and the ephemeral passport, VVP
    uses long-lasting evidence in the ACDC format [TOIP-ACDC].  This is
@@ -651,7 +759,7 @@ Table of Contents
    has a radical effect on the lifecycle of evidence, because keys can
    be rotated without invalidating ACDCs.
 
-3.5.1.8.  KELs {:#KEL}
+6.2.8.  KELs {:#KEL}
 
    Unlike X509 certificates, JWTs [RFC7519], and W3C Verifiable
    Credentials [W3C-VC], signatures over ACDC data are not _contained
@@ -711,7 +819,7 @@ Table of Contents
    different fields of the evidence data, to address privacy,
    regulatory, and legal requirements.
 
-3.5.1.9.  CVD
+6.2.9.  CVD
 
    _Cryptographically verifiable data_ (_CVD_) is data that's associated
    with a digital signature and a claim about who signed it.  When CVD
@@ -721,7 +829,7 @@ Table of Contents
    can be embodied in many formats, but in the context of VVP, all
    instances of CVD are ACDCs.
 
-3.5.1.10.  Credential
+6.2.10.  Credential
 
    A _credential_ is a special kind of CVD that asserts entitlements for
    its legitimate bearer -- _and only its bearer_. CVD that says
@@ -736,7 +844,7 @@ Table of Contents
 
    ACDCs can embody any kind of CVD, not just credentials.
 
-3.5.1.11.  Bearer token
+6.2.11.  Bearer token
 
    VVP never uses bearer tokens, but we define them here to provide a
    contrast.  A _bearer token_ is a credential that satisfies binding
@@ -750,7 +858,7 @@ Table of Contents
    imperfect.  For example, TLS channels can be terminated and recreated
    at multiple places between call origination and delivery.
 
-3.5.1.12.  Targeted credential
+6.2.12.  Targeted credential
 
    A _targeted credential_ is CVD that identifies an issuee as the
    bearer, and that requires the issuee to prove their identity
@@ -758,15 +866,15 @@ Table of Contents
    order to claim the associated privilege.  All credentials in VVP are
    targeted credentials.
 
-3.5.1.13.  JL
+6.2.13.  JL
 
    A _justifying link_ (_JL_) is a reference, inside of one CVD, to
    another CVD that justifies what the first CVD is asserting.  JLs can
    be SAIDs that identify other ACDCs.
 
-3.5.2.  Specific artifacts
+6.3.  Specific artifacts
 
-3.5.2.1.  PSS
+6.3.1.  PSS
 
    Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE
    contains an Identity header that MUST contain a signature from the
@@ -786,16 +894,16 @@ Table of Contents
    missing), optional call-reason (with value null if missing), optional
    goal (with value null if missing), and a reference to evidence (evd).
 
-3.5.2.2.  Dossier
+6.3.2.  Dossier
 
-   The evd field in the passport contains the OOBI (3.5.1.3) of an ACDC
+   The evd field in the passport contains the OOBI (6.2.3) of an ACDC
    data graph called the _dossier_. The dossier is a compilation of all
    the permanent, backing evidence that justifies trust in the identity
    and authorization of the AP and OP.  It is created and must be signed
-   by the AP.  It is CVD (3.5.1.9) asserted to the world, not a
-   credential (3.5.1.10) issued to a specific party.
+   by the AP.  It is CVD (6.2.9) asserted to the world, not a credential
+   (6.2.10) issued to a specific party.
 
-3.5.2.3.  APE
+6.3.3.  Accountable Party Evidence
 
    The dossier MUST include at least what is called _accountable party
    evidence_ (_APE_).
@@ -812,7 +920,7 @@ Table of Contents
    [RFC7095].)  If no brand credential is present, verifiers MUST NOT
    impute a brand to the call on the basis of any VVP guarantees.
 
-3.5.2.4.  Delegation Evidence
+6.3.4.  Delegation Evidence
 
    When a private individual makes a call with VVP, they might be both
    the AP and the OP.  In such cases, we expect their AID to be the
@@ -891,7 +999,7 @@ Table of Contents
    proved by strong evidence that the AP can create or revoke easily, in
    a self-service manner.
 
-3.5.2.5.  Vetting credential
+6.3.5.  Vetting credential
 
    A vetting credential is a targeted credential that enumerates the
    formal and legal attributes of a unique legal entity.  It MUST
@@ -918,7 +1026,7 @@ Table of Contents
 
    (TODO: sample vetting credential)
 
-3.5.2.6.  TNAlloc credential
+6.3.6.  TNAlloc credential
 
    A TNAlloc credential is a targeted credential that confers on its
    issuee the right to control how one or more telephone numbers are
@@ -935,7 +1043,7 @@ Table of Contents
    equal or broader RTU, from which the subset RTU in child credential
    derives.
 
-3.5.2.7.  Brand credential
+6.3.7.  Brand credential
 
    A brand credential is a targeted credential that enumerates brand
    properties such as a brand name, logo, chatbot URL, social media
@@ -961,7 +1069,7 @@ Table of Contents
    shows that the right to use the brand was evaluated only after using
    a vetting credential to prove the identity of the issuee.
 
-3.5.2.8.  Brand proxy credential
+6.3.8.  Brand proxy credential
 
    A brand proxy credential confers on an OP the right to project the
    brand of an AP when making phone calls, subject to a carefully
@@ -974,99 +1082,22 @@ Table of Contents
    and wants the proxy to project the AP's brand, the AP MUST issue this
    credential.
 
-3.6.  Curating
-
-   The evidence that's available in today's telecom ecosystems resembles
-   some of the evidence described here, in concept.  However, it has
-   gaps, and its format is fragile.  Furthermore, if it is organized for
-   discovery, it is typically assembled into large, centralized
-   registries at a regional or national level.  These registries become
-   a trusted third party, which defeats some of the purpose of creating
-   decentralized and independently verifiable evidence in the first
-   place.  Sharing such evidence across jurisdiction boundaries requires
-   regulatory compatibility and bilateral agreements.  Sharing at scale
-   is impractical at best, if not downright illegal.
-
-   How evidence is issued, propagated, and reference is therefore an
-   important concern for this specification.
-
-3.6.1.  Vetting
-
-   The job of vetting legal entities (which includes APs, but also OPs)
-   and issuing vetting credentials is performed by a _legal entity
-   vetter_ (_LEV_).  VVP places few requirements on such vetters, other
-   than the ones already listed for vetting credentials themselves.
-   Vetting credentials do not need to expire, and in fact ACDCs and AIDs
-   facilitate much longer lifecycles than certificates; prophylactic key
-   rotation is recommended but creates no reason to rotate evidence.
-   However, the LEV MUST agree to revoke vetting credentials in a timely
-   manner if the legal status of an entity changes, or if data in a
-   vetting credential becomes invalid.
-
-3.6.2.  Brand information
-
-   The job of analyzing the brand assets of a legal entity and issuing
-   brand credentials is performed by a _brand vetter_ (_BV_).  A BV MAY
-   be an LEV, and MAY issue both types of credentials after a composite
-   analysis.  However, the credentials themselves MUST NOT use a
-   combined schema, the credentials MUST have independent lifecycles,
-   and the assurances associated with each credential type MUST remain
-   independent.  A BV MUST verify the canonical properties of a brand,
-   but it MUST do more than this: it MUST issue the brand credential to
-   the AID of an issuee that is also the issuee of a vetting credential
-   that already exists, and it MUST verify that the legal entity in the
-   vetting credential has a right to use the brand in question.  This
-   link MUST NOT be based on mere weak evidence such as an observation
-   that the legal entity's name and the brand name have some or all
-   words in common, or the fact that a single person requested both
-   credentials.  Further, the BV MUST agree to revoke brand credentials
-   in a timely manner if the associated vetting credential is revoked,
-   if the legal entity's right to use the brand changes, or if
-   characteristics of the brand evolve.
-
-3.6.3.  TN allocations
-
-   Regulators issue TNAlloc credentials to range holders, and range
-   holders issue them to TNUs, and TNUs MAY issue them to a delegate.
-   If aggregators or other intemediaries hold an RTU in the eyes of a
-   regulator, then intermediate TNAlloc credentials MUST be created to
-   track that RTU as part of the chain.  On the other hand, if TNUs
-   acquire telephone numbers through aggregators, but regulators do not
-   consider aggregators to hold allocations, then aggregators MUST work
-   with range holders to assure that the appropriate TNAlloc credentials
-   are issued to the TNUs.
-
-3.6.4.  Brand proxy
-
-   APs issue brand proxy credentials to OPs.
-
-   Vetting and brand credentials may require large databases of metadata
-   about organizations and brands, but how such systems work is out of
-   scope.  Once credentials are issued, they are an independent source
-   of truth.  No party has to return to the operators of such databases
-   to validate anything.
-
-   Issuance and revocation of all other credentials is self-service at
-   every level, and does not require any large, centralized system.
-
-   (TODO: finish.  The AIDs of issuers SHOULD be linked to witnesses...)
-
-4.  Security Considerations
+7.  Security Considerations
 
    TODO Security
 
-5.  Privacy
+8.  Privacy
 
    TODO Discuss graduated disclosure, compact versus expanded ACDCs,
    etc.
 
-6.  IANA Considerations
+9.  IANA Considerations
 
    This document has no IANA actions.
 
-7.  References
+10.  References
 
-7.1.  Normative References
+10.1.  Normative References
 
    [FIPS186-4]
               National Institute of Standards and Technology (NIST),
@@ -1140,7 +1171,7 @@ Table of Contents
               Infrastructure (KERI)", January 2024,
               <https://trustoverip.github.io/tswg-keri-specification/>.
 
-7.2.  Informative References
+10.2.  Informative References
 
    [ATIS-1000074]
               Alliance for Telecommunications Industry Solutions,
