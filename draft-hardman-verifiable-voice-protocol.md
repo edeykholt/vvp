@@ -106,31 +106,29 @@ Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and i
 --- middle
 
 # Introduction
-When we get phone calls, we want to know who's calling, and why. If we could answer such questions with confidence, we would make reasonable judgments about whether to answer, based on the relationship and reputation context.
+When we get phone calls, we want to know who's calling, and why. Annoying strangers abuse expectations far too often.
 
-Unfortunately, providing quality answers is much harder than it seems. Scammers love to impersonate, and they succeed more often than we'd like.
+Regulators are wisely mandating countermeasures. This creates heavy burdens. Vetting every possible caller is ambitious. Monitoring all certificates and cryptographic keys is harder. Operating a central registry, especially across jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting standards, variety in PSTNs and system interconnects, and many other factors further complexify.
 
-Regulators are mandating increased transparency to address this risk. This is wise, and it can be effective. However, it introduces some heavy burdens. Reliably vetting the identity of every possible caller is an ambitious task. Maintaining a comprehensive, up-to-date graph of certificates and cryptographic keys to attest vetted identities is harder. Operating a central registry of such identities and evidence, especially as phone calls increasingly cross jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting technical standards, variety in PSTNs and system interconnects, and many other factors further complexify.
+Yet the inherent limit in today's protections is even more fundamental: a pernicious gap between the party accountable for a call, and the party that provides evidence about who's calling. A decade ago, terminating service providers told us who's calling in a probabilistic way, based on unreliable metadata. More recently, approaches like STIR/SHAKEN move evidence closer to the origin, and add tamper detection. However, the gap persists. The signer of a SHAKEN passport is the originating service provider, not the caller, and we have no evidence to close this gap. If the originating service provider lacks reputation (e.g, because it operates outside the regulated jurisdiction), we have few good options. A high percentage of STIR/SHAKEN traffic does not receive an A attestation, and even the traffic that does receive it may receive it on imperfect evidence.
 
-Yet the inherent limit in today's transparency efforts is even more fundamental: a pernicious gap between the party accountable for a phone call, and the party that provides evidence about who's calling. A decade ago, terminating service providers (TSPs) told us who's calling in a probabilistic way, based on unreliable metadata about a call's source. More recently, approaches like STIR/SHAKEN move the evidence source closer to the origin, and add tamper protections. However, the gap persists. The signer of a SHAKEN passport is the originating service provider (OSP), not the enterprise that makes a call, and we have no evidence to close this gap, other than the OSP's say-so. Further, signers outside the regulated jurisdiction lack reputation for a mixture of reasons. Thus, a high percentage of STIR/SHAKEN traffic does not receive an A attestation, and even the traffic that does receive it may receive it on imperfect evidence.
-
-In theory, the remaining gap could be eliminated by requiring a perfect authentication and authorization between callers and OSPs, for every phone call -- simply refuse to connect calls that do not match an ideal profile for trust. However, this is impractical for many legitimate business reasons. To cite one obvious example, Organization X might hire Call Center Y to call on their behalf, using X's reputation/brand and X's phone number. In such a situation, X is the relevant answer to the "who's calling" question, but Y is the originator of the call -- and there's no good way to guarantee that everyone knows the existence and status of that relationship. In addition, the market manifests a demand for wholesalers/aggregators of phone numbers, and is characterized by complex system layers and interconnects, that further challenge transparency.
+In theory, this gap could be eliminated by perfect authentication and authorization between callers and OSPs, for every phone call: simply refuse to connect calls that do not match an ideal profile for trust. However, this is impractical. Organization X might hire Call Center Y to call on their behalf, using X's reputation/brand and X's phone number. In such a situation, X is the relevant answer to the "who's calling" question, but Y is the originator of the call -- and there's no good way to guarantee that everyone understands that relationship. In addition, the market demands wholesalers/aggregators of phone numbers, and is characterized by complex system layers and interconnects, that further challenge transparent accountability.
 
 VVP solves these problems by applying two crucial innovations.
 
 ## Evidence format
-VVP uses an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates {{RFC5280}}. It is also capable of modeling nuanced delegated relationships such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller, while preserving perfect transparency. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so.
+VVP uses an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates {{RFC5280}}. It is also capable of modeling nuanced delegations such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so.
 
-The evidence that Y cites can be built and maintained by X and Y, doesn't get stale or require periodic reissuance, and does not need to be published in a central registry.
+The evidence that Y cites can be built and maintained by X and Y, doesn't get stale or require periodic reissuance, and doesn't need to be published in a central registry.
 
 Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}} require direct trust in the proximate issuer.
 
-The synergies of these properties mean that ACDCs can be permanent, low-maintenance, lossless rather than lossy in delegation, and flexible rather than fragile. When used as VVP requires, no third party has to guess who's accountable for a call; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. See {{<privacy}}.)
+The synergies of these properties mean that ACDCs can be permanent, flexible, robust, low-maintenance, and lossless rather than lossy in delegation. In VVP, no third party has to guess who's accountable for a call; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. See {{<privacy}}.)
 
 ## Vetting refinements
-Although VVP can work inside governance frameworks such as SHAKEN {{ATIS-1000074}}, it allows for a dramatic upgrade of at least one key ingredient: the foundational vetting mechanism. The ACDC format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO-17442-3}}. vLEIs use a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI {{ISO-17442-1}} that's globally required in high-security, high-regulation, cross-border banking.
+Although VVP operates with governance frameworks such as SHAKEN {{ATIS-1000074}}, it allows for a dramatic upgrade of at least one key component: the foundational vetting mechanism. The evidence format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO-17442-3}}. vLEIs implement a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI {{ISO-17442-1}} that's globally required in high-security, high-regulation, cross-border banking.
 
-To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts. If VVP chose a weaker evidence format like X509 or SD-JWT or W3C VCs, higher vetting standards in some jurisdictions or use cases would not be an option.
+To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially, to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts. If VVP chose a weaker evidence format like X509 or SD-JWT or W3C VCs, higher vetting standards in some jurisdictions or use cases would not be an option.
 
 # Conventions and Definitions
 
@@ -138,27 +136,29 @@ To be clear, VVP does not *require* that vLEIs be used for vetting. However, by 
 
 # Overview
 
-Fundamentally, Verifiable Voice Protocol requires a caller to assemble a dossier ({{<dossier}}) of evidence that proves identity and authorization. This is done once, in advance, as a configuration precondition. Then, for each call, a STIR-compatible VVP PASSporT is built that cites this dossier. Verifiers examine the dossier to make decisions. PASSporTs are ephemeral and last only as long as an SIP INVITE is being evaluated, but the dossiers that they cite may be permanent and are cacheable. Revocation of dossier details is checked in realtime.
+Fundamentally, VVP requires a caller to assemble a dossier ({{<dossier}}) of stable evidence that proves identity and authorization. This is done once or occasionally, in advance, as a configuration precondition. Then, for each call, an ephemeral STIR-compatible VVP PASSporT ({{<passport}}) is generated that cites the preconfigured dossier. Verifiers check the dossier, including realtime revocation status, to make decisions.
 
 ## Roles
 
-Carefully defining the roles played by parties that participate in VVP is foundational to the rest of the specification. The following terms have special meaning to VVP and may not match casual usage.
+The following roles require careful definition. Their meaning in VVP may not match casual usage.
 
 ### Allocation Holder, TNU
-An *allocation holder* (*AH*) is a party that controls how a telephone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct *telephone number users* (*TNUs*). TNUs are customers of range holders -- enterprises and consumers. Range holders are service providers; although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges.
+An *allocation holder* (*AH*) controls how a telephone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct *telephone number users* (*TNUs*). TNUs are customers of range holders -- enterprises and consumers. Range holders are service providers; although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges.
 
 It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.
 
 ### Terminating Party, Terminating Service Provider {#TP}
-For a given phone call, the *terminating party* (*TP*) is the party that receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
+For a given phone call, the *terminating party* (*TP*) receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the *terminating service provider* (*TSP*).
 
 ### Originating Party, Originating Service Provider {#OP}
-An *originating party* (*OP*) is a party that controls the first *session border controller* (*SBC*) that processes a call. It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
+An *originating party* (*OP*) controls the first *session border controller* (*SBC*) that processes a call.
+
+It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
 The direct service provider of an OP is its *originating service provider* (*OSP*). For a given phone call, there may be many layers, boundaries, and transitions between OSP and TSP.
 
 ### Accountable Party {#AP}
-An *accountable party* (*AP*) is a TNU -- an organization or individual that holds the right to use a telephone number (RTU) in the eyes of a regulator. When a terminating party asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs MAY operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect for logistical reasons. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.
+For a given call, the *accountable party* (*AP*) is the organization or individual that has the right to use the source telephone number, according to the associated regulator. When a TP asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs MAY operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.
 
 ### Verifier
 A *verifier* is a party that wants to know who's calling, and why, and that evaluates the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
@@ -172,12 +172,12 @@ VVP depends on three interrelated activities with evidence:
 * Citing
 * Verifying
 
-Chronologically, evidence must be curated before it can be cited or verified. In addition, some trust gaps in existing approaches occur precisely because too few requirements are imposed on evidence. Therefore, understanding the nature of backing evidence, and how that evidence is created and maintained, is a crucial consideration for VVP. This specification includes normative statements about evidence.
+Chronologically, evidence must be curated before it can be cited or verified. In addition, some vulnerabilities in existing approaches occur because evidence requirements are too loose. Therefore, understanding the nature of backing evidence, and how that evidence is created and maintained, is a crucial consideration for VVP. This specification includes normative statements about evidence.
 
 However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions.
 
 ## Citing
-A call secured by VVP begins when the OP ({{<OP}}) builds a VVP PASSporT that complies with STIR {{RFC8224}}. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
+A call secured by VVP begins when the OP ({{<OP}}) generates a new VVP PASSporT that complies with STIR {{RFC8224}} requirements. The passport is a compact-serialized JWT {{RFC7519}} that appears in an `Identity` header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:
 
 ~~~ json
 {
@@ -217,9 +217,28 @@ The semantics of the fields are:
 
 ## Verifying
 
-(TODO: Verifier has a cache that was populated by monitoring the witnesses of known issuer AIDs. (If a new issuer is encountered, it can look up the witnesses and begin monitoring.) Etc.
+When a verifier encounters a VVP passport, they use the following algorithm to verify:
 
-Also discuss deploying in a hybrid mode to extend S/S.)
+1. Confirm that the `orig` and `dest` fields match contextual observations and other SIP metadata.
+1. Extract the `kid` field.
+1. Fetch the key state for the OP from the OOBI. (Caches may be used to optimize this, as long as they satisfy the freshness requirements of the verifier.)
+1. Use the public key of the OP to verify that the signature on the passport is valid. On success, the verifier knows that the OP is at least making a testable assertion and can be held accountable for it. 
+1. Extract the `evd` field, which references the dossier ({{<dossier}}) that constitutes backing evidence.
+1. Check to see whether the dossier has already been fully validated. Since dossiers are highly stable, caching dossier validations is recommended.
+1. If the dossier requires full validation, perform it. Validation includes checking the signatures on each ACDC against the key state of the issuer at the time the issuance occurred. Key state is proved by the KEL, and checked against independent witnesses. (Subsequent key rotations do not invalidate this analysis, which is a vital improvement over certificate-based evidence.) Validation also includes comparing data structure and values against the declared schema, plus a full traversal of all chained CVD, back to the root of trust for each artifact. The correct relationships among evidence artifacts is checked (e.g., proving that the issuer of one piece is the issuee of another piece).
+1. Check to see whether the revocation status of the dossier has been tested recently enough to satisfy the verifier's freshness constraints. If no, check for revocations anywhere in the data graph of the dossier. Revocations are not the same as key rotations. They can be checked much more quickly than doing a full validation.
+1. Assuming that the dossier is valid and has no breakages due to revocation, confirm that the OP is authorized to make the phone call. If there is no DE ({{<DE}}), the OP must be the issuee of the vetting credential; otherwise, the OP must be the issuee of a delegated signing credential for which the issuer is the AP.
+1. Extract the `orig` field and compare it to the TNAlloc credential in the dossier to confirm that the AP (or, if OP is not equal to AP and OP is using their own number, the OP) has the right to call on this number.
+1. If the passport includes the `card` or `goal` fields, extract that information and check that the brand attributes claimed for the call are justified by the brand credential in the dossier.
+1. Check any business logic. For example, if the delegated signer credential says that the OP can only call on behalf of the AP during certain hours, or in certain geos, check those attributes of the call.   
+
+The complete algorithm listed above is quite rigorous. With no caches, it may take a second or two, much like a full validation of a certificate chain. However, because ACDC-based evidence is indexed by SAID, any given ACDC only needs to be validated once in its lifespan, which persists across key rotations and may last as long as an AP uses a phone number -- years or decades. This allows very aggressive caching. And since the same dossier is used to justify many outbound calls -- perhaps thousands or millions of calls, for busy call centers -- and many dossiers will reference the same issuers and issuees and their associated key states and KELs, caching will produce huge benefits.
+
+Furthermore, because SAIDs and their associated data (including links to other nodes in a data graph) have a tamper-evident relationship, any party can perform validation and compile their results, then share the data with verifiers that want to do less work. Validators like this are not oracles, because consumers of such data need not trust shared results blindly. They can always directly recompute some or all of it from a passport, to catch deception. However, they can do this lazily or occasionally, per their preferred balance of risk/effort.
+
+*In toto*, these characteristics mean that no centralized registry is required in any given ecosystem. Data can be fetched directly its source, with consent, across jurisdictional boundaries. Simple opportunistic, uncoordinated reuse (e.g., in or across the datacenters of TSPs) will arise spontaneously and will dramatically improve the scale and efficiency of the system. 
+
+TODO: talk about second-level caching, of revocation status.
 
 ## Evidence
 
