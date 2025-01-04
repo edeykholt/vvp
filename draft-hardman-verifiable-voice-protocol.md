@@ -245,7 +245,7 @@ The evidence that's available in today's telecom ecosystems resembles some of th
 
 How evidence is issued, propagated, and reference is therefore an important concern for this specification.
 
-## Activities 
+## Activities
 
 ### Vetting entity identity
 The job of vetting legal entities (which includes APs, but also OPs) and issuing vetting credentials is performed by a *legal entity vetter* (*LEV*). VVP places few requirements on such vetters, other than the ones already listed for vetting credentials themselves. Vetting credentials do not need to expire, and in fact ACDCs and AIDs facilitate much longer lifecycles than certificates; prophylactic key rotation is recommended but creates no reason to rotate evidence. However, the LEV MUST agree to revoke vetting credentials in a timely manner if the legal status of an entity changes, or if data in a vetting credential becomes invalid.
