@@ -243,7 +243,7 @@ Furthermore, because SAIDs and their associated data (including links to other n
 TODO: talk about second-level caching, of revocation status.
 
 # Curating
-The evidence that's available in today's telecom ecosystems resembles some of the evidence described here, in concept. However, it has gaps, and its format is fragile. Furthermore, if it is organized for discovery, it is typically assembled into large, centralized registries at a regional or national level. These registries become a trusted third party, which defeats some of the purpose of creating decentralized and independently verifiable evidence in the first place. Sharing such evidence across jurisdiction boundaries requires regulatory compatibility and bilateral agreements. Sharing at scale is impractical at best, if not downright illegal.
+The evidence that's available in today's telecom ecosystems resembles some of the evidence described here, in concept. However, it has gaps, and its format is fragile. Furthermore, if it is organized for discovery, it is typically assembled into large, centralized registries at a regional or national level. These registries become a trusted third party, which defeats some of the purpose of creating decentralized and independently verifiable evidence in the first place. Sharing such evidence across jurisdiction boundaries requires regulatory compatibility and bilateral agreements. Sharing at scale is impractical at best, if not illegal.
 
 How evidence is issued, propagated, and reference is therefore an important concern for this specification.
 
