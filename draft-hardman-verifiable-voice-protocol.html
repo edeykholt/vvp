@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Hardman</td>
-<td class="center">Expires 13 July 2025</td>
+<td class="center">Expires 21 July 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-hardman-verifiable-voice-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-01-09" class="published">9 January 2025</time>
+<time datetime="2025-01-17" class="published">17 January 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-07-13">13 July 2025</time></dd>
+<dd class="expires"><time datetime="2025-07-21">21 July 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1115,7 +1115,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1328,9 +1328,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">When we get phone calls, we want to know who's calling, and why. Annoying strangers abuse expectations far too often.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Regulators are wisely mandating countermeasures. This creates heavy burdens. Vetting every possible caller is ambitious. Monitoring all certificates and cryptographic keys is harder. Operating a central registry, especially across jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting standards, variety in PSTNs and system interconnects, and many other factors further complexify.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Yet the inherent limit in today's protections is even more fundamental: a pernicious gap between the party accountable for a call, and the party that provides evidence about who's calling. A decade ago, terminating service providers told us who's calling in a probabilistic way, based on unreliable metadata. More recently, approaches like STIR/SHAKEN move evidence closer to the origin, and add tamper detection. However, the gap persists. The signer of a SHAKEN passport is the originating service provider, not the caller, and we have no evidence to close this gap. If the originating service provider lacks reputation (e.g, because it operates outside the regulated jurisdiction), we have few good options. A high percentage of STIR/SHAKEN traffic does not receive an A attestation, and even the traffic that does receive it may receive it on imperfect evidence.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-1">When we get phone calls, we want to know who's calling, and why. Annoying or malicious strangers abuse expectations far too often.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Regulators are mandating protections. This is wise, but it can create heavy burdens. Vetting every possible caller is ambitious. Monitoring all certificates and cryptographic keys is harder. Operating a central registry, especially across jurisdictional boundaries, is harder still. Regulatory constraints on data movement, shifting standards, variety in PSTNs and system interconnects, and many other factors further complexify.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">No matter how ambitious we become, our protections will remain inadequate until we close a pernicious gap between the party accountable for a call, and the party that provides evidence about who's calling. This disconnect is the root of many vulnerabilities. A decade ago, terminating service providers told us who's calling in a probabilistic way, based on unreliable metadata. More recently, approaches like STIR/SHAKEN move evidence closer to the origin, and add tamper detection. However, the gap persists. The signer of a SHAKEN passport is the originating service provider, not the caller, and we have no evidence to close this gap. If the originating service provider lacks reputation (e.g, because it operates outside the regulated jurisdiction), we have few good options. A high percentage of STIR/SHAKEN traffic does not receive an A attestation, and even the traffic that does receive it may receive it on imperfect evidence.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">In theory, this gap could be eliminated by perfect authentication and authorization between callers and OSPs, for every phone call: simply refuse to connect calls that do not match an ideal profile for trust. However, this is impractical. Organization X might hire Call Center Y to call on their behalf, using X's reputation/brand and X's phone number. In such a situation, X is the relevant answer to the "who's calling" question, but Y is the originator of the call -- and there's no good way to guarantee that everyone understands that relationship. In addition, the market demands wholesalers/aggregators of phone numbers, and is characterized by complex system layers and interconnects, that further challenge transparent accountability.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">VVP solves these problems by applying two crucial innovations.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <div id="evidence-format">
@@ -1338,7 +1338,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <h3 id="name-evidence-format">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-evidence-format" class="section-name selfRef">Evidence format</a>
         </h3>
-<p id="section-1.1-1">VVP uses an evidence format called <em>authentic chained data container</em>s (<em>ACDC</em>s) -- <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. It is also capable of modeling nuanced delegations such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X, and they can prove to any OSP or any other party, in any jurisdiction, that they have the right to do so.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">VVP uses an evidence format called <em>authentic chained data container</em>s (<em>ACDC</em>s) -- <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. The chaining feature in ACDCs is safer, more powerful, and easier to maintain than the one in X509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. It is also capable of modeling nuanced delegations such as the one between Organization X and Call Center Y. This eliminates the gap between accountable party and caller. Given X's formal approval, Y can sign a call on behalf of X, using a number allocated to X, and using X's brand, without impersonating X. They can also prove to any OSP or any other party, in any jurisdiction, that they have the right to do so.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">The evidence that Y cites can be built and maintained by X and Y, doesn't get stale or require periodic reissuance, and doesn't need to be published in a central registry.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <p id="section-1.1-3">Further, when such evidence is filtered through suballocations or crosses jurisdictional boundaries, it can be reused, or linked and transformed, without altering its robustness or efficiency. ACDCs verify data back to a root through arbitrarily long and complex chains of issuers, whereas formats like W3C Verifiable Credentials <span>[<a href="#W3C-VC" class="cite xref">W3C-VC</a>]</span> and SD-JWTs <span>[<a href="#SD-JWT-DRAFT" class="cite xref">SD-JWT-DRAFT</a>]</span> require direct trust in the proximate issuer.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">The synergies of these properties mean that ACDCs can be permanent, flexible, robust, low-maintenance, and lossless rather than lossy in delegation. In VVP, no third party has to guess who's accountable for a call; the accountable party is transparently and provably accountable, period. (Notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. See <a href="#privacy" class="auto internal xref">8</a>.)<a href="#section-1.1-4" class="pilcrow">¶</a></p>
@@ -1349,8 +1349,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <h3 id="name-vetting-refinements">
 <a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-vetting-refinements" class="section-name selfRef">Vetting refinements</a>
         </h3>
-<p id="section-1.2-1">Although VVP operates with governance frameworks such as SHAKEN <span>[<a href="#ATIS-1000074" class="cite xref">ATIS-1000074</a>]</span>, it allows for a dramatic upgrade of at least one key component: the foundational vetting mechanism. The evidence format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in <span>[<a href="#ISO-17442-3" class="cite xref">ISO-17442-3</a>]</span>. vLEIs implement a KYC approach established by the Regulatory Oversight Committee of the G20, based on the LEI <span>[<a href="#ISO-17442-1" class="cite xref">ISO-17442-1</a>]</span> that's globally required in high-security, high-regulation, cross-border banking.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.2-2">To be clear, VVP does not <em>require</em> that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially, to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts. If VVP chose a weaker evidence format like X509 or SD-JWT or W3C VCs, higher vetting standards in some jurisdictions or use cases would not be an option.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-1">Although VVP operates with governance frameworks such as SHAKEN <span>[<a href="#ATIS-1000074" class="cite xref">ATIS-1000074</a>]</span>, it allows for a dramatic upgrade of at least one core component: the foundational vetting mechanism. The evidence format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in <span>[<a href="#ISO-17442-3" class="cite xref">ISO-17442-3</a>]</span>. vLEIs implement a KYC approach advocated by the G20's Financial Stability Board, and overseen by the G20's Regulatory Oversight Committee. This approach follows LEI rules for KYC (<span>[<a href="#ISO-17442-1" class="cite xref">ISO-17442-1</a>]</span>), and today it's globally required in high-security, high-regulation, cross-border banking.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">Millions of institutions have already undergone LEI vetting, and they already use the resulting evidence of their organizational identity in day-to-day behaviors all over the world. By adopting tooling that's compatible with the vLEI ecosystem, VVP avoids imposing the burden of a whole new vetting regime, with its corresponding learning curve, costs, and legal and business adoption challenges.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">To be clear, VVP does not <em>require</em> that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially, to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts. If VVP had chosen a weaker evidence format like X509 or SD-JWT or W3C VCs, higher vetting standards in some jurisdictions or use cases would not be an option, and adopting VVP would always require building and rolling out a vetting infrastructure.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1377,13 +1378,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-roles">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-roles" class="section-name selfRef">Roles</a>
         </h3>
-<p id="section-3.1-1">The following roles require careful definition. Their meaning in VVP may not match casual usage.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">Understanding the workflow in VVP requires a careful definition of roles related to the protocol. The terms that follow have deep implications for the mental model, and their meaning in VVP may not match casual usage.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <div id="allocation-holder">
 <section id="section-3.1.1">
           <h4 id="name-allocation-holder">
 <a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-allocation-holder" class="section-name selfRef">Allocation Holder</a>
           </h4>
-<p id="section-3.1.1-1">An <em>allocation holder</em> (<em>AH</em>) controls how a telephone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct <em>telephone number users</em> (<em>TNUs</em>). TNUs are customers of range holders -- enterprises and consumers. Range holders are service providers; although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-1">An <em>allocation holder</em> (<em>AH</em>) controls how a phone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct <em>telephone number users</em> (<em>TNUs</em>). TNUs are customers of range holders: enterprises and consumers. Range holders are service providers. Although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-2">It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1392,7 +1393,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-terminating-party">
 <a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-terminating-party" class="section-name selfRef">Terminating Party</a>
           </h4>
-<p id="section-3.1.2-1">For a given phone call, the <em>terminating party</em> (<em>TP</em>) receives the call. These can be individual consumers or organizations. The direct service provider of the TP is the <em>terminating service provider</em> (<em>TSP</em>).<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-1">For a given phone call, the <em>terminating party</em> (<em>TP</em>) receives the call. A TP can be an individual consumer or an organization. The direct service provider of the TP is the <em>terminating service provider</em> (<em>TSP</em>).<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="OP">
@@ -1401,8 +1402,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-originating-party" class="section-name selfRef">Originating Party</a>
           </h4>
 <p id="section-3.1.3-1">An <em>originating party</em> (<em>OP</em>) controls the first <em>session border controller</em> (<em>SBC</em>) that processes a call, and therefore cites the evidence that authenticates and authorizes it.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-2">It may be tempting to equate the OP with "the caller", but this equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.1.3-3">It may also be tempting to associate the OP with an organizational identity like "Company X". While this is not wrong, and is in fact used in high-level descriptions in this specification, in its most careful definition, the cryptographic identity of an OP is more narrow. Tt typically corresponds to a single service operated by the IT department within (or at the behest of) Company X, rather than to Company X generically. This narrowness limits cybersecurity risk, because a single service operated by Company X needs far fewer privileges than the company as a whole. Failing to narrow identity appropriately creates vulnerabilities in some alternative approaches. The evidence securing VVP <span class="bcp14">MUST</span> therefore prove a valid relationship between the OP's narrow identity and the broader legal entities that stakeholders naturally conceive.<a href="#section-3.1.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-2">It may be tempting to equate the OP with "the caller", and in some ways this perspective may reflect some truth. However, this simple equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE <span>[<a href="#RFC3261" class="cite xref">RFC3261</a>]</span> with explicit, provable authorization from the party accountable for calls on the originating phone number.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-3">It may also be tempting to associate the OP with an organizational identity like "Company X". While this is not wrong, and is in fact used in high-level descriptions in this specification, in its most careful definition, the cryptographic identity of an OP is more narrow. It typically corresponds to a single service operated by an IT department within (or outsourced but operating at the behest of) Company X, rather than to Company X generically. This narrowness limits cybersecurity risk, because a single service operated by Company X needs far fewer privileges than the company as a whole. Failing to narrow identity appropriately creates vulnerabilities in some alternative approaches. The evidence securing VVP <span class="bcp14">MUST</span> therefore prove a valid relationship between the OP's narrow identity and the broader legal entities that stakeholders naturally conceive.<a href="#section-3.1.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-4">The direct service provider of an OP is its <em>originating service provider</em> (<em>OSP</em>). For a given phone call, there may be complexity between the hardware that begins a call and the SBC of the OP -- and there may also be many layers, boundaries, and transitions between OSP and TSP.<a href="#section-3.1.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1411,7 +1412,9 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-accountable-party">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-accountable-party" class="section-name selfRef">Accountable Party</a>
           </h4>
-<p id="section-3.1.4-1">For a given call, the <em>accountable party</em> (<em>AP</em>) is the organization or individual that has the right to use the source telephone number, according to the associated regulator. When a TP asks, "Who's calling?", it is almost always the AP that they want to identify; thus, the AP is "the caller", as far as the TP concerned. APs <span class="bcp14">MAY</span> operate their own SBCs and therefore be OPs. However, APs may also use a UCaaS provider that makes this relationship indirect. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">For a given call, the <em>accountable party</em> (<em>AP</em>) is the organization or individual that has the right to use the source phone number, according to the regulator of that number. When a TP asks, "Who's calling?", they have little interest in the technicalities of the OP, and it is almost always the AP that they want to identify. Thus, the AP is "the caller", as far as the regulator and the TP are concerned.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">APs may operate their own SBCs and therefore be their own OPs. However, APs may also use a UCaaS provider that makes the AP-OP relationship indirect. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf. None of these complexities alter the fact that, from the TP's perspective, the AP is "the caller". The TP chooses to answer or not, based on their desire to interact with the AP. If the TP's trust is abused, the regulator and the TP both want to hold the AP accountable.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-3">VVP requires an AP to prepare a dossier (<a href="#dossier" class="auto internal xref">6.3.2</a>) of evidence that documents the basis for imposing this accountability on them. Only the owner of a given dossier can prove they intend to initiate a VVP call that cites their dossier. Therefore, if a verifier confirms that a particular call properly matches its dossier, the verifier is justified in considering the owner of that dossier the AP for the call. Otherwise, someone is committing fraud. Accountability, and the basis for it, are both unambiguous.<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="verifier">
@@ -1420,7 +1423,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1.5" class="section-number selfRef">3.1.5. </a><a href="#name-verifier" class="section-name selfRef">Verifier</a>
           </h4>
 <p id="section-3.1.5-1">A <em>verifier</em> is a party that wants to know who's calling, and why, and that evaluates the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.5-2">In addition to checking the validity of cryptographic evidence, the verifier role in VVP <span class="bcp14">MAY</span> also consider how that evidence matches business rules and external conditions. For example, a verifier might begin its analysis by deciding whether Call Center Y has the right, in the abstract, to make calls on behalf of Organization X using a given telephone number. However, VVP evidence allows a verifier to go further: it can also consider whether Y is allowed to exercise this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.<a href="#section-3.1.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-2">In addition to checking the validity of cryptographic evidence, the verifier role in VVP <span class="bcp14">MAY</span> also consider how that evidence matches business rules and external conditions. For example, a verifier might begin its analysis by deciding whether Call Center Y has the right, in the abstract, to make calls on behalf of Organization X using a given phone number. However, VVP evidence allows a verifier to go further: it can also consider whether Y is allowed to exercise this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.<a href="#section-3.1.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1453,62 +1456,105 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-citing">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-citing" class="section-name selfRef">Citing</a>
       </h2>
-<p id="section-4-1">A call secured by VVP begins when the OP (<a href="#OP" class="auto internal xref">3.1.3</a>) generates a new VVP PASSporT that complies with STIR <span>[<a href="#RFC8224" class="cite xref">RFC8224</a>]</span> requirements. The passport is a compact-serialized JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> that appears in an <code>Identity</code> header in a SIP INVITE. In its JSON-serialized form, a typical VVP PASSporT might look like this:<a href="#section-4-1" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-4-2">
+<p id="section-4-1">A call secured by VVP begins when the OP (<a href="#OP" class="auto internal xref">3.1.3</a>) generates a new VVP PASSporT (<a href="#passport" class="auto internal xref">6.2.6</a>) that complies with STIR <span>[<a href="#RFC8224" class="cite xref">RFC8224</a>]</span> requirements. In its compact-serialized JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> form, this passport is then passed as an <code>Identity</code> header in a SIP INVITE <span>[<a href="#RFC3261" class="cite xref">RFC3261</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The passport directly answers the following questions:<a href="#section-4-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4-3.1">
+          <p id="section-4-3.1.1">What is the cryptographic identity of the OP?<a href="#section-4-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-3.2">
+          <p id="section-4-3.2.1">What was the OP's key state at the time the passport was created?<a href="#section-4-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-3.3">
+          <p id="section-4-3.3.1">What evidence exists to connect the OP to the AP?<a href="#section-4-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-3.4">
+          <p id="section-4-3.4.1">What brand attributes are intended to accompany the call?<a href="#section-4-3.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-4-4">The first two answers come from the <code>kid</code> header. The third answer is communicated in the required <code>evd</code> claim. The fourth answer is communicated in the optional <code>card</code> and <code>goal</code> claims.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-5">The answer about evidence is then used to indirectly answer the following additional questions:<a href="#section-4-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4-6.1">
+          <p id="section-4-6.1.1">What is the legal identity of the AP?<a href="#section-4-6.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-6.2">
+          <p id="section-4-6.2.1">Does the AP have the right to use the source phone number?<a href="#section-4-6.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-6.3">
+          <p id="section-4-6.3.1">Does the AP intend the OP to sign passports on its behalf?<a href="#section-4-6.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-6.4">
+          <p id="section-4-6.4.1">Does the AP have the right to use any claimed brand attributes?<a href="#section-4-6.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-4-7">An example will help. In its JSON-serialized form, a typical VVP PASSporT (with some long CESR-encoded hashes shortened by ellipsis for readability) might look like this:<a href="#section-4-7" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-4-8">
 <pre>
 {
   "header": {
     "alg": "EdDSA",
     "typ": "JWT",
     "ppt": "passport",
-    "kid": "https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx",
+    "kid": "https://agentsrus.net/oobi/EMC.../agent/EAx...",
   }
   "payload": {
-    "orig": {"tn": ["+17035550001"]},
-    "dest": {"tn": ["+15715550000"]},
-    "card": ["NICKNAME:Examples-R-Us", "CHATBOT:https://example.com/chatwithus",
-      "LOGO;HASH=EK2r6EnDXre2pecTBO8s99j4OtNaaDIhVyr7uGugDhmp;VALUE=URI:https://example.com/logo64x48.png"],
-    "call-reason": "schedule next appointment",
-    "evd": "https://acme.com/dossier.cesr",
+    "orig": {"tn": ["+33612345678"]},
+    "dest": {"tn": ["+33765432109"]},
+    "card": ["NICKNAME:Monde d'Exemples",
+      "CHATBOT:https://example.com/chatwithus",
+      "LOGO;HASH=EK2...;VALUE=URI:https://example.com/ico64x48.png"],
+    "goal": "negotiate.schedule",
+    "call-reason": "planifier le prochain rendez-vous",
+    "evd": "https://fr.example.com/dossiers/E0F....cesr",
     "origId": "e0ac7b44-1fc3-4794-8edd-34b83c018fe9",
     "iat": 1699840000,
     "exp": 1699840030,
     "jti": "70664125-c88d-49d6-b66f-0510c20fc3a6"
   }
 }
-</pre><a href="#section-4-2" class="pilcrow">¶</a>
+</pre><a href="#section-4-8" class="pilcrow">¶</a>
 </div>
-<p id="section-4-3">The semantics of the fields are:<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-9">The semantics of the fields are:<a href="#section-4-9" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4-4.1">
-          <p id="section-4-4.1.1"><code>alg</code> <em>(required)</em> <span class="bcp14">MUST</span> be "EdDSA". Standardizing on one scheme prevents jurisdictions with incompatible or weaker cryptography. The RSA, HMAC, and ES256 algorithms <span class="bcp14">MUST NOT</span> be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which depends on the Montgomery-to-Edwards transformation.)<a href="#section-4-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4-10.1">
+          <p id="section-4-10.1.1"><code>alg</code> <em>(required)</em> <span class="bcp14">MUST</span> be "EdDSA". Standardizing on one scheme prevents jurisdictions with incompatible or weaker cryptography. The RSA, HMAC, and ES256 algorithms <span class="bcp14">MUST NOT</span> be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which depends on the Montgomery-to-Edwards transformation.)<a href="#section-4-10.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.2">
-          <p id="section-4-4.2.1"><code>typ</code> <em>(required)</em> <span class="bcp14">MUST</span> be "JWT".<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.2">
+          <p id="section-4-10.2.1"><code>typ</code> <em>(required)</em> <span class="bcp14">MUST</span> be "JWT".<a href="#section-4-10.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.3">
-          <p id="section-4-4.3.1"><code>ppt</code> <em>(required)</em> Per STIR, <span class="bcp14">MUST</span> be "passport".<a href="#section-4-4.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.3">
+          <p id="section-4-10.3.1"><code>ppt</code> <em>(required)</em> Per STIR, <span class="bcp14">MUST</span> be "passport".<a href="#section-4-10.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.4">
-          <p id="section-4-4.4.1"><code>kid</code> <em>(required)</em> <span class="bcp14">MUST</span> be the OOBI of an AID <a href="#aid" class="auto internal xref">6.2.3</a> controlled by the OP <a href="#OP" class="auto internal xref">3.1.3</a>. Typically this is NOT the AID that identifies the OP as a legal entity, but rather an AID controlled by software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for <code>kid</code> <span class="bcp14">MUST</span> be singlesig and, in the common case where it is not the legal entity AID, <span class="bcp14">MUST</span> have a delegate relationship with the legal entity AID, proved through Delegate Evidence <a href="#DE" class="auto internal xref">6.3.4</a>.)<a href="#section-4-4.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.4">
+          <p id="section-4-10.4.1"><code>kid</code> <em>(required)</em> <span class="bcp14">MUST</span> be the OOBI of an AID (<a href="#aid" class="auto internal xref">6.2.3</a>) controlled by the OP (<a href="#OP" class="auto internal xref">3.1.3</a>). An OOBI is a special URL that returns IANA content-type <code>application/json+cesr</code>. In this case, it returns a KEL (<a href="#KEL" class="auto internal xref">6.2.8</a>). Typically the AID in question does not identify the OP as a legal entity, but rather an AID controlled by software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for <code>kid</code> <span class="bcp14">MUST</span> be singlesig and, in the common case where it is not the legal entity AID, <span class="bcp14">MUST</span> have a delegate relationship with the legal entity AID, proved through Delegate Evidence <a href="#DE" class="auto internal xref">6.3.4</a>.)<a href="#section-4-10.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.5">
-          <p id="section-4-4.5.1"><code>orig</code> <em>(required)</em> <span class="bcp14">MUST</span> conform to SHAKEN requirements, with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.<a href="#section-4-4.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.5">
+          <p id="section-4-10.5.1"><code>orig</code> <em>(required)</em> <span class="bcp14">MUST</span> conform to SHAKEN requirements, with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.<a href="#section-4-10.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.6">
-          <p id="section-4-4.6.1"><code>dest</code> <em>(required)</em> <span class="bcp14">MUST</span> conform to SHAKEN requirements.<a href="#section-4-4.6.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.6">
+          <p id="section-4-10.6.1"><code>dest</code> <em>(required)</em> <span class="bcp14">MUST</span> conform to SHAKEN requirements.<a href="#section-4-10.6.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.7">
-          <p id="section-4-4.7.1"><code>evd</code> <em>(required)</em> <span class="bcp14">MUST</span> be the OOBI of a bespoke ACDC (the dossier, <a href="#dossier" class="auto internal xref">6.3.2</a>) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. An OOBI is a special URL that returns IANA content-type <code>application/json+cesr</code>. Such a URL can be hosted on any convenient web server, and is analogous to the <code>x5u</code> header in X509 contexts. See below for details.<a href="#section-4-4.7.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.7">
+          <p id="section-4-10.7.1"><code>card</code> <em>(optional)</em> Contains one or more brand attributes. These are analogous to <span>[<a href="#RCD-DRAFT" class="cite xref">RCD-DRAFT</a>]</span> or <span>[<a href="#CTIA-BCID" class="cite xref">CTIA-BCID</a>]</span> data, but differ in that they must be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD PASSporT) as needed. Individual attributes conform to the VCard standard <span>[<a href="#RFC6350" class="cite xref">RFC6350</a>]</span>.<a href="#section-4-10.7.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.8">
-          <p id="section-4-4.8.1"><code>origId</code> <em>(optional)</em> Follows SHAKEN semantics.<a href="#section-4-4.8.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.8">
+          <p id="section-4-10.8.1"><code>goal</code> <em>(optional)</em> A machine-readable, localizable goal code, as described by <span>[<a href="#ARIES-RFC-0519" class="cite xref">ARIES-RFC-0519</a>]</span>. If present, the dossier <span class="bcp14">MUST</span> prove that the OP is authorized by the AP to initiate calls with this particular goal.<a href="#section-4-10.8.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.9">
-          <p id="section-4-4.9.1"><code>iat</code> <em>(required)</em> Follows standard JWT semantics.<a href="#section-4-4.9.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.9">
+          <p id="section-4-10.9.1"><code>call-reason</code> <em>(optional)</em> A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with <code>goal</code>; most calls will either omit both, or choose one or the other. Since <code>call-reason</code> cannot be analyzed or verified in any way, it is deprecated, but it is included in VVP to facilitate the construction of derivative RCD PASSporTs which have the property.<a href="#section-4-10.9.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-4.10">
-          <p id="section-4-4.10.1"><code>jti</code> <em>(required)</em> Follows standard JWT semantics.<a href="#section-4-4.10.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-4-10.10">
+          <p id="section-4-10.10.1"><code>evd</code> <em>(required)</em> <span class="bcp14">MUST</span> be the OOBI of a bespoke ACDC (the dossier, <a href="#dossier" class="auto internal xref">6.3.2</a>) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. This URL can be hosted on any convenient web server, and is somewhat analogous to the <code>x5u</code> header in X509 contexts. See below for details.<a href="#section-4-10.10.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-10.11">
+          <p id="section-4-10.11.1"><code>origId</code> <em>(optional)</em> Follows SHAKEN semantics.<a href="#section-4-10.11.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-10.12">
+          <p id="section-4-10.12.1"><code>iat</code> <em>(required)</em> Follows standard JWT semantics.<a href="#section-4-10.12.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-10.13">
+          <p id="section-4-10.13.1"><code>jti</code> <em>(optional)</em> Follows standard JWT semantics.<a href="#section-4-10.13.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -1521,16 +1567,16 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-5-1">When a verifier encounters a VVP passport, they use the following algorithm to verify:<a href="#section-5-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5-2">
 <li id="section-5-2.1">
-          <p id="section-5-2.1.1">Confirm that the <code>orig</code> and <code>dest</code> fields match contextual observations and other SIP metadata.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.1.1">Confirm that the <code>orig</code> and <code>dest</code> fields match contextual observations and other SIP metadata. That is, the passport appears aligned with what is known about the call from external sources. This is not a cryptographic analysis.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.2">
           <p id="section-5-2.2.1">Extract the <code>kid</code> field.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.3">
-          <p id="section-5-2.3.1">Fetch the key state for the OP from the OOBI. (Caches may be used to optimize this, as long as they meet the freshness standards of the verifier.)<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.3.1">Fetch the key state for the OP from the OOBI. Caches may be used to optimize this, as long as they meet the freshness standards of the verifier. Normally, the current key state is checked, but the OOBI returns a data stream that also allows historical analysis.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.4">
-          <p id="section-5-2.4.1">Use the public key of the OP to verify that the signature on the passport is valid. On success, the verifier knows that the OP is at least making a testable assertion and can be held accountable for it.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.4.1">Use the public key of the OP to verify that the signature on the passport is valid for that key state. On success, the verifier knows that the OP is at least making a testable assertion about the identity and authorizations of the AP.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.5">
           <p id="section-5-2.5.1">Extract the <code>evd</code> field, which references the dossier (<a href="#dossier" class="auto internal xref">6.3.2</a>) that constitutes backing evidence.<a href="#section-5-2.5.1" class="pilcrow">¶</a></p>
@@ -1539,19 +1585,23 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-5-2.6.1">Check to see whether the dossier has already been fully validated. Since dossiers are highly stable, caching dossier validations is recommended.<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.7">
-          <p id="section-5-2.7.1">If the dossier requires full validation, perform it. Validation includes checking the signatures on each ACDC in the dossier's data graph against the key state of the issuer at the time the issuance occurred. Key state is proved by the KEL <a href="#KEL" class="auto internal xref">6.2.8</a>, and checked against independent witnesses. (Subsequent key rotations do not invalidate this analysis, which is a vital improvement over certificate-based evidence.) Validation also includes comparing data structure and values against the declared schema, plus a full traversal of all chained CVD <a href="#cvd" class="auto internal xref">6.2.9</a>, back to the root of trust for each artifact. The correct relationships among evidence artifacts is checked (e.g., proving that the issuer of one piece is the issuee of another piece).<a href="#section-5-2.7.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.7.1">If the dossier requires full validation, perform it. Validation includes checking the signature on each ACDC in the dossier's data graph against the key state of the issuer at the time the issuance occurred. Key state is proved by the KEL <a href="#KEL" class="auto internal xref">6.2.8</a>, and checked against independent witnesses.<a href="#section-5-2.7.1" class="pilcrow">¶</a></p>
+<p id="section-5-2.7.2">
+Issuance is recorded explicitly in the KEL's overall event sequence, so this check does not require guesses about how to map issuance timestamps to key state events. Also, subsequent key rotations do not invalidate this analysis, which is a vital improvement over certificate-based evidence.<a href="#section-5-2.7.2" class="pilcrow">¶</a></p>
+<p id="section-5-2.7.3">
+Validation also includes comparing data structure and values against the declared schema, plus a full traversal of all chained CVD <a href="#cvd" class="auto internal xref">6.2.9</a>, back to the root of trust for each artifact. The correct relationships among evidence artifacts is checked (e.g., proving that the issuer of one piece is the issuee of another piece).<a href="#section-5-2.7.3" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.8">
-          <p id="section-5-2.8.1">Check to see whether the revocation status of the dossier has been tested recently enough to satisfy the verifier's freshness standards. If no, check for revocations anywhere in the data graph of the dossier. Revocations are not the same as key rotations. They can be checked much more quickly than doing a full validation.<a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.8.1">Check to see whether the revocation status of the dossier has been tested recently enough to satisfy the verifier's freshness standards. If no, check for revocations anywhere in the data graph of the dossier. Revocations are not the same as key rotations. They can be checked much more quickly than doing a full validation. Revocation checks can also be cached, possibly with a different freshness threshold than the main evidence.<a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.9">
-          <p id="section-5-2.9.1">Assuming that the dossier is valid and has no breakages due to revocation, confirm that the OP is authorized to make the phone call. If there is no DE (<a href="#DE" class="auto internal xref">6.3.4</a>), the OP must be the issuee of the vetting credential; otherwise, the OP must be the issuee of a delegated signing credential for which the issuer is the AP.<a href="#section-5-2.9.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.9.1">Assuming that the dossier is valid and has no breakages due to revocation, confirm that the OP is authorized to sign the passport. If there is no DE (<a href="#DE" class="auto internal xref">6.3.4</a>), the AP and the OP must be identical, and the OP must be the issuee of the vetting credential; otherwise, the OP must be the issuee of a delegated signing credential for which the issuer is the AP.<a href="#section-5-2.9.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.10">
           <p id="section-5-2.10.1">Extract the <code>orig</code> field and compare it to the TNAlloc credential <a href="#tnalloc-credential" class="auto internal xref">6.3.6</a> cited in the dossier <a href="#dossier" class="auto internal xref">6.3.2</a> to confirm that the AP <a href="#AP" class="auto internal xref">3.1.4</a> (or, if OP is not equal to AP and OP is using their own number, the OP <a href="#OP" class="auto internal xref">3.1.3</a>) has the right to call on this number.<a href="#section-5-2.10.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.11">
-          <p id="section-5-2.11.1">If the passport includes non-null values for the optional <code>card</code> or <code>goal</code> fields, extract that information and check that the brand attributes claimed for the call are justified by the brand credential <a href="#brand-credential" class="auto internal xref">6.3.7</a> in the dossier.<a href="#section-5-2.11.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.11.1">If the passport includes non-null values for the optional <code>card</code> or <code>goal</code> fields, extract that information and check that the brand attributes claimed for the call are justified by a brand credential <a href="#brand-credential" class="auto internal xref">6.3.7</a> in the dossier.<a href="#section-5-2.11.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.12">
           <p id="section-5-2.12.1">Check any business logic. For example, if the delegated signer credential says that the OP can only call on behalf of the AP during certain hours, or in certain geos, check those attributes of the call.<a href="#section-5-2.12.1" class="pilcrow">¶</a></p>
@@ -1560,7 +1610,6 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-5-3">The complete algorithm listed above is quite rigorous. With no caches, it may take a second or two, much like a full validation of a certificate chain. However, because ACDC-based evidence is indexed by SAID <a href="#said" class="auto internal xref">6.2.1</a>, any given ACDC only needs to be validated once in its lifespan, which persists across key rotations and may last as long as an AP <a href="#AP" class="auto internal xref">3.1.4</a> uses a phone number -- years or decades. This allows very aggressive caching. And since the same dossier is used to justify many outbound calls -- perhaps thousands or millions of calls, for busy call centers -- and many dossiers will reference the same issuers and issuees and their associated key states and KELs <a href="#KEL" class="auto internal xref">6.2.8</a>, caching will produce huge benefits.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <p id="section-5-4">Furthermore, because SAIDs and their associated data (including links to other nodes in a data graph) have a tamper-evident relationship, any party can perform validation and compile their results, then share the data with verifiers that want to do less work. Validators like this are not oracles, because consumers of such data need not trust shared results blindly. They can always directly recompute some or all of it from a passport, to catch deception. However, they can do this lazily or occasionally, per their preferred balance of risk/effort.<a href="#section-5-4" class="pilcrow">¶</a></p>
 <p id="section-5-5"><em>In toto</em>, these characteristics mean that no centralized registry is required in any given ecosystem. Data can be fetched directly from its source, with consent, across jurisdictional boundaries. Simple opportunistic, uncoordinated reuse (e.g., in or across the datacenters of TSPs <a href="#TP" class="auto internal xref">3.1.2</a>) will arise spontaneously and will dramatically improve the scale and efficiency of the system.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">TODO: talk about second-level caching, of revocation status.<a href="#section-5-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="curating">
@@ -1596,7 +1645,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-allocating-tns">
 <a href="#section-6.1.3" class="section-number selfRef">6.1.3. </a><a href="#name-allocating-tns" class="section-name selfRef">Allocating TNs</a>
           </h4>
-<p id="section-6.1.3-1">Regulators issue TNAlloc credentials <a href="#tnalloc-credential" class="auto internal xref">6.3.6</a> to range holders, and range holders issue them to TNUs <a href="#allocation-holder" class="auto internal xref">3.1.1</a>, and TNUs <span class="bcp14">MAY</span> issue them to a delegate such as a call center. If aggregators or other intemediaries hold an RTU in the eyes of a regulator, then intermediate TNAlloc credentials <span class="bcp14">MUST</span> be created to track that RTU as part of the chain. On the other hand, if TNUs acquire telephone numbers through aggregators, but regulators do not consider aggregators to hold allocations, then aggregators <span class="bcp14">MUST</span> work with range holders to assure that the appropriate TNAlloc credentials are issued to the TNUs.<a href="#section-6.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.3-1">Regulators issue TNAlloc credentials <a href="#tnalloc-credential" class="auto internal xref">6.3.6</a> to range holders, and range holders issue them to TNUs <a href="#allocation-holder" class="auto internal xref">3.1.1</a>, and TNUs <span class="bcp14">MAY</span> issue them to a delegate such as a call center. If aggregators or other intemediaries hold an RTU in the eyes of a regulator, then intermediate TNAlloc credentials <span class="bcp14">MUST</span> be created to track that RTU as part of the chain. On the other hand, if TNUs acquire phone numbers through aggregators, but regulators do not consider aggregators to hold allocations, then aggregators <span class="bcp14">MUST</span> work with range holders to assure that the appropriate TNAlloc credentials are issued to the TNUs.<a href="#section-6.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="granting-brand-proxy-rights">
@@ -1880,7 +1929,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-6.3.3" class="section-number selfRef">6.3.3. </a><a href="#name-accountable-party-evidence" class="section-name selfRef">Accountable Party Evidence</a>
           </h4>
 <p id="section-6.3.3-1">The dossier <span class="bcp14">MUST</span> include at least what is called <em>accountable party evidence</em> (<em>APE</em>).<a href="#section-6.3.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3.3-2">APE consists of several credentials, explored in detail below. It <span class="bcp14">MUST</span> include a vetting credential for the AP. it <span class="bcp14">MUST</span> include a TNAlloc credential that proves RTU. Normally the RTU <span class="bcp14">MUST</span> be assigned to the AP; however, if a proxy is the OP and uses their own telephone number, the RTU <span class="bcp14">MUST</span> be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it <span class="bcp14">MUST</span> include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard <span>[<a href="#RFC6350" class="cite xref">RFC6350</a>]</span> or JCard <span>[<a href="#RFC7095" class="cite xref">RFC7095</a>]</span>.) If no brand credential is present, verifiers <span class="bcp14">MUST NOT</span> impute a brand to the call on the basis of any VVP guarantees.<a href="#section-6.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3.3-2">APE consists of several credentials, explored in detail below. It <span class="bcp14">MUST</span> include a vetting credential for the AP. it <span class="bcp14">MUST</span> include a TNAlloc credential that proves RTU. Normally the RTU <span class="bcp14">MUST</span> be assigned to the AP; however, if a proxy is the OP and uses their own phone number, the RTU <span class="bcp14">MUST</span> be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it <span class="bcp14">MUST</span> include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard <span>[<a href="#RFC6350" class="cite xref">RFC6350</a>]</span> or JCard <span>[<a href="#RFC7095" class="cite xref">RFC7095</a>]</span>.) If no brand credential is present, verifiers <span class="bcp14">MUST NOT</span> impute a brand to the call on the basis of any VVP guarantees.<a href="#section-6.3.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="DE">
@@ -2003,7 +2052,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-sample-evidence-graph-op-ki" class="selfRef">Sample evidence graph; OP kid could bind to APE or DE</a>
             </figcaption></figure>
-<p id="section-6.3.4-4">Where DE exists, the APE will identify and authorize the AP, but the OOBI in the <code>kid</code> claim of the passport will identify the OP, and these two parties will be different. Therefore, the DE in the dossier <span class="bcp14">MUST</span> include a delegated signer credential that authorizes the OP to act on the AP's behalf and that stipulates the constraints that govern this delegation. It <span class="bcp14">SHOULD</span> also include a vetting credential for the OP, that proves the OP's identity. If the APE includes a brand credential, then the DE <span class="bcp14">MUST</span> also include a brand proxy credential, proving that the OP not only can use the AP's allocated telephone number, but has AP's permission to project the AP's brand while doing so.<a href="#section-6.3.4-4" class="pilcrow">¶</a></p>
+<p id="section-6.3.4-4">Where DE exists, the APE will identify and authorize the AP, but the OOBI in the <code>kid</code> claim of the passport will identify the OP, and these two parties will be different. Therefore, the DE in the dossier <span class="bcp14">MUST</span> include a delegated signer credential that authorizes the OP to act on the AP's behalf and that stipulates the constraints that govern this delegation. It <span class="bcp14">SHOULD</span> also include a vetting credential for the OP, that proves the OP's identity. If the APE includes a brand credential, then the DE <span class="bcp14">MUST</span> also include a brand proxy credential, proving that the OP not only can use the AP's allocated phone number, but has AP's permission to project the AP's brand while doing so.<a href="#section-6.3.4-4" class="pilcrow">¶</a></p>
 <p id="section-6.3.4-5">The PASSporT-specific signature <span class="bcp14">MUST</span> come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.<a href="#section-6.3.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2022,7 +2071,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-tnalloc-credential">
 <a href="#section-6.3.6" class="section-number selfRef">6.3.6. </a><a href="#name-tnalloc-credential" class="section-name selfRef">TNAlloc credential</a>
           </h4>
-<p id="section-6.3.6-1">A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more telephone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP <span class="bcp14">MUST</span> also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials <span class="bcp14">MUST</span> contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.<a href="#section-6.3.6-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.6-1">A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more phone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP <span class="bcp14">MUST</span> also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials <span class="bcp14">MUST</span> contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.<a href="#section-6.3.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="brand-credential">
@@ -2147,6 +2196,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="ARIES-RFC-0519">[ARIES-RFC-0519]</dt>
+        <dd>
+<span class="refAuthor">Hardman, D.</span>, <span class="refTitle">"Aries RFC 0519: Goal Codes"</span>, <span>n.d.</span>, <span>&lt;<a href="https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0519-goal-codes/README.md">https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0519-goal-codes/README.md</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="ATIS-1000074">[ATIS-1000074]</dt>
         <dd>
 <span class="refAuthor">Alliance for Telecommunications Industry Solutions</span>, <span class="refTitle">"Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)"</span>, <time datetime="2019-02" class="refDate">February 2019</time>, <span>&lt;<a href="https://atis.org/resources/signature-based-handling-of-asserted-information-using-tokens-shaken-atis-1000074-e/">https://atis.org/resources/signature-based-handling-of-asserted-information-using-tokens-shaken-atis-1000074-e/</a>&gt;</span>. </dd>
@@ -2185,7 +2238,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <dd class="break"></dd>
 <dt id="SD-JWT-DRAFT">[SD-JWT-DRAFT]</dt>
         <dd>
-<span class="refAuthor">Fett, D.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"Selective Disclosure for JWTs (SD-JWT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-14</span>, <time datetime="2024-11-15" class="refDate">15 November 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-14">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-14</a>&gt;</span>. </dd>
+<span class="refAuthor">Fett, D.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"Selective Disclosure for JWTs (SD-JWT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-selective-disclosure-jwt-15</span>, <time datetime="2025-01-16" class="refDate">16 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-15">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-selective-disclosure-jwt-15</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="W3C-DID">[W3C-DID]</dt>
         <dd>
