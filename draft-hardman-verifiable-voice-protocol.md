@@ -134,7 +134,7 @@ The synergies of these properties mean that ACDCs can be permanent, flexible, ro
 ## Vetting refinements
 Although VVP operates with governance frameworks such as SHAKEN {{ATIS-1000074}}, it allows for a dramatic upgrade of at least one core component: the foundational vetting mechanism. The evidence format used by VVP is also the format used by the Verifiable Legal Entity Identifier (vLEI) standardized in {{ISO-17442-3}}. vLEIs implement a KYC approach advocated by the G20's Financial Stability Board, and overseen by the G20's Regulatory Oversight Committee. This approach follows LEI rules for KYC ({{ISO-17442-1}}), and today it's globally required in high-security, high-regulation, cross-border banking.
 
-Millions of institutions have already undergone LEI vetting, and they already use the resulting evidence of their organizational identity in day-to-day behaviors all over the world. By adopting tooling that's compatible with the vLEI ecosystem, VVP avoids imposing the burden of a whole new vetting regime, with its corresponding learning curve, costs, and legal and business adoption challenges.   
+Millions of institutions have already undergone LEI vetting, and they already use the resulting evidence of their organizational identity in day-to-day behaviors all over the world. By adopting tooling that's compatible with the vLEI ecosystem, VVP avoids imposing the burden of a whole new vetting regime, with its corresponding learning curve, costs, and legal and business adoption challenges.
 
 To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially, to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts. If VVP had chosen a weaker evidence format like X509 or SD-JWT or W3C VCs, higher vetting standards in some jurisdictions or use cases would not be an option, and adopting VVP would always require building and rolling out a vetting infrastructure.
 
@@ -224,7 +224,7 @@ An example will help. In its JSON-serialized form, a typical VVP PASSporT (with 
     "dest": {"tn": ["+33765432109"]},
     "card": ["NICKNAME:Monde d'Exemples",
       "CHATBOT:https://example.com/chatwithus",
-      "LOGO;HASH=EK2...;VALUE=URI:https://example.com/logo64x48.png"],
+      "LOGO;HASH=EK2...;VALUE=URI:https://example.com/ico64x48.png"],
     "goal": "negotiate.schedule",
     "call-reason": "planifier le prochain rendez-vous",
     "evd": "https://fr.example.com/dossiers/E0F....cesr",
@@ -263,9 +263,9 @@ When a verifier encounters a VVP passport, they use the following algorithm to v
 1. Extract the `evd` field, which references the dossier ({{<dossier}}) that constitutes backing evidence.
 1. Check to see whether the dossier has already been fully validated. Since dossiers are highly stable, caching dossier validations is recommended.
 1. If the dossier requires full validation, perform it. Validation includes checking the signature on each ACDC in the dossier's data graph against the key state of the issuer at the time the issuance occurred. Key state is proved by the KEL {{<KEL}}, and checked against independent witnesses.
-    
+
     Issuance is recorded explicitly in the KEL's overall event sequence, so this check does not require guesses about how to map issuance timestamps to key state events. Also, subsequent key rotations do not invalidate this analysis, which is a vital improvement over certificate-based evidence.
-    
+
     Validation also includes comparing data structure and values against the declared schema, plus a full traversal of all chained CVD {{<cvd}}, back to the root of trust for each artifact. The correct relationships among evidence artifacts is checked (e.g., proving that the issuer of one piece is the issuee of another piece).
 1. Check to see whether the revocation status of the dossier has been tested recently enough to satisfy the verifier's freshness standards. If no, check for revocations anywhere in the data graph of the dossier. Revocations are not the same as key rotations. They can be checked much more quickly than doing a full validation. Revocation checks can also be cached, possibly with a different freshness threshold than the main evidence.
 1. Assuming that the dossier is valid and has no breakages due to revocation, confirm that the OP is authorized to sign the passport. If there is no DE ({{<DE}}), the AP and the OP must be identical, and the OP must be the issuee of the vetting credential; otherwise, the OP must be the issuee of a delegated signing credential for which the issuer is the AP.
