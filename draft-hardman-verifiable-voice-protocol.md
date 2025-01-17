@@ -74,6 +74,12 @@ normative:
     author:
       org: International Organization for Standardization
     date: 2024
+  ATIS-1000074:
+    target: https://atis.org/resources/signature-based-handling-of-asserted-information-using-tokens-shaken-atis-1000074-e/
+    title: "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)"
+    author:
+      org: Alliance for Telecommunications Industry Solutions
+    date: Feb 2019
 
 informative:
   RFC3986:
@@ -84,12 +90,6 @@ informative:
   RCD-DRAFT: I-D.ietf-sipcore-callinfo-rcd
   RCD-PASSPORT: I-D.ietf-stir-passport-rcd
   SD-JWT-DRAFT: I-D.ietf-oauth-selective-disclosure-jwt
-  ATIS-1000074:
-    target: https://atis.org/resources/signature-based-handling-of-asserted-information-using-tokens-shaken-atis-1000074-e/
-    title: "Signature-Based Handling of Asserted Information Using toKENs (SHAKEN)"
-    author:
-      org: Alliance for Telecommunications Industry Solutions
-    date: Feb 2019
   CTIA-BCID:
     target: https://api.ctia.org/wp-content/uploads/2022/11/Branded-Calling-Best-Practices.pdf
     title: "Branded Calling ID Best Practices"
@@ -241,12 +241,12 @@ The semantics of the fields are:
 * `alg` *(required)* MUST be "EdDSA". Standardizing on one scheme prevents jurisdictions with incompatible or weaker cryptography. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which depends on the Montgomery-to-Edwards transformation.)
 * `typ` *(required)* MUST be "JWT".
 * `ppt` *(required)* Per STIR, MUST be "passport".
-* `kid` *(required)* MUST be the OOBI of an AID ({{<aid}}) controlled by the OP ({{<OP}}). An OOBI is a special URL that returns IANA content-type `application/json+cesr`. In this case, it returns a KEL ({{<KEL}}). Typically the AID in question does not identify the OP as a legal entity, but rather an AID controlled by software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for `kid` MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence {{<DE}}.)
-* `orig` *(required)* MUST conform to SHAKEN requirements, with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
+* `kid` *(required)* MUST be the OOBI of an AID ({{<aid}}) controlled by the OP ({{<OP}}). An OOBI is a special URL that returns IANA content-type `application/json+cesr`. In this case, it returns a KEL ({{<KEL}}). Typically the AID in question does not identify the OP as a legal entity, but rather software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for `kid` MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence {{<DE}}.)
+* `orig` *(required)* MUST conform to SHAKEN requirements ({{ATIS-1000074}}), with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
 * `dest` *(required)* MUST conform to SHAKEN requirements.
-* `card` *(optional)* Contains one or more brand attributes. These are analogous to {{RCD-DRAFT}} or {{CTIA-BCID}} data, but differ in that they must be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD PASSporT) as needed. Individual attributes conform to the VCard standard {{RFC6350}}.
-* `goal` *(optional)* A machine-readable, localizable goal code, as described by {{ARIES-RFC-0519}}. If present, the dossier MUST prove that the OP is authorized by the AP to initiate calls with this particular goal.
-* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is deprecated, but it is included in VVP to facilitate the construction of derivative RCD PASSporTs which have the property.
+* `card` *(optional)* Contains one or more brand attributes. These are analogous to {{RCD-DRAFT}} or {{CTIA-BCID}} data, but differ in that they MUST be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD PASSporT) as needed. Individual attributes MUST conform to the VCard standard {{RFC6350}}.
+* `goal` *(optional)* A machine-readable, localizable goal code, as described informally by {{ARIES-RFC-0519}}. If present, the dossier MUST prove that the OP is authorized by the AP to initiate calls with this particular goal.
+* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is discouraged. However it is not formally deprecated. It is included in VVP to facilitate the construction of derivative RCD PASSporTs which have the property.
 * `evd` *(required)* MUST be the OOBI of a bespoke ACDC (the dossier, {{<dossier}}) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. This URL can be hosted on any convenient web server, and is somewhat analogous to the `x5u` header in X509 contexts. See below for details.
 * `origId` *(optional)* Follows SHAKEN semantics.
 * `iat` *(required)* Follows standard JWT semantics.
