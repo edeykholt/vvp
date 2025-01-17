@@ -98,6 +98,12 @@ informative:
     date: Nov 2022
   W3C-DID: W3C.REC-did-core-20220719
   W3C-VC: W3C.REC-vc-data-model-20220303
+  ARIES-RFC-0519:
+    target: https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0519-goal-codes/README.md
+    title: "Aries RFC 0519: Goal Codes"
+    author:
+      name: Daniel Hardman
+      date: Apr 2021
 
 --- abstract
 
@@ -155,7 +161,7 @@ For a given phone call, the *terminating party* (*TP*) receives the call. A TP c
 ### Originating Party {#OP}
 An *originating party* (*OP*) controls the first *session border controller* (*SBC*) that processes a call, and therefore cites the evidence that authenticates and authorizes it.
 
-It may be tempting to equate the OP with "the caller", and in some ways this perspective may reflect some truth. However, this simple equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE with explicit, provable authorization from the party accountable for calls on the originating phone number.
+It may be tempting to equate the OP with "the caller", and in some ways this perspective may reflect some truth. However, this simple equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE {{RFC3261}} with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
 It may also be tempting to associate the OP with an organizational identity like "Company X". While this is not wrong, and is in fact used in high-level descriptions in this specification, in its most careful definition, the cryptographic identity of an OP is more narrow. It typically corresponds to a single service operated by an IT department within (or outsourced but operating at the behest of) Company X, rather than to Company X generically. This narrowness limits cybersecurity risk, because a single service operated by Company X needs far fewer privileges than the company as a whole. Failing to narrow identity appropriately creates vulnerabilities in some alternative approaches. The evidence securing VVP MUST therefore prove a valid relationship between the OP's narrow identity and the broader legal entities that stakeholders naturally conceive.
 
@@ -185,7 +191,7 @@ Chronologically, evidence must be curated before it can be cited or verified. In
 However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions.
 
 # Citing
-A call secured by VVP begins when the OP ({{<OP}}) generates a new VVP PASSporT ({{<passport}}) that complies with STIR {{RFC8224}} requirements. In its compact-serialized JWT {{RFC7519}} form, this passport is then passed as an `Identity` header in a SIP INVITE.
+A call secured by VVP begins when the OP ({{<OP}}) generates a new VVP PASSporT ({{<passport}}) that complies with STIR {{RFC8224}} requirements. In its compact-serialized JWT {{RFC7519}} form, this passport is then passed as an `Identity` header in a SIP INVITE {{RFC3261}}.
 
 The passport directly answers the following questions:
 
@@ -203,7 +209,7 @@ The answer about evidence is then used to indirectly answer the following additi
 * Does the AP intend the OP to sign passports on its behalf?
 * Does the AP have the right to use any claimed brand attributes?
 
-An example will help. In its JSON-serialized form, a typical VVP PASSporT might look like this:
+An example will help. In its JSON-serialized form, a typical VVP PASSporT (with some long CESR-encoded hashes shortened by ellipsis for readability) might look like this:
 
 ~~~ json
 {
@@ -211,15 +217,17 @@ An example will help. In its JSON-serialized form, a typical VVP PASSporT might 
     "alg": "EdDSA",
     "typ": "JWT",
     "ppt": "passport",
-    "kid": "https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx",
+    "kid": "https://agentsrus.net/oobi/EMC.../agent/EAx...",
   }
   "payload": {
     "orig": {"tn": ["+33612345678"]},
     "dest": {"tn": ["+33765432109"]},
-    "card": ["NICKNAME:Monde d'Exemples", "CHATBOT:https://example.com/chatwithus",
-      "LOGO;HASH=EK2r6EnDXre2pecTBO8s99j4OtNaaDIhVyr7uGugDhmp;VALUE=URI:https://example.com/logo64x48.png"],
-    "call-reason": "schedule next appointment",
-    "evd": "https://fr.example.com/dossiers/E0F9C28367E4011E7BA587831C1B8DEBA.cesr",
+    "card": ["NICKNAME:Monde d'Exemples",
+      "CHATBOT:https://example.com/chatwithus",
+      "LOGO;HASH=EK2...;VALUE=URI:https://example.com/logo64x48.png"],
+    "goal": "negotiate.schedule",
+    "call-reason": "planifier le prochain rendez-vous",
+    "evd": "https://fr.example.com/dossiers/E0F....cesr",
     "origId": "e0ac7b44-1fc3-4794-8edd-34b83c018fe9",
     "iat": 1699840000,
     "exp": 1699840030,
@@ -236,6 +244,9 @@ The semantics of the fields are:
 * `kid` *(required)* MUST be the OOBI of an AID ({{<aid}}) controlled by the OP ({{<OP}}). An OOBI is a special URL that returns IANA content-type `application/json+cesr`. In this case, it returns a KEL ({{<KEL}}). Typically the AID in question does not identify the OP as a legal entity, but rather an AID controlled by software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for `kid` MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence {{<DE}}.)
 * `orig` *(required)* MUST conform to SHAKEN requirements, with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
 * `dest` *(required)* MUST conform to SHAKEN requirements.
+* `card` *(optional)* Contains one or more brand attributes. These are analogous to {{RCD-DRAFT}} or {{CTIA-BCID}} data, but differ in that they must be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD PASSporT) as needed. Individual attributes conform to the VCard standard {{RFC6350}}.
+* `goal` *(optional)* A machine-readable, localizable goal code, as described by {{ARIES-RFC-0519}}. If present, the dossier MUST prove that the OP is authorized by the AP to initiate calls with this particular goal.
+* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is deprecated, but it is included in VVP to facilitate the construction of derivative RCD PASSporTs which have the property.
 * `evd` *(required)* MUST be the OOBI of a bespoke ACDC (the dossier, {{<dossier}}) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. This URL can be hosted on any convenient web server, and is somewhat analogous to the `x5u` header in X509 contexts. See below for details.
 * `origId` *(optional)* Follows SHAKEN semantics.
 * `iat` *(required)* Follows standard JWT semantics.
