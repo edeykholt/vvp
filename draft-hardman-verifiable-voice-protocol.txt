@@ -467,43 +467,42 @@ Table of Contents
       the OP (3.1.3).  An OOBI is a special URL that returns IANA
       content-type application/json+cesr.  In this case, it returns a
       KEL (6.2.8).  Typically the AID in question does not identify the
-      OP as a legal entity, but rather an AID controlled by software
-      running on or invoked by the SBC operated by the OP.  (The AID
-      that identifies the OP as a legal entity may be controlled by a
-      multisig scheme and thus require multiple humans to create a
-      signature.  The AID for kid MUST be singlesig and, in the common
-      case where it is not the legal entity AID, MUST have a delegate
-      relationship with the legal entity AID, proved through Delegate
-      Evidence 6.3.4.)
+      OP as a legal entity, but rather software running on or invoked by
+      the SBC operated by the OP.  (The AID that identifies the OP as a
+      legal entity may be controlled by a multisig scheme and thus
+      require multiple humans to create a signature.  The AID for kid
+      MUST be singlesig and, in the common case where it is not the
+      legal entity AID, MUST have a delegate relationship with the legal
+      entity AID, proved through Delegate Evidence 6.3.4.)
 
-   *  orig _(required)_ MUST conform to SHAKEN requirements, with the
-      additional constraint that only one phone number is allowed.
-      Although the containing SIP INVITE may allow multiple originating
-      phone numbers, only one can be tied to evidence evaluated by
-      verifiers.
+   *  orig _(required)_ MUST conform to SHAKEN requirements
+      ([ATIS-1000074]), with the additional constraint that only one
+      phone number is allowed.  Although the containing SIP INVITE may
+      allow multiple originating phone numbers, only one can be tied to
+      evidence evaluated by verifiers.
 
    *  dest _(required)_ MUST conform to SHAKEN requirements.
 
    *  card _(optional)_ Contains one or more brand attributes.  These
       are analogous to [RCD-DRAFT] or [CTIA-BCID] data, but differ in
-      that they must be justified by evidence in the dossier.  Because
+      that they MUST be justified by evidence in the dossier.  Because
       of this strong foundation that interconnects with formal legal
       identity, they can be used to derive other brand evidence (e.g.,
-      an RCD PASSporT) as needed.  Individual attributes conform to the
-      VCard standard [RFC6350].
+      an RCD PASSporT) as needed.  Individual attributes MUST conform to
+      the VCard standard [RFC6350].
 
    *  goal _(optional)_ A machine-readable, localizable goal code, as
-      described by [ARIES-RFC-0519].  If present, the dossier MUST prove
-      that the OP is authorized by the AP to initiate calls with this
-      particular goal.
+      described informally by [ARIES-RFC-0519].  If present, the dossier
+      MUST prove that the OP is authorized by the AP to initiate calls
+      with this particular goal.
 
    *  call-reason _(optional)_ A human-readable, arbitrary phrase that
       describes the self-asserted intent of the caller.  This claim is
       largely redundant with goal; most calls will either omit both, or
       choose one or the other.  Since call-reason cannot be analyzed or
-      verified in any way, it is deprecated, but it is included in VVP
-      to facilitate the construction of derivative RCD PASSporTs which
-      have the property.
+      verified in any way, it is discouraged.  However it is not
+      formally deprecated.  It is included in VVP to facilitate the
+      construction of derivative RCD PASSporTs which have the property.
 
    *  evd _(required)_ MUST be the OOBI of a bespoke ACDC (the dossier,
       6.3.2) that constitutes a verifiable data graph of all evidence
@@ -1213,6 +1212,13 @@ Table of Contents
 
 10.1.  Normative References
 
+   [ATIS-1000074]
+              Alliance for Telecommunications Industry Solutions,
+              "Signature-Based Handling of Asserted Information Using
+              toKENs (SHAKEN)", February 2019,
+              <https://atis.org/resources/signature-based-handling-of-
+              asserted-information-using-tokens-shaken-atis-1000074-e/>.
+
    [FIPS186-4]
               National Institute of Standards and Technology (NIST),
               "Digital Signature Standard (DSS)", July 2013,
@@ -1291,13 +1297,6 @@ Table of Contents
               Hardman, D., "Aries RFC 0519: Goal Codes", n.d.,
               <https://github.com/hyperledger/aries-rfcs/blob/main/
               concepts/0519-goal-codes/README.md>.
-
-   [ATIS-1000074]
-              Alliance for Telecommunications Industry Solutions,
-              "Signature-Based Handling of Asserted Information Using
-              toKENs (SHAKEN)", February 2019,
-              <https://atis.org/resources/signature-based-handling-of-
-              asserted-information-using-tokens-shaken-atis-1000074-e/>.
 
    [CTIA-BCID]
               CTIA, "Branded Calling ID Best Practices", November 2022,
