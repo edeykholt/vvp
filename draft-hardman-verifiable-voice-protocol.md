@@ -224,8 +224,8 @@ An example will help. In its JSON-serialized form, a typical VVP PASSporT (with 
     "alg": "EdDSA",
     "typ": "JWT",
     "ppt": "passport",
-    "kid": "https://agentsrus.net/oobi/EMC.../agent/EAx...",
-  }
+    "kid": "https://agentsrus.net/oobi/EMC.../agent/EAx..."
+  },
   "payload": {
     "orig": {"tn": ["+33612345678"]},
     "dest": {"tn": ["+33765432109"]},
@@ -298,7 +298,7 @@ How evidence is issued, propagated, quality-controlled, and referenced is theref
 The following curation activities are imporant in a VVP ecosystem.
 
 ### Witnessing and watching
-In an ACDC-based ecosystem, issuers issue and revoke their own evidence without any calls to a centralized registry or authority. However, KERI's decentralized witness feature MUST be active. This provides an official methodology for curating the relationship between keys and identifiers, and between identifiers and non-repudiable actions like issuing and revoking credentials. 
+In an ACDC-based ecosystem, issuers issue and revoke their own evidence without any calls to a centralized registry or authority. However, KERI's decentralized witness feature MUST be active. This provides an official methodology for curating the relationship between keys and identifiers, and between identifiers and non-repudiable actions like issuing and revoking credentials.
 
 A KERI *witness* is a lightweight server that acts as a notary. It exposes a standard interface. It receives signed events from the controller of an identifier that it services. If these events are properly sequenced and aligned with the identifier's signing policy and key state, they are recorded and become queryable, typically by the public. KERI allows the controller of an autonomic identifier to choose zero or more witnesses. The witnesses can change over the lifecycle of the identifier. However, the relationship between an identifier and its witnesses cannot be changed arbitrarily; the controller of the identifier makes a cryptographic commitment to its witnesses, and can only change that commitment by satisfying the signing policy of the identifier. In VVP, identifiers used by issuers MUST have at least one witness, because this guarantees viral discoverability, and SHOULD have at least 3 witnesses, because this guarantees both high availability and the detection of duplicity by the controller of the identifier.
 
@@ -736,6 +736,11 @@ A brand proxy credential confers on an OP the right to project the brand of an A
 
 An example brand credential and its schema are shown in {{<appendix-a}}.
 
+### Delegated signer credential
+A delegated signer credential proves that automation running under the control of the OP has been authorized by the AP to originate VVP traffic (and thus, sign VVP passports) on its behalf.
+
+An example delegated signer credential and its schema are shown in {{<appendix-a}}.
+
 # Interoperability
 
 The basic evidence that drives VVP -- vetting credential ({{<vetting-credential}}), TNAlloc credential ({{<tnalloc-credential}}), brand credential ({{<brand-credential}}), brand proxy credential ({{<brand-proxy-credential}}), and delegated signer credential ({{<delegated-signer-credential}}) -- MUST all be ACDCs. This is because only when the data in these credentials is modeled as an ACDC is it associated with permanent identities that possess appropriate security guarantees.
@@ -748,7 +753,7 @@ This transformation from foreign evidence to ACDCs is very flexible, and allows 
 
 All VVP stakeholders need to understand that accepting foreign evidence does much more than alter format. Bridging is not a simple conversion or reissuance. It replaces identifiers (e.g., DIDs as specified in {{W3C-DID}} with AIDs as specified in {{TOIP-KERI}}). The new identifiers have different lifecycles and different trust bases than the original. Bridging also changes the *meaning* of the credential. Foreign evidence directly asserts claims backed by the reputation of its original issuer. A new ACDC embodies a claim by the bridging party, that they personally verified foreign evidence according to foreign evidence rules, at a given moment. It cites the foreign evidence as a source, and may copy claims into the ACDC, but the bridging party is only asserting that they verified the original issuer's commitment to the claims, not that the bridging party commits to those claims.
 
-Verifiers MAY choose to accept such derivative ACDCs, but the indirection SHOULD color their confidence. They MUST NOT assume that the foreign evidence and the ACDC have the same referent or controller. They MUST NOT hold the bridging party accountable for the claims -- only for the claim that they verified the original issuer's commitment to the claims. They MUST accept that there is no defined relationship between revocation of the foreign evidence and revocation of the ACDC. 
+Verifiers MAY choose to accept such derivative ACDCs, but the indirection SHOULD color their confidence. They MUST NOT assume that the foreign evidence and the ACDC have the same referent or controller. They MUST NOT hold the bridging party accountable for the claims -- only for the claim that they verified the original issuer's commitment to the claims. They MUST accept that there is no defined relationship between revocation of the foreign evidence and revocation of the ACDC.
 
 # Security Considerations
 
@@ -772,7 +777,7 @@ The schema of a vetting credential can be very simple; it MUST identify the issu
 ~~~json
 ~~~
 
-## 
+##
 
 # IANA Considerations
 
@@ -784,4 +789,3 @@ This document has no IANA actions.
 {:numbered="false"}
 
 TODO acknowledge.
-
