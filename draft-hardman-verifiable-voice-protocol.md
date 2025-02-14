@@ -290,7 +290,7 @@ How evidence is issued, propagated, quality-controlled, and referenced is theref
 
 ## Activities
 
-The following curation activities are imporant in a VVP ecosystem.
+The following curation activities guarantee the evidence upon which a VVP ecosystem depends.
 
 ### Witnessing and watching
 In an ACDC-based ecosystem, issuers issue and revoke their own evidence without any calls to a centralized registry or authority. However, KERI's decentralized witness feature MUST be active. This provides an official, uniform, and high-security methodology for curating the relationship between keys and identifiers, and between identifiers and non-repudiable actions like issuing and revoking credentials. In addition, watchers MAY be used by given verifiers, to provide efficient caching, pub-sub notifications of state changes, and duplicity detection. For more about these topics, see {{<appendix-b}}.
@@ -308,6 +308,11 @@ At the option of the AP and OP, VVP MAY prove the right to use the originating p
 When VVP is used to prove brand, APs ({{<AP}}) MAY issue brand proxy credentials ({{<brand-proxy-credential}}) to OPs ({{<OP}}), giving them the right to use the AP's brand. Without this credential, the OP only has the right to use the AP's phone number.
 
 Issuing vetting and brand credentials might be driven by large databases of metadata about organizations and brands, but how such systems work is out of scope. The credentials themselves contain all necessary information, and once credentials are issued, they constitute an independent source of truth as far as VVP is concerned. No party has to return to the operators of such databases to validate anything.
+
+### Delegating signing authority
+An AP MUST prove, by issuing a delegated signer credential ({{<delegated-signing-credential}}), that the signer of its passport does so with its explicit authorization. Normally the signer is automation under the control of the OP, but the issuee of the credential MAY vary at the AP's discretion.
+
+Since this credential merely documents the AP's intent to be accountable for the actions of the signer, the AP MAY choose whatever process it likes to issue it.
 
 ### Revoking
 Revoking an ACDC is as simple as the issuer signing a revocation event and distributing it to witnesses. Parties that perform a full validation of a given ACDC ({{<verifying}}) will automatically detect the revocation event in realtime, because they will contact one or more of these witnesses. Parties that are caching their validations MAY poll witnesses very efficiently to discover revocation events. Some witnesses may choose to offer the option of registering a callback, allowing interested parties to learn about revocations even more efficiently.
