@@ -123,7 +123,7 @@ Regulators have mandated protections, and industry has responded. However, exist
 * Market complexities such as the presence of aggregators, wholesalers, and call centers that proxy a brand are difficult to model safely.
 * What may work for enterprises offers little benefit for individual callers.
 
-VVP solves these problems by applying two crucial innovations. 
+VVP solves these problems by applying two crucial innovations.
 
 ## Evidence format
 VVP is rooted in an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. Other forms of evidence (e.g., JWTs/STIR PASSporTs, digital signatures, and optional interoperable inputs from W3C verifiable credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}}) also contribute. However, the foundation that VVP places beneath them is unique. For a discussion of the theory behind VVP evidence, see {{<appendix-a}}. For more about additional evidence types, see {{<general-evidence-categories}} and {{<interoperability}}.
