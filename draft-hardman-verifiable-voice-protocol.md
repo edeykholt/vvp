@@ -108,7 +108,7 @@ informative:
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and individuals making telephone calls. This eliminates trust gaps that scammers exploit. Like related technolgies such as STIR, SHAKEN, RCD, and BCID, VVP binds cryptographic evidence to a SIP INVITE, and verifies this evidence downstream. However, VVP builds from different technical and governance assumptions, and uses better evidence. This allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. Because it is easier to adopt, VVP can plug gaps or build bridges between other approaches, functioning as glue in hybrid ecosystems. For example, it can justify an A attestation in SHAKEN, or an RCD passport for branded calling, when a call originates outside SHAKEN or RCD ecosystems. VVP also works well as a standalone mechanism, independent of other solutions. An extra benefit is that VVP enables two-way evidence sharing with verifiable text and chat, as well as with other industry verticals that need verifiability in non-telco contexts.
+Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and individuals making telephone calls. This eliminates trust gaps that scammers exploit. Like related technolgies such as SHAKEN, RCD, and BCID, VVP binds cryptographic evidence to a SIP INVITE, and verifies this evidence downstream. However, VVP builds from different technical and governance assumptions, and uses better evidence. This allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. Because it is easier to adopt, VVP can plug gaps or build bridges between other approaches, functioning as glue in hybrid ecosystems. For example, it can justify an A attestation in SHAKEN, or an RCD passport for branded calling, when a call originates outside SHAKEN or RCD ecosystems. VVP also works well as a standalone mechanism, independent of other solutions. An extra benefit is that VVP enables two-way evidence sharing with verifiable text and chat, as well as with other industry verticals that need verifiability in non-telco contexts.
 
 --- middle
 
@@ -121,7 +121,7 @@ Regulators have mandated protections, and industry has responded. However, exist
 * Each jurisdiction has its own governance and its own set of signers. Sharing information across boundaries is fraught with logistical and regulatory problems.
 * Deployment and maintenance costs are high.
 * Market complexities such as the presence of aggregators, wholesalers, and call centers that proxy a brand are difficult to model safely.
-* What may work for enterprises offers little benefit for individual callers.
+* What might work for enterprises offers little benefit for individual callers.
 
 VVP solves these problems by applying two crucial innovations.
 
@@ -150,7 +150,7 @@ Fundamentally, VVP requires a caller to assemble a dossier ({{<dossier}}) of sta
 Understanding the workflow in VVP requires a careful definition of roles related to the protocol. The terms that follow have deep implications for the mental model, and their meaning in VVP may not match casual usage.
 
 ### Allocation Holder
-An *allocation holder* (*AH*) controls how a phone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct *telephone number users* (*TNUs*). TNUs are customers of range holders: enterprises and consumers. Range holders are service providers. Although they are AHs, they may not be TNUs for all the phone numbers in their allocated ranges.
+An *allocation holder* (*AH*) controls how a phone number is used, in the eyes of a regulator. Typically, range holders are AHs, and so are the direct *telephone number users* (*TNUs*). TNUs are customers of range holders: enterprises and consumers. Range holders are service providers. Although they are AHs, they might not be TNUs for all the phone numbers in their allocated ranges.
 
 It is possible for an ecosystem to include other parties as AHs (e.g., wholesalers, aggregators). However, some regulators dislike this outcome, and prefer that such parties broker allocations without actually holding the allocations as intermediaries.
 
@@ -160,23 +160,23 @@ For a given phone call, the *terminating party* (*TP*) receives the call. A TP c
 ### Originating Party {#OP}
 An *originating party* (*OP*) controls the first *session border controller* (*SBC*) that processes a call, and therefore builds the passport that cites the evidence that authenticates and authorizes the call.
 
-It may be tempting to equate the OP with "the caller", and in some ways this perspective may reflect truth. However, this simple equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE {{RFC3261}} with explicit, provable authorization from the party accountable for calls on the originating phone number.
+It may be tempting to equate the OP with "the caller", and in some ways this perspective might reflect truth. However, this simple equivalence lacks nuance and doesn't always hold. In a VVP context, it is more accurate to say that the OP creates a SIP INVITE {{RFC3261}} with explicit, provable authorization from the party accountable for calls on the originating phone number.
 
 It may also be tempting to associate the OP with an organizational identity like "Company X". While this is not wrong, and is in fact used in high-level descriptions in this specification, in its most careful definition, the cryptographic identity of an OP is more narrow. It typically corresponds to a single service operated by an IT department within (or outsourced but operating at the behest of) Company X, rather than to Company X generically. This narrowness limits cybersecurity risk, because a single service operated by Company X needs far fewer privileges than the company as a whole. Failing to narrow identity appropriately creates vulnerabilities in some alternative approaches. The evidence securing VVP MUST therefore prove a valid relationship between the OP's narrow identity and the broader legal entities that stakeholders naturally conceive.
 
 The direct service provider of an OP is its *originating service provider* (*OSP*). For a given phone call, there may be complexity between the hardware that begins a call and the SBC of the OP -- and there may also be many layers, boundaries, and transitions between OSP and TSP.
 
 ### Accountable Party {#AP}
-For a given call, the *accountable party* (*AP*) is the organization or individual that has the right to use the originating phone number, according to the regulator of that number. When a TP asks, "Who's calling?", they have little interest in the technicalities of the OP, and it is almost always the AP that they want to identify. Thus, the AP is "the caller", as far as the regulator and the TP are concerned.
+For a given call, the *accountable party* (*AP*) is the organization or individual that has the right to use the originating phone number, according to the regulator of that number. When a TP asks, "Who's calling?", they have little interest in the technicalities of the OP, and it is almost always the AP that they want to identify. The AP is accountable for the call, and thus "the caller", as far as the regulator and the TP are concerned.
 
-APs may operate their own SBCs and therefore be their own OPs. However, APs may also use a UCaaS provider that makes the AP-OP relationship indirect. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf. None of these complexities alter the fact that, from the TP's perspective, the AP is "the caller". The TP chooses to answer or not, based on their desire to interact with the AP. If the TP's trust is abused, the regulator and the TP both want to hold the AP accountable.
+APs can operate their own SBCs and therefore be their own OPs. However, APs can also use a UCaaS provider that makes the AP-OP relationship indirect. Going further, a business can hire a call center, and delegate to the call center the right to use its phone number. In such a case, the business is the AP, but the call center is the OP that makes calls on its behalf. None of these complexities alter the fact that, from the TP's perspective, the AP is "the caller". The TP chooses to answer or not, based on their desire to interact with the AP. If the TP's trust is abused, the regulator and the TP both want to hold the AP accountable.
 
 VVP requires an AP to prepare a dossier ({{<dossier}}) of evidence that documents a basis for imposing this accountability on them. Only the owner of a given dossier can prove they intend to initiate a VVP call that cites their dossier. Therefore, if a verifier confirms that a particular call properly matches its dossier, the verifier is justified in considering the owner of that dossier the AP for the call. Otherwise, someone is committing fraud. Accountability, and the basis for it, are both unambiguous.
 
 ### Verifier
 A *verifier* is a party that wants to know who's calling, and why, and that evaluates the answers to these questions by examining formal evidence. TPs, TSPs, OSPs, government regulators, law enforcement doing lawful intercept, auditors, and even APs or OPs can be verifiers. Each may need to see different views of the evidence about a particular phone call, and it may be impossible to comply with various regulations unless these views are kept distinct -- yet each wants similar and compatible assurance.
 
-In addition to checking the validity of cryptographic evidence, the verifier role in VVP MAY also consider how that evidence matches business rules and external conditions. For example, a verifier might begin its analysis by deciding whether Call Center Y has the right, in the abstract, to make calls on behalf of Organization X using a given phone number. However, VVP evidence allows a verifier to go further: it can also consider whether Y is allowed to exercise this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.
+In addition to checking the validity of cryptographic evidence, the verifier role in VVP MAY also consider how that evidence matches business rules and external conditions. For example, a verifier can begin its analysis by deciding whether Call Center Y has the right, in the abstract, to make calls on behalf of Organization X using a given phone number. However, VVP evidence allows a verifier to go further: it can also consider whether Y is allowed to exercise this right at the particular time of day when a call occurs, or in the jurisdiction of a particular TP, given the business purpose asserted in a particular call.
 
 ## Lifecycle
 VVP depends on three interrelated activities with evidence:
@@ -187,37 +187,37 @@ VVP depends on three interrelated activities with evidence:
 
 Chronologically, evidence must be curated before it can be cited or verified. In addition, some vulnerabilities in existing approaches occur because evidence requirements are too loose. Therefore, understanding the nature of backing evidence, and how that evidence is created and maintained, is a crucial consideration for VVP. This specification includes normative statements about evidence.
 
-However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions that come later.
+However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation to {{<curating}}. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions that come later.
 
 # Citing
-A call secured by VVP begins when the OP ({{<OP}}) generates a new VVP PASSporT ({{<passport}}) that complies with STIR {{RFC8224}} requirements. In its compact-serialized JWT {{RFC7519}} form, this passport is then passed as an `Identity` header in a SIP INVITE {{RFC3261}}.
+A call secured by VVP begins when the OP ({{<OP}}) generates a new VVP passport ({{<passport}}) that complies with STIR {{RFC8224}} requirements. In its compact-serialized JWT {{RFC7519}} form, this passport is then passed as an `Identity` header in a SIP INVITE {{RFC3261}}.
 
 ## Questions answered by a passport
 The passport directly answers the following questions:
 
 * What is the cryptographic identity of the OP?
-* What was the OP's key state at the time the passport was created?
+* How can a verifier determine the OP's key state at the time the passport was created?
 * How can a verifier identify and fetch evidence that connects the OP to the asserted AP?
-* What brand attributes are intended to accompany the call?
+* What brand attributes are asserted to accompany the call?
 
 The first two answers come from the `kid` header. The third answer is communicated in the required `evd` claim. The fourth answer is communicated in the optional `card` and `goal` claims.
 
-The answer about evidence is then used to indirectly answer the following additional questions:
+Evidence can then be fetched to indirectly answer the following additional questions:
 
 * What is the legal identity of the AP?
 * Does the AP have the right to use the originating phone number?
 * Does the AP intend the OP to sign passports on its behalf?
-* Does the AP have the right to use any claimed brand attributes?
+* Does the AP have the right to use the brand attributes asserted for the call?
 
 ## Sample passport
-An example will help. In its JSON-serialized form, a typical VVP PASSporT (with some long CESR-encoded hashes shortened by ellipsis for readability) might look like this:
+An example will help. In its JSON-serialized form, a typical VVP passport (with some long CESR-encoded hashes shortened by ellipsis for readability) might look like this:
 
 ~~~ json
 {
   "header": {
     "alg": "EdDSA",
     "typ": "JWT",
-    "ppt": "passport",
+    "ppt": "vvp",
     "kid": "https://agentsrus.net/oobi/EMC.../agent/EAx..."
   },
   "payload": {
@@ -240,14 +240,14 @@ An example will help. In its JSON-serialized form, a typical VVP PASSporT (with 
 The semantics of the fields are:
 
 * `alg` *(required)* MUST be "EdDSA". Standardizing on one scheme prevents jurisdictions with incompatible or weaker cryptography. The RSA, HMAC, and ES256 algorithms MUST NOT be used. (This choice is motivated by compatibility with the vLEI and its associated ACDC ecosystem, which depends on the Montgomery-to-Edwards transformation.)
-* `typ` *(required)* MUST be "JWT".
-* `ppt` *(required)* Per STIR, MUST be "passport".
+* `typ` *(required)* Per {{RFC8225}}, MUST be "passport".
+* `ppt` *(required)* Per {{RFC8225}}, MUST identify the specific PASSporT type -- in this case, "vvp".
 * `kid` *(required)* MUST be the OOBI of an AID ({{<aid}}) controlled by the OP ({{<OP}}). An OOBI is a special URL that facilitates ACDC's viral discoverability goals. It returns IANA content-type `application/json+cesr`, which provides some important security guarantees. This OOBI returns a KEL ({{<KEL}}). Typically the AID in question does not identify the OP as a legal entity, but rather software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for `kid` MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence {{<DE}}.)
 * `orig` *(required)* MUST conform to SHAKEN requirements ({{ATIS-1000074}}), with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
 * `dest` *(required)* MUST conform to SHAKEN requirements.
-* `card` *(optional)* Contains one or more brand attributes. These are analogous to {{RCD-DRAFT}} or {{CTIA-BCID}} data, but differ in that they MUST be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD PASSporT) as needed. Individual attributes MUST conform to the VCard standard {{RFC6350}}.
+* `card` *(optional)* Contains one or more brand attributes. These are analogous to {{RCD-DRAFT}} or {{CTIA-BCID}} data, but differ in that they MUST be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD passport) as needed. Individual attributes MUST conform to the VCard standard {{RFC6350}}.
 * `goal` *(optional)* A machine-readable, localizable goal code, as described informally by {{ARIES-RFC-0519}}. If present, the dossier MUST prove that the OP is authorized by the AP to initiate calls with this particular goal.
-* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is discouraged. However it is not formally deprecated. It is included in VVP to facilitate the construction of derivative RCD PASSporTs which have the property.
+* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is discouraged. However it is not formally deprecated. It is included in VVP to facilitate the construction of derivative RCD passports which have the property.
 * `evd` *(required)* MUST be the OOBI of a bespoke ACDC (the dossier, {{<dossier}}) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. This URL can be hosted on any convenient web server, and is somewhat analogous to the `x5u` header in X509 contexts. See below for details.
 * `origId` *(optional)* Follows SHAKEN semantics.
 * `iat` *(required)* Follows standard JWT semantics.
@@ -256,31 +256,32 @@ The semantics of the fields are:
 # Verifying
 
 ## Algorithm
-When a verifier encounters a VVP passport, they use the following algorithm to verify:
+When a verifier encounters a VVP passport, they SHOULD verify by using an algorithm similar to following. (Optimizations may combine or reorder operations, but MUST achieve all of the same guarantees, in order to be compliant implementations.)
 
 1. Confirm that the `orig` and `dest` fields match contextual observations and other SIP metadata. That is, the passport appears aligned with what is known about the call from external sources. This is not a cryptographic analysis.
 1. Extract the `kid` field.
-1. Fetch the key state for the OP from the OOBI. Caches may be used to optimize this, as long as they meet the freshness standards of the verifier. Normally, the current key state is checked, but the OOBI returns a data stream that also allows historical analysis.
-1. Use the public key of the OP to verify that the signature on the passport is valid for that key state. On success, the verifier knows that the OP is at least making a testable assertion about the identity and authorizations of the AP.
+1. Fetch the key state for the OP from the OOBI in `kid`. Caches may be used to optimize this, as long as they meet the freshness standards of the verifier. Normally, the current key state is checked, but the OOBI returns a data stream that also allows historical analysis.
+1. Use the public key of the OP to verify that the signature on the passport is valid for that key state. On success, the verifier knows that the OP is at making an assertion about the identity and authorizations of the AP. (This is approximately the level of assurance provided by existing alternatives to VVP.)
 1. Extract the `evd` field, which references the dossier ({{<dossier}}) that constitutes backing evidence.
-1. Check to see whether the dossier has already been fully validated. Since dossiers are highly stable, caching dossier validations is recommended.
-1. If the dossier requires full validation, perform it. Validation includes checking the signature on each ACDC in the dossier's data graph against the key state of the issuer at the time the issuance occurred. Key state is proved by the KEL {{<KEL}}, and checked against independent witnesses.
+1. Use the SAID ({{<said}}) of the dossier as a lookup key to see whether the dossier has already been fully validated. Since dossiers are highly stable, caching dossier validations is recommended.
+1. If the dossier requires full validation, perform it. Validation includes checking the signature on each ACDC in the dossier's data graph against the key state of its respective issuer at the time the issuance occurred. Key state is proved by the KEL {{<KEL}}, and checked against independent witnesses.
 
     Issuance is recorded explicitly in the KEL's overall event sequence, so this check does not require guesses about how to map issuance timestamps to key state events. Subsequent key rotations do not invalidate this analysis.
 
-    Validation also includes comparing data structure and values against the declared schema, plus a full traversal of all chained CVD {{<cvd}}, back to the root of trust for each artifact. The correct relationships among evidence artifacts is checked (e.g., proving that the issuer of one piece is the issuee of another piece).
-1. Check to see whether the revocation status of the dossier has been tested recently enough to satisfy the verifier's freshness standards. If no, check for revocations anywhere in the data graph of the dossier. Revocations are not the same as key rotations. They can be checked much more quickly than doing a full validation. Revocation checks can also be cached, possibly with a different freshness threshold than the main evidence.
+    Validation also includes comparing data structure and values against the declared schema, plus a full traversal of all chained CVD {{<cvd}}, back to the root of trust for each artifact. The correct relationships among evidence artifacts MUST also be checked (e.g., proving that the issuer of one piece is the issuee of another piece).
+
+1. Check to see whether the revocation status of the dossier and each item it depends on has been tested recently enough to satisfy the verifier's freshness standards. If no, check for revocations anywhere in the data graph of the dossier. Revocations are not the same as key rotations. They can be checked much more quickly than doing a full validation. Revocation checks can also be cached, possibly with a different freshness threshold than the main evidence.
 1. Assuming that the dossier is valid and has no breakages due to revocation, confirm that the OP is authorized to sign the passport. If there is no delegation evidence ({{<DE}}), the AP and the OP must be identical, and the OP must be the issuee of the vetting credential; otherwise, the OP must be the issuee of a delegated signing credential for which the issuer is the AP.
 1. Extract the `orig` field and compare it to the TNAlloc credential {{<tnalloc-credential}} cited in the dossier {{<dossier}} to confirm that the AP {{<AP}} (or, if OP is not equal to AP and OP is using their own number, the OP {{<OP}}) has the right to originate calls with this number.
 1. If the passport includes non-null values for the optional `card` or `goal` fields, extract that information and check that the brand attributes claimed for the call are justified by a brand credential {{<brand-credential}} in the dossier.
 1. Check any business logic. For example, if the delegated signer credential says that the OP can only call on behalf of the AP during certain hours, or in certain geos, check those attributes of the call.
 
 ## Planning for efficiency
-The complete algorithm listed above is quite rigorous. With no caches, it may take a second or two, much like full validation of a certificate chain. However, because ACDC-based evidence is indexed by SAID {{<said}}, any given ACDC only needs to be validated once in its lifespan, which persists across key rotations and may last as long as an AP {{<AP}} uses a phone number -- years or decades. This allows very aggressive caching. And since the same dossier is used to justify many outbound calls -- perhaps thousands or millions of calls, for busy call centers -- and many dossiers will reference the same issuers and issuees and their associated key states and KELs {{<KEL}}, caching will produce huge benefits.
+The complete algorithm listed above is quite rigorous. With no caches, it may take several seconds, much like a thorough validation of a certificate chain. However, because ACDC-based evidence is indexed by SAID ({{<said}}), any given ACDC only needs to be validated once in its lifespan, which persists across key rotations and may last as long as an AP ({{<AP}}) uses a phone number -- years or decades. This allows very aggressive caching. And since the same dossier is used to justify many outbound calls -- perhaps thousands or millions of calls, for busy call centers -- and many dossiers will reference the same issuers and issuees and their associated key states and KELs ({{<KEL}}), caching will produce huge benefits.
 
 Furthermore, because SAIDs and their associated data (including links to other nodes in a data graph) have a tamper-evident relationship, any party can perform validation and compile their results, then share the data with verifiers that want to do less work. Validators like this are not oracles, because consumers of such data need not trust shared results blindly. They can always directly recompute some or all of it from a passport, to catch deception. However, they can do this lazily or occasionally, per their preferred balance of risk/effort.
 
-*In toto*, these characteristics mean that no centralized registry is required in any given ecosystem. Data can be fetched directly from its source, across jurisdictional boundaries. Because it is fetched from its source, it comes with consent. Privacy can be tuned ({{<privacy}}). Simple opportunistic, uncoordinated reuse (e.g., in or across the datacenters of TSPs {{<TP}}) will arise spontaneously and will dramatically improve the scale and efficiency of the system.
+*In toto*, these characteristics mean that no centralized registry is required in any given ecosystem. Data can be fetched directly from its source, across jurisdictional boundaries. Because it is fetched from its source, it comes with consent. Privacy can be tuned (see {{<privacy}}). Simple opportunistic, uncoordinated reuse (e.g., in or across the datacenters of TSPs will arise spontaneously and will dramatically improve the scale and efficiency of the system.
 
 # Curating
 The evidence that's available in today's telecom ecosystems resembles some of the evidence described here, in concept. However, existing evidence has gaps, and its format is fragile. Furthermore, if it is organized for discovery, it is typically assembled into large, centralized registries at a regional or national level. These registries become a trusted third party, which defeats some of the purpose of creating decentralized and independently verifiable evidence in the first place. Sharing such evidence across jurisdiction boundaries requires regulatory compatibility and bilateral agreements. Sharing at scale is impractical at best, if not illegal.
@@ -292,17 +293,7 @@ How evidence is issued, propagated, quality-controlled, and referenced is theref
 The following curation activities are imporant in a VVP ecosystem.
 
 ### Witnessing and watching
-In an ACDC-based ecosystem, issuers issue and revoke their own evidence without any calls to a centralized registry or authority. However, KERI's decentralized witness feature MUST be active. This provides an official methodology for curating the relationship between keys and identifiers, and between identifiers and non-repudiable actions like issuing and revoking credentials.
-
-A KERI *witness* is a lightweight server that acts as a notary. It exposes a standard interface. It receives signed events from the controller of an identifier that it services. If these events are properly sequenced and aligned with the identifier's signing policy and key state, they are recorded and become queryable, typically by the public. KERI allows the controller of an autonomic identifier to choose zero or more witnesses. The witnesses can change over the lifecycle of the identifier. However, the relationship between an identifier and its witnesses cannot be changed arbitrarily; the controller of the identifier makes a cryptographic commitment to its witnesses, and can only change that commitment by satisfying the signing policy of the identifier. In VVP, identifiers used by issuers MUST have at least one witness, because this guarantees viral discoverability, and SHOULD have at least 3 witnesses, because this guarantees both high availability and the detection of duplicity by the controller of the identifier.
-
-Witnesses provide, for VVP, many of the security guarantees that alternate designs seek from blockchains. However, witnesses are far more lightweight than blockchains. They can be run by anyone, without coordination or approval, and can be located in any jurisdiction that the owner of the identifier prefers, satisfying regulatory requirements about data locality. Although a single witness may service mulptiple identifiers, the records related to any single identifier are independent, and no consensus algorithm is required to order them relative to others. Thus, every identifier's data evolves in parallel, without bottlenecks, and any identifier can be deleted without affecting the integrity of other identifiers' records, satisfying regulatory requirements about erasure. Witnesses only store (and thus, can only expose to the public) what a given data controller has instructed them to store and publish. Thus, witnesses do not create difficulties with consent or privacy.
-
-In VVP, when a party shares an identifier or a piece of evidence, they do so via a special URL called an OOBI (out of band invitation). The OOBI serves a tamper-evident KEL ({{<KEL}}) that reveals the full, provable history of the key state and other witnesses for the identifier, and even includes a forward reference to new witnesses, if they have changed. It also allows the discovery of issuance and revocation events, and their sequence relative to one another and to key state changes.
-
-An additional and optional feature in KERI is enabled by adding *watchers*. Watchers are a lightweight service that synthesizes data from many witnesses. Watchers MAY monitor multiple witnesses and enable hyper-efficient caching. They SHOULD also compare what multiple witnesses for a given identifier are saying, which prevents controllers of an identifier from forking reality in a duplicitous way, and which can detect malicious attempts to use stolen keys.
-
-Witnesses are chosen according to the preference of each party that controls an identifier, and a mature ecosystem could have dozens, hundreds, or thousands. Watchers, on the other hand, address the needs of verifiers, because they distill some or all of the complexity in an ecosystem down to a single endpoint that verifiers can query. Any verifier can operate a watcher at any time, without any coordination or approval. Viral discoverability can automatically populate the watcher's cache, and keep it up-to-date as witness data evolves. Verifiers can share watchers if they prefer. Anything that watchers assert must be independently verified by consulting witnesses, so watchers need not have a complete picture of the world, and they are a convenience rather than an oracle that must be trusted. The data that watchers synthesize is deliberately published by witnesses for public consumption, at the request of each data stream's associated data controllers, and does not represent surveillance ({{<privacy}}). If a watcher can no longer find witness data to back one of its assertions, it MUST delete the data to satisfy its contract. This means that acts of erasure on witnesses propagate to watchers, again satisfying regulatory erasure requirements.
+In an ACDC-based ecosystem, issuers issue and revoke their own evidence without any calls to a centralized registry or authority. However, KERI's decentralized witness feature MUST be active. This provides an official, uniform, and high-security methodology for curating the relationship between keys and identifiers, and between identifiers and non-repudiable actions like issuing and revoking credentials. In addition, watchers MAY be used by given verifiers, to provide efficient caching, pub-sub notifications of state changes, and duplicity detection. For more about these topics, see {{<appendix-b}}.
 
 ### Vetting identity
 The job of vetting legal entities (which includes APs {{<AP}}, but also OPs {{<OP}}) and issuing vetting credentials ({{<vetting-credential}}) is performed by a *legal entity vetter*. VVP MUST have evidence of vetted identity. It places few requirements on such vetters, other than the ones already listed for vetting credentials themselves. Vetting credentials MAY expire, but this is not particularly desirable and might actually be an antipattern. ACDCs and AIDs facilitate much longer lifecycles than certificates; prophylactic key rotation is recommended but creates no reason to rotate evidence. However, a legal entity vetter MUST agree to revoke vetting credentials in a timely manner if the legal status of an entity changes, or if data in a vetting credential becomes invalid.
@@ -351,13 +342,13 @@ VVP uses SAIDs and digital signatures as primitive forms of evidence.
 ### X509 certificates
 VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.
 
-### PASSporT
+### Passport
 VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan ({{<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{RCD-PASSPORT}}.
 
 Neither VVP's backing evidence nor its passport depends on a certificate authority ecosystem. The passport MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}, rather than the signature variants preferred by the other passport types. Instead of including granular fields in the claims of its JWT, the VVP passport cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
 <figure>
-<name>SHAKEN PASSporT compared to VVP PASSporT</name>
+<name>SHAKEN Passport compared to VVP Passport</name>
 <artset>
   <artwork type="svg" name="fig1.svg">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="528" viewBox="0 0 528 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -379,8 +370,8 @@ Neither VVP's backing evidence nor its passport depends on a certificate authori
     <polygon class="arrowhead" points="168,224 156,218.4 156,229.6" fill="black" transform="rotate(180,160,224)"/>
     <circle cx="464" cy="144" r="6" class="opendot" fill="white" stroke="black"/>
     <g class="text">
-    <text x="104" y="20">SHAKEN PASSporT</text>
-    <text x="396" y="20">VVP PASSporT</text>
+    <text x="104" y="20">SHAKEN Passport</text>
+    <text x="396" y="20">VVP Passport</text>
     <text x="56" y="52">protected</text>
     <text x="344" y="52">protected</text>
     <text x="108" y="68">kid: pubkey of OSP</text>
@@ -405,7 +396,7 @@ Neither VVP's backing evidence nor its passport depends on a certificate authori
   </artwork>
   <artwork type="ascii-art" name="fig1.txt">
 <![CDATA[
-     SHAKEN PASSporT                       VVP PASSporT
+     SHAKEN Passport                       VVP Passport
 +-----------------------+           +-----------------------+
 | protected             |           | protected             |
 |   kid: pubkey of OSP -+---+       |   kid: AID of OP      |
@@ -600,7 +591,7 @@ DE is nearly always required when the AP is an organization, because the cryptog
     <path d="M 288,512 L 464,512" fill="none" stroke="black"/>
     <circle cx="320" cy="80" r="6" class="opendot" fill="white" stroke="black"/>
     <g class="text">
-    <text x="124" y="20">VVP PASSporT</text>
+    <text x="124" y="20">VVP Passport</text>
     <text x="72" y="52">protected</text>
     <text x="12" y="68">..</text>
     <text x="96" y="68">...kid: AID of OP</text>
@@ -659,7 +650,7 @@ DE is nearly always required when the AP is an organization, because the cryptog
   </artwork>
   <artwork type="ascii-art" name="fig3.txt">
 <![CDATA[
-         VVP PASSporT
+         VVP Passport
   +-----------------------+
   | protected             |
 ......kid: AID of OP      |
@@ -698,7 +689,7 @@ v?                                  (APE)                 (DE)
 
 Where DE exists, the APE will identify and authorize the AP, but the OOBI in the `kid` claim of the passport will identify the OP, and these two parties will be different. Therefore, the DE in the dossier MUST include a delegated signer credential that authorizes the OP to act on the AP's behalf and that stipulates the constraints that govern this delegation. It SHOULD also include a vetting credential for the OP, that proves the OP's identity. If the APE includes a brand credential, then the DE MUST also include a brand proxy credential, proving that the OP not only can use the AP's allocated phone number, but has AP's permission to project the AP's brand while doing so.
 
-The PASSporT-specific signature MUST come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.
+The passport-specific signature MUST come from the OP, not the OSP or any other party. The OP can generate this signature in its on-prem or cloud PBX, using keys that it controls. It is crucial that the distinction between OP and AP be transparent, with the relationship proved by strong evidence that the AP can create or revoke easily, in a self-service manner.
 
 ### Vetting credential
 A vetting credential is a targeted credential that enumerates the formal and legal attributes of a unique legal entity. It MUST include a legal identifier that makes the entity unique in its home jurisdiction (e.g., an LEI), and it MUST include an AID for the legal entity as an AP. This AID is unique globally.
@@ -709,31 +700,31 @@ A vetting credential MUST include a JL to a credential that qualifies the issuer
 
 To achieve various design goals, a vetting credential MUST be an ACDC, but this ACDC MAY be a transformation of a credential in another format (e.g., W3C VC, SD-JWT, X509 certificate). See {{<interoperability}}.
 
-One example of a possible vetting credential is an LE vLEI; see {{ISO-17442-3}} and {{<appendix-b}}.
+One example of a possible vetting credential is an LE vLEI; see {{ISO-17442-3}} and {{<appendix-c}}.
 
 ### TNAlloc credential
 A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more phone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP MUST also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials MUST contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.
 
 To achieve various design goals, a TNAlloc credential MUST be an ACDC, but this ACDC MAY be a transformation of a credential in another format (e.g., a TNAuthList from {{RFC8226}}). See {{<interoperability}}.
 
-An example TNAlloc credential and its schema are shown in {{<appendix-b}}.
+An example TNAlloc credential and its schema are shown in {{<appendix-c}}.
 
 ### Brand credential
 A brand credential is a targeted credential that enumerates brand properties such as a brand name, logo, chatbot URL, social media handle, and domain name. It MUST be issued to an AP as a legal entity, but it does not enumerate the formal and legal attributes of the AP; rather, it enumerates properties that would be meaningful to a TP who's deciding whether to take a phone call. It confers on its issuee the right to use the described brand by virtue of research conducted by the issuer (e.g., a trademark search).
 
 This credential MUST be issued according to a documented process that offers formal assurance that it is only issued with accurate information, and only to a legal entity that has the right to use the described brand. A single AP MAY have multiple brand credentials (e.g., a fictional corporation, `Amce Space Travel Deutschland, GmbH`, might hold brand credentials for both `Sky Ride` and for `Orbítame Latinoamérica`). Rights to use the same brand MAY be conferred on multiple APs (`Acme Space Travel Deutschland, Gmbh` and `Acme Holdings Canada, Ltd` may both possess brand credentials for `Sky Ride`). A brand credential MUST contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.
 
-An example brand credential and its schema are shown in {{<appendix-b}}.
+An example brand credential and its schema are shown in {{<appendix-c}}.
 
 ### Brand proxy credential
 A brand proxy credential confers on an OP the right to project the brand of an AP when making phone calls, subject to a carefully selected set of constraints. This is different from the simple RTU conferred by TNAlloc. Without a brand proxy credential, a call center could make calls on behalf of an AP, using the AP's allocated phone number, but would be forced to do so under its own name or brand, because it lacks evidence that the AP intended anything different. If an AP intends for phone calls to be made by a proxy, and wants the proxy to project the AP's brand, the AP MUST issue this credential.
 
-An example brand credential and its schema are shown in {{<appendix-b}}.
+An example brand credential and its schema are shown in {{<appendix-c}}.
 
 ### Delegated signer credential
 A delegated signer credential proves that automation running under the control of the OP has been authorized by the AP to originate VVP traffic (and thus, sign VVP passports) on its behalf.
 
-An example delegated signer credential and its schema are shown in {{<appendix-b}}.
+An example delegated signer credential and its schema are shown in {{<appendix-c}}.
 
 # Interoperability
 
@@ -774,8 +765,21 @@ Even better, when such evidence is filtered through suballocations or crosses ju
 
 The synergies of these properties mean that ACDCs can be permanent, flexible, robust, and low-maintenance. In VVP, no third party has to guess who's accountable for a call; the accountable party is transparently and provably accountable, period. (Yet notwithstanding this transparency, ACDCs support a form of pseudonymity and graduated disclosure that satisfies vital privacy and data processing constraints. See {{<privacy}}.)
 
-# Appendix B: Sample Credentials
-{:appendix #appendix-b}
+# Appendix B: Witnesses and Watchers
+A full description of witnesses and watchers is available in {{TOIP-KERI}}. Here, we merely summarize.
+
+A KERI *witness* is a lightweight server that acts as a notary. It exposes a standard interface. It receives signed events from the controller of an identifier that it services. If these events are properly sequenced and aligned with the identifier's signing policy and key state, they are recorded and become queryable, typically by the public. KERI allows the controller of an autonomic identifier to choose zero or more witnesses. The witnesses can change over the lifecycle of the identifier. However, the relationship between an identifier and its witnesses cannot be changed arbitrarily; the controller of the identifier makes a cryptographic commitment to its witnesses, and can only change that commitment by satisfying the signing policy of the identifier. In VVP, identifiers used by issuers MUST have at least one witness, because this guarantees viral discoverability, and SHOULD have at least 3 witnesses, because this guarantees both high availability and the detection of duplicity by the controller of the identifier.
+
+Witnesses provide, for VVP, many of the security guarantees that alternate designs seek from blockchains. However, witnesses are far more lightweight than blockchains. They can be run by anyone, without coordination or approval, and can be located in any jurisdiction that the owner of the identifier prefers, satisfying regulatory requirements about data locality. Although a single witness may service mulptiple identifiers, the records related to any single identifier are independent, and no consensus algorithm is required to order them relative to others. Thus, every identifier's data evolves in parallel, without bottlenecks, and any identifier can be deleted without affecting the integrity of other identifiers' records, satisfying regulatory requirements about erasure. Witnesses only store (and thus, can only expose to the public) what a given data controller has instructed them to store and publish. Thus, witnesses do not create difficulties with consent or privacy.
+
+In VVP, when a party shares an identifier or a piece of evidence, they do so via a special URL called an OOBI (out of band invitation). The OOBI serves a tamper-evident KEL ({{<KEL}}) that reveals the full, provable history of the key state and other witnesses for the identifier, and even includes a forward reference to new witnesses, if they have changed. It also allows the discovery of issuance and revocation events, and their sequence relative to one another and to key state changes.
+
+An additional and optional feature in KERI is enabled by adding *watchers*. Watchers are a lightweight service that synthesizes data from many witnesses. Watchers MAY monitor multiple witnesses and enable hyper-efficient caching. They SHOULD also compare what multiple witnesses for a given identifier are saying, which prevents controllers of an identifier from forking reality in a duplicitous way, and which can detect malicious attempts to use stolen keys.
+
+Witnesses are chosen according to the preference of each party that controls an identifier, and a mature ecosystem could have dozens, hundreds, or thousands. Watchers, on the other hand, address the needs of verifiers, because they distill some or all of the complexity in an ecosystem down to a single endpoint that verifiers can query. Any verifier can operate a watcher at any time, without any coordination or approval. Viral discoverability can automatically populate the watcher's cache, and keep it up-to-date as witness data evolves. Verifiers can share watchers if they prefer. Anything that watchers assert must be independently verified by consulting witnesses, so watchers need not have a complete picture of the world, and they are a convenience rather than an oracle that must be trusted. The data that watchers synthesize is deliberately published by witnesses for public consumption, at the request of each data stream's associated data controllers, and does not represent surveillance ({{<privacy}}). If a watcher can no longer find witness data to back one of its assertions, it MUST delete the data to satisfy its contract. This means that acts of erasure on witnesses propagate to watchers, again satisfying regulatory erasure requirements.
+
+# Appendix C: Sample Credentials
+{:appendix #appendix-c}
 
 ## Vetting credential
 The schema of a vetting credential can be very simple; it MUST identify the issuer and issuee by AID, and it MUST identify the vetted entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets that requirement:
