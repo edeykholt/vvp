@@ -330,10 +330,10 @@ SAIDs are evidence that hashed data has not changed. They can also function like
 ### Signature
 A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs: `signature = sign(D, privkey)`. The evidence can be verified by checking that the signature is bound to D and the public key of the signer: `valid = verify(signature, D, pubkey)`. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.
 
-The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern.
+The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern by anchoring signatures on non-ephemeral evidence to KELs ({{<KEL}}).
 
 ### AID
-An *autonomic identifier* (*AID*) is a short string that can be resolved to one or more cryptographic keys at a specific version of their key state. Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures. AIDs are like W3C DIDs {{W3C-DID}}}, and can be transformed into DIDs. The information required to resolve an AID to its cryptographic keys is communicated through a special form of URI called an *out-of-band invitation* (*OOBI*). An OOBI points to an HTTP resource that returns IANA content-type `application/json+cesr`; it is somewhat analogous to a combination of the `kid` and `x5u` constructs in many JWTs. AIDs and OOBIs are defined in the KERI spec {{TOIP-KERI}}.
+An *autonomic identifier* (*AID*) is a short string that can be resolved to one or more cryptographic keys at a specific version of the identifier's key state. Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures. AIDs are like W3C DIDs {{W3C-DID}}}, and can be transformed into DIDs. The information required to resolve an AID to its cryptographic keys is communicated through a special form of URI called an *out-of-band invitation* (*OOBI*). An OOBI points to an HTTP resource that returns IANA content-type `application/json+cesr`; it is somewhat analogous to a combination of the `kid` and `x5u` constructs in many JWTs. AIDs and OOBIs are defined in the KERI spec {{TOIP-KERI}}.
 
 An example of an AID is `EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa`. AIDs are created by calculating the hash of the identifier's initial state; since this state is typically a canonicalized JSON object, AIDs usually match the same regex as SAIDs in general. A noteworthy exception is that non-transferrable AIDs begin with `B` instead of `E` or another letter. Such AIDs are analogous to did:key values, and play a limited role in VVP. They are incapable of rotating keys or anchoring events to a KEL. They therefore lack OOBIs and can receive but not issue ACDCs. However, their virtue is that they can be created and used without a sophisticated wallet. This may make them a convenient way to identify the automation that signs passports and receives a delegated signer credential (see {{<delegating-signing-authority}}).
 
@@ -347,10 +347,10 @@ Since neither a SAID value nor the data it hashes can be changed without breakin
 VVP uses SAIDs and digital signatures as primitive forms of evidence.
 
 ### X509 certificates
-VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain.
+VVP does not depend on X509 certificates {{RFC5280}} for any of its evidence. However, if deployed in a hybrid mode, it MAY be used beside alternative mechanisms that are certificate-based. In such cases, self-signed certificates that never expire might suffice to tick certificate boxes, while drastically simplifying the burden of maintaining accurate, unexpired, unrevoked views of authorizations and reflecting that knowledge in certificates. This is because deep authorization analysis flows through VVP's more rich and flexible evidence chain. See {{<interoperability}}.
 
 ### Passport
-VVP emits and verifies a STIR PASSporT {{RFC8225}}. This is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan ({{<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{RCD-PASSPORT}}.
+VVP emits and verifies a STIR PASSporT {{RFC8225}} that is fully compliant in all respects, except that it lacks the `x5u` header that links it to an X509 certificate. The passport is a form of evidence suitable for evaluation during the brief interval when a call is being initiated, and it is carefully backed by evidence with a longer lifespan ({{<dossier}}). Conceptually, VVP's version is similar to a SHAKEN passport {{RFC8588}}. It MAY also reference brand-related evidence, allowing it to play an additional role similar to the RCD passport {{RCD-PASSPORT}}.
 
 Neither VVP's backing evidence nor its passport depends on a certificate authority ecosystem. The passport MUST be secured by an EdDSA digital signature {{RFC8032}}, {{FIPS186-4}}, rather than the signature variants preferred by the other passport types. Instead of including granular fields in the claims of its JWT, the VVP passport cites a rich data graph of evidence by referencing the SAID of that data graph. This indirection and its implications are discussed below.
 
@@ -392,7 +392,7 @@ Neither VVP's backing evidence nor its passport depends on a certificate authori
     <text x="52" y="132">dest</text>
     <text x="340" y="132">dest</text>
     <text x="60" y="148">attest</text>
-    <text x="392" y="148">evd (SAID = ref t</text>
+    <text x="392" y="148">evd (JL to dossier)</text>
     <text x="92" y="164">...more claims</text>
     <text x="368" y="164">signature of OP</text>
     <text x="84" y="180">signature of OSP</text>
@@ -412,7 +412,7 @@ Neither VVP's backing evidence nor its passport depends on a certificate authori
 |   orig                |   |       |   orig                |
 |   dest                |   |       |   dest                |
 |   attest              |   |       |   card                |
-|   ...more claims      |   |       |   evd (SAID = ref to)-+---+
+|   ...more claims      |   |       |   evd (JL to dossier)-+---+
 | signature of OSP      |   |       | signature of OP       |   |
 +-----------------------+   |       +-----------------------+   |
                             |                                   |
@@ -528,7 +528,7 @@ A *justifying link* (*JL*) is a reference, inside of one CVD, to another CVD tha
 ## Specific artifacts
 
 ### PSS
-Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP {{<OP}}. This *passpport-specific signature* (*PSS*) MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
+Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP ({{<OP}}). This *passpport-specific signature* (*PSS*) MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
 
 The signature MUST be the result of running the EdDSA algorithm over input data that consists of the following ordered metadata about a call: the source phone number (`orig` claim in the JWT), the destination phone number (`dest` claim), an OOBI for the OP (`kid`), a timestamp (`iat`), optional brand information (`card` with value `null` if missing), optional `call-reason` (with value `null` if missing), optional `goal` (with value `null` if missing), and a reference to evidence (`evd`).
 
@@ -749,7 +749,20 @@ Verifiers MAY choose to accept such derivative ACDCs, but the indirection SHOULD
 
 # Security Considerations
 
-TODO Security
+Like most cryptographic mechanisms, VVP depends on the foundational assumption that people will manage cryptographic keys carefully. VVP enforces this assumption more thoroughly than many existing solutions:
+
+* Parties that issue credentials MUST be identified with AIDs ({{<aid}}) that use witnesses ({{<appendix-b>}}). This guarantees a non-repudiable, publicly accessible audit log of how their key state evolves, and it makes key rotation easy. It also offers compromise and duplicity detection. Via prerotation, it enables recovery from key compromise. AIDs can be upgraded to use quantum-proof signing algorithms without changing the identifier.
+* Parties that issue credentials MUST do so using ACDCs ({{<acdcs}}) signed by their AID rather than a raw key. This makes evidence revocable. It also makes it stable across key rotation, and prevents retrograde attacks by allowing verifiers to map an issuance or revocation event to an unambiguous key state in the {{<KEL}}.
+
+However, it is still possible to make choices that weaken the security posture of the ecosystem. Therefore, the following best practices SHOULD be followed:
+
+1. Passports SHOULD have an aggressive timeout (e.g., 1 minutes). Signatures on passports are not anchored in a KEL, and must therefore be evaluated for age with respect to the time they were received. Overly old passports could be a replay attack (a purported second call with the same orig and dest numbers, using the same backing evidence, soon after the first.)
+
+1. Witnesses SHOULD be used in such a way that high availability is guaranteed, and in such a way that duplicity by the controller of an AID is detected. (Verifiers will be able to see the witness policy of each AID controller, and SHOULD decide for themselves whether the party is reliable, depending on what they observe.)
+
+1. Revocations MUST be timely.
+
+1. Watchers MUST propagate events to local caches with a low latency, and MUST provide information that allows verifiers to decide whether that latency meets their freshness requirements.
 
 # Privacy
 
