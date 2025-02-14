@@ -104,7 +104,8 @@ Table of Contents
        6.1.3.  Vetting brand
        6.1.4.  Allocating TNs
        6.1.5.  Granting brand proxy rights
-       6.1.6.  Revoking
+       6.1.6.  Delegating signing authority
+       6.1.7.  Revoking
      6.2.  General evidence categories
        6.2.1.  SAID
        6.2.2.  Signature
@@ -645,7 +646,8 @@ Table of Contents
 
 6.1.  Activities
 
-   The following curation activities are imporant in a VVP ecosystem.
+   The following curation activities guarantee the evidence upon which a
+   VVP ecosystem depends.
 
 6.1.1.  Witnessing and watching
 
@@ -727,7 +729,19 @@ Table of Contents
    No party has to return to the operators of such databases to validate
    anything.
 
-6.1.6.  Revoking
+6.1.6.  Delegating signing authority
+
+   An AP MUST prove, by issuing a delegated signer credential (6.3.9),
+   that the signer of its passport does so with its explicit
+   authorization.  Normally the signer is automation under the control
+   of the OP, but the issuee of the credential MAY vary at the AP's
+   discretion.
+
+   Since this credential merely documents the AP's intent to be
+   accountable for the actions of the signer, the AP MAY choose whatever
+   process it likes to issue it.
+
+6.1.7.  Revoking
 
    Revoking an ACDC is as simple as the issuer signing a revocation
    event and distributing it to witnesses.  Parties that perform a full

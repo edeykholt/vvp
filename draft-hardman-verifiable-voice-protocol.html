@@ -1230,7 +1230,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.6.2.1.2.5.1"><a href="#section-6.1.5" class="auto internal xref">6.1.5</a>.  <a href="#name-granting-brand-proxy-rights" class="internal xref">Granting brand proxy rights</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.6">
-                    <p id="section-toc.1-1.6.2.1.2.6.1"><a href="#section-6.1.6" class="auto internal xref">6.1.6</a>.  <a href="#name-revoking" class="internal xref">Revoking</a></p>
+                    <p id="section-toc.1-1.6.2.1.2.6.1"><a href="#section-6.1.6" class="auto internal xref">6.1.6</a>.  <a href="#name-delegating-signing-authorit" class="internal xref">Delegating signing authority</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.7">
+                    <p id="section-toc.1-1.6.2.1.2.7.1"><a href="#section-6.1.7" class="auto internal xref">6.1.7</a>.  <a href="#name-revoking" class="internal xref">Revoking</a></p>
 </li>
                 </ul>
 </li>
@@ -1704,7 +1707,7 @@ Validation also includes comparing data structure and values against the declare
         <h3 id="name-activities">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-activities" class="section-name selfRef">Activities</a>
         </h3>
-<p id="section-6.1-1">The following curation activities are imporant in a VVP ecosystem.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-1">The following curation activities guarantee the evidence upon which a VVP ecosystem depends.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <div id="witnessing-and-watching">
 <section id="section-6.1.1">
           <h4 id="name-witnessing-and-watching">
@@ -1746,12 +1749,21 @@ Validation also includes comparing data structure and values against the declare
 <p id="section-6.1.5-2">Issuing vetting and brand credentials might be driven by large databases of metadata about organizations and brands, but how such systems work is out of scope. The credentials themselves contain all necessary information, and once credentials are issued, they constitute an independent source of truth as far as VVP is concerned. No party has to return to the operators of such databases to validate anything.<a href="#section-6.1.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="revoking">
+<div id="delegating-signing-authority">
 <section id="section-6.1.6">
-          <h4 id="name-revoking">
-<a href="#section-6.1.6" class="section-number selfRef">6.1.6. </a><a href="#name-revoking" class="section-name selfRef">Revoking</a>
+          <h4 id="name-delegating-signing-authorit">
+<a href="#section-6.1.6" class="section-number selfRef">6.1.6. </a><a href="#name-delegating-signing-authorit" class="section-name selfRef">Delegating signing authority</a>
           </h4>
-<p id="section-6.1.6-1">Revoking an ACDC is as simple as the issuer signing a revocation event and distributing it to witnesses. Parties that perform a full validation of a given ACDC (<a href="#verifying" class="auto internal xref">5</a>) will automatically detect the revocation event in realtime, because they will contact one or more of these witnesses. Parties that are caching their validations <span class="bcp14">MAY</span> poll witnesses very efficiently to discover revocation events. Some witnesses may choose to offer the option of registering a callback, allowing interested parties to learn about revocations even more efficiently.<a href="#section-6.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.6-1">An AP <span class="bcp14">MUST</span> prove, by issuing a delegated signer credential (<a href="#delegated-signer-credential" class="auto internal xref">6.3.9</a>), that the signer of its passport does so with its explicit authorization. Normally the signer is automation under the control of the OP, but the issuee of the credential <span class="bcp14">MAY</span> vary at the AP's discretion.<a href="#section-6.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.6-2">Since this credential merely documents the AP's intent to be accountable for the actions of the signer, the AP <span class="bcp14">MAY</span> choose whatever process it likes to issue it.<a href="#section-6.1.6-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="revoking">
+<section id="section-6.1.7">
+          <h4 id="name-revoking">
+<a href="#section-6.1.7" class="section-number selfRef">6.1.7. </a><a href="#name-revoking" class="section-name selfRef">Revoking</a>
+          </h4>
+<p id="section-6.1.7-1">Revoking an ACDC is as simple as the issuer signing a revocation event and distributing it to witnesses. Parties that perform a full validation of a given ACDC (<a href="#verifying" class="auto internal xref">5</a>) will automatically detect the revocation event in realtime, because they will contact one or more of these witnesses. Parties that are caching their validations <span class="bcp14">MAY</span> poll witnesses very efficiently to discover revocation events. Some witnesses may choose to offer the option of registering a callback, allowing interested parties to learn about revocations even more efficiently.<a href="#section-6.1.7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
