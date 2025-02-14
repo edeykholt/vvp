@@ -4,8 +4,8 @@
 
 Network Working Group                                         D. Hardman
 Internet-Draft                                            Provenant, Inc
-Intended status: Standards Track                         7 February 2025
-Expires: 11 August 2025
+Intended status: Standards Track                        14 February 2025
+Expires: 18 August 2025
 
 
                        Verifiable Voice Protocol
@@ -15,22 +15,23 @@ Abstract
 
    Verifiable Voice Protocol (VVP) authenticates and authorizes
    organizations and individuals making telephone calls.  This
-   eliminates trust gaps that scammers exploit.  Like STIR, SHAKEN, RCD,
-   BCID, and related technologies, VVP binds strong cryptographic
-   evidence to a SIP INVITE, and verifies this evidence downstream.
-   However, VVP builds from different technical and governance
-   assumptions.  This unique foundation allows VVP to cross
-   jurisdictional boundaries easily and robustly.  It also makes VVP
-   simpler, more decentralized, cheaper to deploy and maintain, more
+   eliminates trust gaps that scammers exploit.  Like related
+   technolgies such as STIR, SHAKEN, RCD, and BCID, VVP binds
+   cryptographic evidence to a SIP INVITE, and verifies this evidence
+   downstream.  However, VVP builds from different technical and
+   governance assumptions, and uses better evidence.  This allows VVP to
+   cross jurisdictional boundaries easily and robustly.  It also makes
+   VVP simpler, more decentralized, cheaper to deploy and maintain, more
    private, more scalable, and higher assurance than alternatives.
    Because it is easier to adopt, VVP can plug gaps or build bridges
    between other approaches, functioning as glue in hybrid ecosystems.
    For example, it can justify an A attestation in SHAKEN, or an RCD
    passport for branded calling, when a call originates outside SHAKEN
-   or RCD ecosystems.  VVP also works well as a standalone mechanism.
-   An extra benefit is that VVP enables two-way evidence sharing with
-   verifiable text and chat, as well as with other industry verticals
-   that need verifiability in non-telco contexts.
+   or RCD ecosystems.  VVP also works well as a standalone mechanism,
+   independent of other solutions.  An extra benefit is that VVP enables
+   two-way evidence sharing with verifiable text and chat, as well as
+   with other industry verticals that need verifiability in non-telco
+   contexts.
 
 About This Document
 
@@ -60,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 August 2025.
+   This Internet-Draft will expire on 18 August 2025.
 
 Copyright Notice
 
@@ -131,13 +132,14 @@ Table of Contents
    7.  Interoperability
    8.  Security Considerations
    9.  Privacy
-   10. Appendix A: Sample Credentials
-     10.1.  Vetting credential
-     10.2.  TNAlloc credential
-   11. IANA Considerations
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+   10. Appendix A: Evidence theory
+   11. Appendix B: Sample Credentials
+     11.1.  Vetting credential
+     11.2.  TNAlloc credential
+   12. IANA Considerations
+   13. References
+     13.1.  Normative References
+     13.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -146,40 +148,25 @@ Table of Contents
    When we get phone calls, we want to know who's calling, and why.
    Annoying or malicious strangers abuse expectations far too often.
 
-   Regulators are mandating protections.  This is wise, but it can
-   create heavy burdens.  Vetting every possible caller is ambitious.
-   Monitoring all certificates and cryptographic keys is harder.
-   Operating a central registry, especially across jurisdictional
-   boundaries, is harder still.  Regulatory constraints on data
-   movement, shifting standards, variety in PSTNs and system
-   interconnects, and many other factors further complexify.
+   Regulators have mandated protections, and industry has responded.
+   However, existing solutions have several drawbacks:
 
-   No matter how ambitious we become, our protections will remain
-   inadequate until we close a gap between the party accountable for a
-   call, and the party that provides evidence about who's calling.  This
-   disconnect is the root of many vulnerabilities.  At first,
-   terminating service providers told us who's calling in a
-   probabilistic way, based on unreliable metadata.  More recently,
-   approaches like STIR/SHAKEN move evidence closer to the origin, and
-   add tamper detection.  However, the gap persists.  The signer of a
-   SHAKEN passport is the originating service provider, not the caller,
-   and no evidence closes this gap.  If the originating service provider
-   lacks reputation (e.g, because it operates outside the regulated
-   jurisdiction), few good options exist.  A high percentage of STIR/
-   SHAKEN traffic does not receive an A attestation, and even the
-   traffic that does receive it may use very flawed evidence.
+   *  Assurance derives only from the signatures of originating service
+      providers, with no independently verifiable proof of what they
+      assert.
 
-   In theory, this gap could be eliminated by perfect authentication and
-   authorization between callers and OSPs, for every phone call: simply
-   refuse to connect calls that do not match an ideal profile for trust.
-   However, this is impractical.  Organization X might hire Call Center
-   Y to call on their behalf, using X's reputation/brand and X's phone
-   number.  In such a situation, X is the relevant answer to the "who's
-   calling" question, but Y is the originator of the call -- and there's
-   no good way to guarantee that everyone understands that relationship.
-   In addition, the market demands wholesalers/aggregators of phone
-   numbers, and is characterized by complex system layers and
-   interconnects, that further challenge transparent accountability.
+   *  Each jurisdiction has its own governance and its own set of
+      signers.  Sharing information across boundaries is fraught with
+      logistical and regulatory problems.
+
+   *  Deployment and maintenance costs are high.
+
+   *  Market complexities such as the presence of aggregators,
+      wholesalers, and call centers that proxy a brand are difficult to
+      model safely.
+
+   *  What may work for enterprises offers little benefit for individual
+      callers.
 
    VVP solves these problems by applying two crucial innovations.
 
@@ -189,72 +176,15 @@ Table of Contents
    container_s (_ACDC_s) -- [TOIP-ACDC].  Other forms of evidence (e.g.,
    JWTs/STIR PASSporTs, digital signatures, and optional interoperable
    inputs from W3C verifiable credentials [W3C-VC] and SD-JWTs
-   [SD-JWT-DRAFT]; see 7) also contribute to the overall solution
-   ((6.2)), but the foundation that VVP places beneath them is unique.
+   [SD-JWT-DRAFT]) also contribute.  However, the foundation that VVP
+   places beneath them is unique.  For a discussion of the theory behind
+   VVP evidence, see 10.  For more about additional evidence types, see
+   6.2 and 7.
 
-   Most prior art uses X509 certificates [RFC5280] for foundational
-   identity.  Certificates have great virtues.  Notably, they are well
-   understood, and their tooling is ubiquitous and mature.  However,
-   they also have some serious drawbacks.  They are protected by a
-   single key whose compromise is difficult to detect.  Recovery is
-   cumbersome and slow.  As a result, _certificates are far more
-   temporary than the identities they attest_. This has numerous
-   downstream consequences.  When foundational evidence of identity has
-   to be replaced constantly, the resulting ecosystem is fragile,
-   complex, and expensive for all stakeholders.  Vulnerabilities abound.
-   Authorizations can only be analyzed in a narrow _now window_, never
-   at arbitrary moments in time.  This creates enormous pressure to
-   build a centralized registry, where evidence can be curated once, and
-   where the cost of reacting to revocations is amortized.  The entire
-   fabric of evidence has to be rebuilt from scratch if quantum security
-   becomes a requirement.
-
-   In contrast, the issuers and holders of ACDCs -- and thus, the
-   stakeholders in VVP passports -- are identified by autonomic
-   identifiers, not raw keys.  This introduces numerous security
-   benefits.  Keys, key types, and signing algorithms can all change
-   (even for post-quantum upgrades) without invalidating evidence.
-   Signing and rotation operations are sequenced deterministically,
-   making historical audits possible.  Key compromises are detected as
-   soon as an attacker attempts consequential actions.  Recovery from
-   compromise is trivial.  Multisig signing policies allow diffuse,
-   nuanced control.  The result is that identities in ACDCs are as
-   stable as identities in real organizations.  This makes delegations
-   and chaining mechanisms far more robust than their analogs in
-   certificates, and this in turn makes the whole ecosystem safer, more
-   powerful, and easier to maintain.  Revocations are cheap and fast.
-   No central registries are needed, which eliminates privacy concerns
-   and regulatory hurdles.  Adoption can be opportunistic; it doesn't
-   require a central mandate or carefully orchestrated consensus
-   throughout a jurisdiction before it can deliver value.
-
-   ACDCs make it practical to model nuanced, dynamic delegations such as
-   the one between Organization X and Call Center Y.  This eliminates
-   the gap that alternative approaches leave between accountable party
-   and the provider of call evidence.  Given X's formal approval, Y can
-   sign a call on behalf of X, using a number allocated to X, and using
-   X's brand, without impersonating X.  They can also prove to any OSP
-   or any other party, in any jurisdiction, that they have the right to
-   do so.  Furthermore, the evidence that Y cites can be built and
-   maintained by X and Y, doesn't get stale or require periodic
-   reissuance, and doesn't need to be published in a central registry.
-
-   Even better, when such evidence is filtered through suballocations or
-   crosses jurisdictional boundaries, it can be reused, or linked and
-   transformed, without altering its robustness or efficiency.  Unlike
-   W3C verifiable credentials and SD-JWTs, which require direct trust in
-   the proximate issuer, ACDCs and the JWTs that reference them verify
-   data back to a root through arbitrarily long and complex chains of
-   issuers, with only the root needing to be known and trusted by the
-   verifier.
-
-   The synergies of these properties mean that ACDCs can be permanent,
-   flexible, robust, and low-maintenance.  In VVP, no third party has to
-   guess who's accountable for a call; the accountable party is
-   transparently and provably accountable, period.  (Yet notwithstanding
-   this transparency, ACDCs support a form of pseudonymity and graduated
-   disclosure that satisfies vital privacy and data processing
-   constraints.  See 9.)
+   Because of innovations in format, VVP evidence is easier to create
+   and maintain, safer, and more flexible than alternative approaches.
+   It is also more flexible and much longer lasting.  This drastically
+   lowers the friction to adoption.
 
 1.2.  Vetting refinements
 
@@ -689,15 +619,16 @@ Table of Contents
 6.  Curating
 
    The evidence that's available in today's telecom ecosystems resembles
-   some of the evidence described here, in concept.  However, it has
-   gaps, and its format is fragile.  Furthermore, if it is organized for
-   discovery, it is typically assembled into large, centralized
-   registries at a regional or national level.  These registries become
-   a trusted third party, which defeats some of the purpose of creating
-   decentralized and independently verifiable evidence in the first
-   place.  Sharing such evidence across jurisdiction boundaries requires
-   regulatory compatibility and bilateral agreements.  Sharing at scale
-   is impractical at best, if not illegal.
+   some of the evidence described here, in concept.  However, existing
+   evidence has gaps, and its format is fragile.  Furthermore, if it is
+   organized for discovery, it is typically assembled into large,
+   centralized registries at a regional or national level.  These
+   registries become a trusted third party, which defeats some of the
+   purpose of creating decentralized and independently verifiable
+   evidence in the first place.  Sharing such evidence across
+   jurisdiction boundaries requires regulatory compatibility and
+   bilateral agreements.  Sharing at scale is impractical at best, if
+   not illegal.
 
    How evidence is issued, propagated, quality-controlled, and
    referenced is therefore an important concern for this specification.
@@ -1293,7 +1224,7 @@ Table of Contents
    another format (e.g., W3C VC, SD-JWT, X509 certificate).  See 7.
 
    One example of a possible vetting credential is an LE vLEI; see
-   [ISO-17442-3] and 10.
+   [ISO-17442-3] and 11.
 
 6.3.6.  TNAlloc credential
 
@@ -1315,7 +1246,7 @@ Table of Contents
    ACDC, but this ACDC MAY be a transformation of a credential in
    another format (e.g., a TNAuthList from [RFC8226]).  See 7.
 
-   An example TNAlloc credential and its schema are shown in 10.
+   An example TNAlloc credential and its schema are shown in 11.
 
 6.3.7.  Brand credential
 
@@ -1341,7 +1272,7 @@ Table of Contents
    shows that the right to use the brand was evaluated only after using
    a vetting credential to prove the identity of the issuee.
 
-   An example brand credential and its schema are shown in 10.
+   An example brand credential and its schema are shown in 11.
 
 6.3.8.  Brand proxy credential
 
@@ -1356,7 +1287,7 @@ Table of Contents
    and wants the proxy to project the AP's brand, the AP MUST issue this
    credential.
 
-   An example brand credential and its schema are shown in 10.
+   An example brand credential and its schema are shown in 11.
 
 6.3.9.  Delegated signer credential
 
@@ -1365,7 +1296,7 @@ Table of Contents
    traffic (and thus, sign VVP passports) on its behalf.
 
    An example delegated signer credential and its schema are shown in
-   10.
+   11.
 
 7.  Interoperability
 
@@ -1412,12 +1343,12 @@ Table of Contents
 
    Verifiers MAY choose to accept such derivative ACDCs, but the
    indirection SHOULD color their confidence.  They MUST NOT assume that
-   the foreign evidence and the ACDC have the same referent or
-   controller.  They MUST NOT hold the bridging party accountable for
-   the claims -- only for the claim that they verified the original
-   issuer's commitment to the claims.  They MUST accept that there is no
-   defined relationship between revocation of the foreign evidence and
-   revocation of the ACDC.
+   identifiers in the foreign evidence and in the ACDC have the same
+   referents or controllers.  They MUST NOT hold the bridging party
+   accountable for the claims -- only for the claim that they verified
+   the original issuer's commitment to the claims.  They MUST accept
+   that there is no defined relationship between revocation of the
+   foreign evidence and revocation of the ACDC.
 
 8.  Security Considerations
 
@@ -1428,9 +1359,79 @@ Table of Contents
    TODO Discuss graduated disclosure, compact versus expanded ACDCs,
    etc.
 
-10.  Appendix A: Sample Credentials
+10.  Appendix A: Evidence theory
 
-10.1.  Vetting credential
+   Most existing approaches to secure telephony uses X509 certificates
+   [RFC5280] for foundational identity.  Certificates have great
+   virtues.  Notably, they are well understood, and their tooling is
+   ubiquitous and mature.  However, they also have some serious
+   drawbacks.  They are protected by a single key whose compromise is
+   difficult to detect.  Recovery is cumbersome and slow.  As a result,
+   _certificates are far more temporary than the identities they
+   attest_.
+
+   This has numerous downstream consequences.  When foundational
+   evidence of identity has to be replaced constantly, the resulting
+   ecosystem is fragile, complex, and expensive for all stakeholders.
+   Vulnerabilities abound.  Authorizations can only be analyzed in a
+   narrow _now window_, never at arbitrary moments in time.  This
+   creates enormous pressure to build a centralized registry, where
+   evidence can be curated once, and where the cost of reacting to
+   revocations is amortized.  The entire fabric of evidence has to be
+   rebuilt from scratch if quantum security becomes a requirement.
+
+   In contrast, the issuers and holders of ACDCs -- and thus, the
+   stakeholders in VVP passports -- are identified by autonomic
+   identifiers, not raw keys.  This introduces numerous security
+   benefits.  Keys, key types, and signing algorithms can all change
+   (even for post-quantum upgrades) without invalidating evidence.
+   Signing and rotation operations are sequenced deterministically,
+   making historical audits possible.  Key compromises are detected as
+   soon as an attacker attempts consequential actions.  Recovery from
+   compromise is trivial.  Multisig signing policies allow diffuse,
+   nuanced control.
+
+   The result is that _identities in ACDCs are as stable as identities
+   in real organizations_. This makes delegations and chaining
+   mechanisms far more robust than their analogs in certificates, and
+   this in turn makes the whole ecosystem safer, more powerful, and
+   easier to maintain.  Revocations are cheap and fast.  No central
+   registries are needed, which eliminates privacy concerns and
+   regulatory hurdles.  Adoption can be opportunistic; it doesn't
+   require a central mandate or carefully orchestrated consensus
+   throughout a jurisdiction before it can deliver value.
+
+   ACDCs make it practical to model nuanced, dynamic delegations such as
+   the one between Organization X and Call Center Y.  This eliminates
+   the gap that alternative approaches leave between accountable party
+   and the provider of call evidence.  Given X's formal approval, Y can
+   sign a call on behalf of X, using a number allocated to X, and using
+   X's brand, without impersonating X.  They can also prove to any OSP
+   or any other party, in any jurisdiction, that they have the right to
+   do so.  Furthermore, the evidence that Y cites can be built and
+   maintained by X and Y, doesn't get stale or require periodic
+   reissuance, and doesn't need to be published in a central registry.
+
+   Even better, when such evidence is filtered through suballocations or
+   crosses jurisdictional boundaries, it can be reused, or linked and
+   transformed, without altering its robustness or efficiency.  Unlike
+   W3C verifiable credentials and SD-JWTs, which require direct trust in
+   the proximate issuer, ACDCs and the JWTs that reference them verify
+   data back to a root through arbitrarily long and complex chains of
+   issuers, with only the root needing to be known and trusted by the
+   verifier.
+
+   The synergies of these properties mean that ACDCs can be permanent,
+   flexible, robust, and low-maintenance.  In VVP, no third party has to
+   guess who's accountable for a call; the accountable party is
+   transparently and provably accountable, period.  (Yet notwithstanding
+   this transparency, ACDCs support a form of pseudonymity and graduated
+   disclosure that satisfies vital privacy and data processing
+   constraints.  See 9.)
+
+11.  Appendix B: Sample Credentials
+
+11.1.  Vetting credential
 
    The schema of a vetting credential can be very simple; it MUST
    identify the issuer and issuee by AID, and it MUST identify the
@@ -1440,20 +1441,20 @@ Table of Contents
    (Artwork only available as JSON: see https://www.ietf.org/archive/id/
    draft-hardman-verifiable-voice-protocol-latest.html)
 
-10.2.  TNAlloc credential
+11.2.  TNAlloc credential
 
    (Artwork only available as JSON: see https://www.ietf.org/archive/id/
    draft-hardman-verifiable-voice-protocol-latest.html)
 
    ##
 
-11.  IANA Considerations
+12.  IANA Considerations
 
    This document has no IANA actions.
 
-12.  References
+13.  References
 
-12.1.  Normative References
+13.1.  Normative References
 
    [ATIS-1000074]
               Alliance for Telecommunications Industry Solutions,
@@ -1534,7 +1535,7 @@ Table of Contents
               Infrastructure (KERI)", January 2024,
               <https://trustoverip.github.io/tswg-keri-specification/>.
 
-12.2.  Informative References
+13.2.  Informative References
 
    [ARIES-RFC-0519]
               Hardman, D., "Aries RFC 0519: Goal Codes", n.d.,
