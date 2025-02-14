@@ -310,7 +310,7 @@ When VVP is used to prove brand, APs ({{<AP}}) MAY issue brand proxy credentials
 Issuing vetting and brand credentials might be driven by large databases of metadata about organizations and brands, but how such systems work is out of scope. The credentials themselves contain all necessary information, and once credentials are issued, they constitute an independent source of truth as far as VVP is concerned. No party has to return to the operators of such databases to validate anything.
 
 ### Delegating signing authority
-An AP MUST prove, by issuing a delegated signer credential ({{<delegated-signing-credential}}), that the signer of its passport does so with its explicit authorization. Normally the signer is automation under the control of the OP, but the issuee of the credential MAY vary at the AP's discretion.
+An AP MUST prove, by issuing a delegated signer credential ({{<delegated-signer-credential}}), that the signer of its passport does so with its explicit authorization. Normally the signer is automation under the control of the OP, but the issuee of the credential MAY vary at the AP's discretion.
 
 Since this credential merely documents the AP's intent to be accountable for the actions of the signer, the AP MAY choose whatever process it likes to issue it.
 
