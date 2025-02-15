@@ -4,8 +4,8 @@
 
 Network Working Group                                         D. Hardman
 Internet-Draft                                            Provenant, Inc
-Intended status: Standards Track                        14 February 2025
-Expires: 18 August 2025
+Intended status: Standards Track                        15 February 2025
+Expires: 19 August 2025
 
 
                        Verifiable Voice Protocol
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 August 2025.
+   This Internet-Draft will expire on 19 August 2025.
 
 Copyright Notice
 
@@ -798,17 +798,18 @@ Table of Contents
    earlier time period, unless signatures are anchored to a data source
    that detects anachronisms.  Lack of attention to this detail
    undermines the security of many credential schemes, including in
-   telecom.  VVP explicitly addresses this concern.
+   telecom.  VVP explicitly addresses this concern by anchoring
+   signatures on non-ephemeral evidence to KELs (6.2.8).
 
 6.2.3.  AID
 
    An _autonomic identifier_ (_AID_) is a short string that can be
    resolved to one or more cryptographic keys at a specific version of
-   their key state.  Using cryptographic keys, a party can prove it is
-   the controller of an AID by creating digital signatures.  AIDs are
-   like W3C DIDs [W3C-DID]}, and can be transformed into DIDs.  The
-   information required to resolve an AID to its cryptographic keys is
-   communicated through a special form of URI called an _out-of-band
+   the identifier's key state.  Using cryptographic keys, a party can
+   prove it is the controller of an AID by creating digital signatures.
+   AIDs are like W3C DIDs [W3C-DID]}, and can be transformed into DIDs.
+   The information required to resolve an AID to its cryptographic keys
+   is communicated through a special form of URI called an _out-of-band
    invitation_ (_OOBI_).  An OOBI points to an HTTP resource that
    returns IANA content-type application/json+cesr; it is somewhat
    analogous to a combination of the kid and x5u constructs in many
@@ -866,17 +867,19 @@ Table of Contents
    maintaining accurate, unexpired, unrevoked views of authorizations
    and reflecting that knowledge in certificates.  This is because deep
    authorization analysis flows through VVP's more rich and flexible
-   evidence chain.
+   evidence chain.  See 7.
 
 6.2.6.  Passport
 
-   VVP emits and verifies a STIR PASSporT [RFC8225].  This is a form of
-   evidence suitable for evaluation during the brief interval when a
-   call is being initiated, and it is carefully backed by evidence with
-   a longer lifespan (6.3.2).  Conceptually, VVP's version is similar to
-   a SHAKEN passport [RFC8588].  It MAY also reference brand-related
-   evidence, allowing it to play an additional role similar to the RCD
-   passport [RCD-PASSPORT].
+   VVP emits and verifies a STIR PASSporT [RFC8225] that is fully
+   compliant in all respects, except that it lacks the x5u header that
+   links it to an X509 certificate.  The passport is a form of evidence
+   suitable for evaluation during the brief interval when a call is
+   being initiated, and it is carefully backed by evidence with a longer
+   lifespan (6.3.2).  Conceptually, VVP's version is similar to a SHAKEN
+   passport [RFC8588].  It MAY also reference brand-related evidence,
+   allowing it to play an additional role similar to the RCD passport
+   [RCD-PASSPORT].
 
    Neither VVP's backing evidence nor its passport depends on a
    certificate authority ecosystem.  The passport MUST be secured by an
@@ -897,7 +900,7 @@ Table of Contents
    |   orig                |   |       |   orig                |
    |   dest                |   |       |   dest                |
    |   attest              |   |       |   card                |
-   |   ...more claims      |   |       |   evd (SAID = ref to)-+---+
+   |   ...more claims      |   |       |   evd (JL to dossier)-+---+
    | signature of OSP      |   |       | signature of OP       |   |
    +-----------------------+   |       +-----------------------+   |
                                |                                   |
@@ -1039,13 +1042,13 @@ Table of Contents
 
    Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE
    contains an Identity header that MUST contain a signature from the
-   call's OP 3.1.3.  This _passpport-specific signature_ (_PSS_) MUST be
-   an Ed25519 signature serialized as CESR; it is NOT a JWS.  The 64 raw
-   bytes of the signature are left-padded to 66 bytes, then base64url-
-   encoded.  The AA at the front of the result is cut and replaced with
-   0B, giving an 88-character string.  A regex that matches the result
-   is: 0B[-_\w]{86}, and a sample value (with the middle elided) is:
-   0BNzaC1lZD...yRLAYeKNQvYx.
+   call's OP (3.1.3).  This _passpport-specific signature_ (_PSS_) MUST
+   be an Ed25519 signature serialized as CESR; it is NOT a JWS.  The 64
+   raw bytes of the signature are left-padded to 66 bytes, then
+   base64url-encoded.  The AA at the front of the result is cut and
+   replaced with 0B, giving an 88-character string.  A regex that
+   matches the result is: 0B[-_\w]{86}, and a sample value (with the
+   middle elided) is: 0BNzaC1lZD...yRLAYeKNQvYx.
 
    The signature MUST be the result of running the EdDSA algorithm over
    input data that consists of the following ordered metadata about a
@@ -1318,12 +1321,77 @@ Table of Contents
 
 8.  Security Considerations
 
-   TODO Security
+   Like most cryptographic mechanisms, VVP depends on the foundational
+   assumption that people will manage cryptographic keys carefully.  VVP
+   enforces this assumption more thoroughly than many existing
+   solutions:
+
+   *  Parties that issue credentials MUST be identified with AIDs
+      (6.2.3) that use witnesses (11).  This guarantees a non-
+      repudiable, publicly accessible audit log of how their key state
+      evolves, and it makes key rotation easy.  It also offers
+      compromise and duplicity detection.  Via prerotation, it enables
+      recovery from key compromise.  AIDs can be upgraded to use
+      quantum-proof signing algorithms without changing the identifier.
+
+   *  Parties that issue credentials MUST do so using ACDCs (6.2.7)
+      signed by their AID rather than a raw key.  This makes evidence
+      revocable.  It also makes it stable across key rotation, and
+      prevents retrograde attacks by allowing verifiers to map an
+      issuance or revocation event to an unambiguous key state in the
+      6.2.8.
+
+   However, it is still possible to make choices that weaken the
+   security posture of the ecosystem.  Therefore, the following best
+   practices SHOULD be followed:
+
+   1.  Passports SHOULD have an aggressive timeout (e.g., 1 minutes).
+       Signatures on passports are not anchored in a KEL, and must
+       therefore be evaluated for age with respect to the time they were
+       received.  Overly old passports could be a replay attack (a
+       purported second call with the same orig and dest numbers, using
+       the same backing evidence, soon after the first.)
+
+   2.  Witnesses SHOULD be used in such a way that high availability is
+       guaranteed, and in such a way that duplicity by the controller of
+       an AID is detected.  (Verifiers will be able to see the witness
+       policy of each AID controller, and SHOULD decide for themselves
+       whether the party is reliable, depending on what they observe.)
+
+   3.  Revocations MUST be timely.
+
+   4.  Watchers MUST propagate events to local caches with a low
+       latency, and MUST provide information that allows verifiers to
+       decide whether that latency meets their freshness requirements.
 
 9.  Privacy
 
-   TODO Discuss graduated disclosure, compact versus expanded ACDCs,
-   etc.
+   Both institutions and individuals that make phone calls may have
+   privacy goals.  Although their goals might differ in some ways, both
+   will wish to disclose some attributes to the TP, and both may wish to
+   suppress some of that same information from intermediaries.  Both
+   will want control over how this disclosure works.
+
+   ACDCs support a technique called _graduated disclosure_ that enables
+   this.
+
+   The hashing algorithm for ACDCs resembles the hashing algorithm for a
+   merkle tree.  The ACDC is a hierarchical data structure that can be
+   modeled as nested JSON.  Any given layer of the structure may consist
+   of a mixture of simple scalar values and child objects.  The input to
+   the hashing function for a layer of content equals the content of
+   scalar fields and the _hashes_ of child objects.
+
+   This means is that any given child JSON object in an ACDC can be
+   replaced with its hash, _without altering the hash of the parent
+   data_. Thus, there can be expanded ACDCs (where all data inside child
+   objects is visible) or compacted ACDCs (where some or all of the
+   child objects are replaced by their equivalent hashes).  A signature
+   over an expanded ACDC is also a signature over any of the compacted
+   versions of the same ACDC, and a revocation event over any of the
+   versions is guaranteed to mean the same thing.
+
+   This can be used to... TODO
 
 10.  Appendix A: Evidence theory
 
