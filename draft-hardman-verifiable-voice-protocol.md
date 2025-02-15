@@ -751,7 +751,7 @@ Verifiers MAY choose to accept such derivative ACDCs, but the indirection SHOULD
 
 Like most cryptographic mechanisms, VVP depends on the foundational assumption that people will manage cryptographic keys carefully. VVP enforces this assumption more thoroughly than many existing solutions:
 
-* Parties that issue credentials MUST be identified with AIDs ({{<aid}}) that use witnesses ({{<appendix-b>}}). This guarantees a non-repudiable, publicly accessible audit log of how their key state evolves, and it makes key rotation easy. It also offers compromise and duplicity detection. Via prerotation, it enables recovery from key compromise. AIDs can be upgraded to use quantum-proof signing algorithms without changing the identifier.
+* Parties that issue credentials MUST be identified with AIDs ({{<aid}}) that use witnesses ({{<appendix-b}}). This guarantees a non-repudiable, publicly accessible audit log of how their key state evolves, and it makes key rotation easy. It also offers compromise and duplicity detection. Via prerotation, it enables recovery from key compromise. AIDs can be upgraded to use quantum-proof signing algorithms without changing the identifier.
 * Parties that issue credentials MUST do so using ACDCs ({{<acdcs}}) signed by their AID rather than a raw key. This makes evidence revocable. It also makes it stable across key rotation, and prevents retrograde attacks by allowing verifiers to map an issuance or revocation event to an unambiguous key state in the {{<KEL}}.
 
 However, it is still possible to make choices that weaken the security posture of the ecosystem. Therefore, the following best practices SHOULD be followed:
@@ -766,7 +766,15 @@ However, it is still possible to make choices that weaken the security posture o
 
 # Privacy
 
-TODO Discuss graduated disclosure, compact versus expanded ACDCs, etc.
+Both institutions and individuals that make phone calls may have privacy goals. Although their goals might differ in some ways, both will wish to disclose some attributes to the TP, and both may wish to suppress some of that same information from intermediaries. Both will want control over how this disclosure works.
+
+ACDCs support a technique called *graduated disclosure* that enables this.
+
+The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. The ACDC is a hierarchical data structure that can be modeled as nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the *hashes* of child objects.
+
+This means is that any given child JSON object in an ACDC can be replaced with its hash, *without altering the hash of the parent data*. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are replaced by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.
+
+This can be used to... TODO
 
 # Appendix A: Evidence theory
 {:appendix #appendix-a}
