@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="368" width="264" viewBox="0 0 264 368" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<path d="M 8,32 L 8,256" fill="none" stroke="black"/>
+<path d="M 112,32 L 112,256" fill="none" stroke="black"/>
+<path d="M 152,32 L 152,144" fill="none" stroke="black"/>
+<path d="M 256,32 L 256,144" fill="none" stroke="black"/>
+<path d="M 8,32 L 112,32" fill="none" stroke="black"/>
+<path d="M 152,32 L 256,32" fill="none" stroke="black"/>
+<path d="M 152,144 L 256,144" fill="none" stroke="black"/>
+<path d="M 8,256 L 112,256" fill="none" stroke="black"/>
+<g class="text">
+<text x="56" y="20">Expanded ACDC</text>
+<text x="204" y="20">Compact ACDC</text>
+<text x="40" y="52">a = {</text>
+<text x="184" y="52">a = {</text>
+<text x="60" y="68">b = N,</text>
+<text x="204" y="68">b = N,</text>
+<text x="56" y="84">C = {</text>
+<text x="196" y="84">H(c)</text>
+<text x="76" y="100">d = M,</text>
+<text x="204" y="100">g = Q,</text>
+<text x="76" y="116">e = O,</text>
+<text x="196" y="116">H(i)</text>
+<text x="72" y="132">f = P</text>
+<text x="168" y="132">}</text>
+<text x="44" y="148">},</text>
+<text x="60" y="164">g = Q,</text>
+<text x="56" y="180">i = {</text>
+<text x="76" y="196">j = R,</text>
+<text x="72" y="212">k = S</text>
+<text x="40" y="228">}</text>
+<text x="24" y="244">}</text>
+<text x="48" y="276">H(a) = H(</text>
+<text x="192" y="276">H(a) = H(</text>
+<text x="88" y="292">b</text>
+<text x="232" y="292">b</text>
+<text x="100" y="308">H(c)</text>
+<text x="244" y="308">H(c)</text>
+<text x="88" y="324">g</text>
+<text x="232" y="324">g</text>
+<text x="100" y="340">H(i)</text>
+<text x="244" y="340">H(i)</text>
+<text x="80" y="356">)</text>
+<text x="224" y="356">)</text>
+</g>
+</svg>

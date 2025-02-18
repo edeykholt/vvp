@@ -743,9 +743,9 @@ An example delegated signer credential and its schema are shown in {{<appendix-c
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
 
 ## Certificates {#interop-certs}
-Verifiers who prefer to operate in certificate ecosystems such as SHAKEN and RCD can be satisfied by having an intermediary verify according to VVP rules (see {{<verifying}}), and then signing a new passport in a certificate-dependent format (e.g., for SHAKEN and/or RCD), where the new passport contains an `x5u` header pointing to the certificate of the new signer. If the certificate fetched from the `x5u` URL satisfies enough trust requirements of the verifier, the goals of the new context are achieved. If this intermediary is the OSP, the standard assumptions of SHAKEN are fully met, but the OSP's attestation can always be `A`, since VVP conclusively proves the identity of the AP and OP.
+Verifiers who prefer to operate in certificate ecosystems such as SHAKEN and RCD can be satisfied by having an intermediary verify according to VVP rules (see {{<verifying}}), and then signing a new passport in a certificate-dependent format (e.g., for SHAKEN and/or RCD), where the new passport contains an `x5u` header pointing to the certificate of the new signer. This form of trust handoff is called *cascaded mode*. If the certificate fetched from the `x5u` URL satisfies enough trust requirements of the verifier, the goals of the new context are achieved. If this intermediary is the OSP, the standard assumptions of SHAKEN are fully met, but the OSP's attestation can always be `A`, since VVP conclusively proves the identity of the AP and OP.
 
-In the preceding example, a new passport is created with an `x5u` value completely unknown to VVP. However, in an alternative mode, a VVP passport MAY itself contain an `x5u` header. If it does, the `x5u` header MUST NOT be used to achieve any VVP verification guarantees; its inclusion is intended to make trust flow the other way. The associated X509 certificate SHOULD be issued to the public key of the party that plays the OP role in VVP. If and only if it does so, the full weight of VVP evidence about the OP's status as a trusted signer for the AP transfers to the certificate, even if the certificate is self-issued or otherwise fails to chain back to a known certificate authority. Valid VVP passports that obey this requirement can thus be used to enable VVP-unaware but certificate-based checks without certificate authorities (or without prior knowledge of them). The certificate-based checks are ephemeral and MUST be done in real-time, since the binding between a key and the owner of a cert cannot be known to be valid except at the current moment.
+In another pattern called *foundation mode*, a VVP passport MAY itself contain an `x5u` header. If it does, the `x5u` header MUST NOT be used to achieve any VVP verification guarantees; the key state of the OP's AID MUST still justify any acceptance of the signature. However, the associated X509 certificate SHOULD be issued to the public key of the party that plays the OP role in VVP. If and only if it does so, the full weight of VVP evidence about the OP's status as a trusted signer for the AP can be transferred to the certificate, even if the certificate is self-issued or otherwise chains back to something other than a known, high-reputation certificate authority. Valid VVP passports that obey this requirement can thus be used to enable VVP-unaware but certificate-based checks without certificate authorities (or without prior knowledge of them). Such certificate-based checks should be done in real-time, since the binding between a key and the owner of a cert cannot be known to be valid except at the current moment. (Note the lack of normative language in several preceding sentences. How foreign ecosystems impute trust is out of scope in this specification; VVP merely describes reasonable choices.)
 
 ## Other credential formats {#interop-creds}
 The stable evidence that drives VVP -- vetting credential ({{<vetting-credential}}), TNAlloc credential ({{<tnalloc-credential}}), brand credential ({{<brand-credential}}), brand proxy credential ({{<brand-proxy-credential}}), and delegated signer credential ({{<delegated-signer-credential}}) -- MUST all be ACDCs. This is because only when the data in these credentials is modeled as an ACDC is it associated with permanent identities that possess appropriate security guarantees.
@@ -783,11 +783,92 @@ Both institutions and individuals that make phone calls may have privacy goals. 
 
 ACDCs support a technique called *graduated disclosure* that enables this.
 
-The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. The ACDC is a hierarchical data structure that can be modeled as nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the *hashes* of child objects.
+The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the *hashes* of child objects.
 
 This means is that any given child JSON object in an ACDC can be replaced with its hash, *without altering the hash of the parent data*. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are replaced by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.
 
-This can be used to... TODO
+<figure>
+<name>ACDC hashes like a Merkle tree</name>
+<artset>
+  <artwork type="svg" name="fig4.svg">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="368" width="264" viewBox="0 0 264 368" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+    <path d="M 8,32 L 8,256" fill="none" stroke="black"/>
+    <path d="M 112,32 L 112,256" fill="none" stroke="black"/>
+    <path d="M 152,32 L 152,144" fill="none" stroke="black"/>
+    <path d="M 256,32 L 256,144" fill="none" stroke="black"/>
+    <path d="M 8,32 L 112,32" fill="none" stroke="black"/>
+    <path d="M 152,32 L 256,32" fill="none" stroke="black"/>
+    <path d="M 152,144 L 256,144" fill="none" stroke="black"/>
+    <path d="M 8,256 L 112,256" fill="none" stroke="black"/>
+    <g class="text">
+    <text x="56" y="20">Expanded ACDC</text>
+    <text x="204" y="20">Compact ACDC</text>
+    <text x="40" y="52">a = {</text>
+    <text x="184" y="52">a = {</text>
+    <text x="60" y="68">b = N,</text>
+    <text x="204" y="68">b = N,</text>
+    <text x="56" y="84">C = {</text>
+    <text x="196" y="84">H(c)</text>
+    <text x="76" y="100">d = M,</text>
+    <text x="204" y="100">g = Q,</text>
+    <text x="76" y="116">e = O,</text>
+    <text x="196" y="116">H(i)</text>
+    <text x="72" y="132">f = P</text>
+    <text x="168" y="132">}</text>
+    <text x="44" y="148">},</text>
+    <text x="60" y="164">g = Q,</text>
+    <text x="56" y="180">i = {</text>
+    <text x="76" y="196">j = R,</text>
+    <text x="72" y="212">k = S</text>
+    <text x="40" y="228">}</text>
+    <text x="24" y="244">}</text>
+    <text x="48" y="276">H(a) = H(</text>
+    <text x="192" y="276">H(a) = H(</text>
+    <text x="88" y="292">b</text>
+    <text x="232" y="292">b</text>
+    <text x="100" y="308">H(c)</text>
+    <text x="244" y="308">H(c)</text>
+    <text x="88" y="324">g</text>
+    <text x="232" y="324">g</text>
+    <text x="100" y="340">H(i)</text>
+    <text x="244" y="340">H(i)</text>
+    <text x="80" y="356">)</text>
+    <text x="224" y="356">)</text>
+    </g>
+    </svg>
+  </artwork>
+  <artwork type="ascii-art" name="fig4.txt">
+<![CDATA[
+Expanded ACDC      Compact ACDC
++------------+    +------------+
+| a = {      |    | a = {      |
+|   b = N,   |    |   b = N,   |
+|   C = {    |    |   H(c)     |
+|     d = M, |    |   g = Q,   |
+|     e = O, |    |   H(i)     |
+|     f = P  |    | }          |
+|   },       |    +------------+
+|   g = Q,   |
+|   i = {    |
+|     j = R, |
+|     k = S  |
+|   }        |
+| }          |
++------------+
+ H(a) = H(         H(a) = H(
+          b                 b
+          H(c)              H(c)
+          g                 g
+          H(i)              H(i)
+         )                 )
+]]>
+    </artwork>
+  </artset>
+</figure>
+
+In combination with the `evd` claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.
+
+For example, suppose that a company in jurisdiction X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to X's TSP or to X, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since both forms of the ACDC have the same hash.
 
 # Appendix A: Evidence theory
 {:appendix #appendix-a}
