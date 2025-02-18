@@ -4,8 +4,8 @@
 
 Network Working Group                                         D. Hardman
 Internet-Draft                                            Provenant, Inc
-Intended status: Standards Track                        15 February 2025
-Expires: 19 August 2025
+Intended status: Standards Track                        18 February 2025
+Expires: 22 August 2025
 
 
                        Verifiable Voice Protocol
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 August 2025.
+   This Internet-Draft will expire on 22 August 2025.
 
 Copyright Notice
 
@@ -131,6 +131,8 @@ Table of Contents
        6.3.8.  Brand proxy credential
        6.3.9.  Delegated signer credential
    7.  Interoperability
+     7.1.  Certificates
+     7.2.  Other credential formats
    8.  Security Considerations
    9.  Privacy
    10. Appendix A: Evidence theory
@@ -185,8 +187,8 @@ Table of Contents
 
    Because of innovations in format, VVP evidence is easier to create
    and maintain, safer, and more flexible than alternative approaches.
-   It is also more flexible and much longer lasting.  This drastically
-   lowers the friction to adoption.
+   It also lasts much longer.  This drastically lowers the friction to
+   adoption.
 
 1.2.  Vetting refinements
 
@@ -204,9 +206,9 @@ Table of Contents
    already use the resulting evidence of their organizational identity
    in day-to-day behaviors all over the world.  By adopting tooling
    that's compatible with the vLEI ecosystem, VVP gives adopters an
-   intriguing option: just skip the task of inventing a whole new
+   intriguing option: _just skip the task of inventing a whole new
    vetting regime unique to telco, with its corresponding learning
-   curve, costs, and legal and business adoption challenges.
+   curve, costs, and legal and business adoption challenges._
 
    To be clear, VVP does not _require_ that vLEIs be used for vetting.
    However, by choosing an evidence format that is high-precision and
@@ -245,17 +247,19 @@ Table of Contents
 
 3.1.1.  Allocation Holder
 
-   An _allocation holder_ (_AH_) controls how a phone number is used, in
-   the eyes of a regulator.  Typically, range holders are AHs, and so
-   are the direct _telephone number users_ (_TNUs_).  TNUs are customers
-   of range holders: enterprises and consumers.  Range holders are
-   service providers.  Although they are AHs, they might not be TNUs for
-   all the phone numbers in their allocated ranges.
+   An _allocation holder_ controls how a phone number is used, in the
+   eyes of a regulator.  Enterprises and consumers that make calls with
+   phone numbers they legitimately control are the most obvious category
+   of allocation holders, and are called direct _telephone number users_
+   (_TNUs_).  Range holders hold allocations for numbers that have not
+   yet been assigned; they don't make calls with these numbers, and are
+   therefore not TNUs, but they are still allocation holders.
 
-   It is possible for an ecosystem to include other parties as AHs
-   (e.g., wholesalers, aggregators).  However, some regulators dislike
-   this outcome, and prefer that such parties broker allocations without
-   actually holding the allocations as intermediaries.
+   It is possible for an ecosystem to include other parties as
+   allocation holders (e.g., wholesalers, aggregators).  However, many
+   regulators dislike this outcome, and prefer that such parties broker
+   allocations without actually holding the allocations as
+   intermediaries.
 
 3.1.2.  Terminating Party
 
@@ -268,8 +272,8 @@ Table of Contents
 
    An _originating party_ (_OP_) controls the first _session border
    controller_ (_SBC_) that processes a call, and therefore builds the
-   passport that cites the evidence that authenticates and authorizes
-   the call.
+   VVP passport (6.2.6) that cites the evidence that authenticates and
+   authorizes the call.
 
    It may be tempting to equate the OP with "the caller", and in some
    ways this perspective might reflect truth.  However, this simple
@@ -290,7 +294,8 @@ Table of Contents
    Failing to narrow identity appropriately creates vulnerabilities in
    some alternative approaches.  The evidence securing VVP MUST
    therefore prove a valid relationship between the OP's narrow identity
-   and the broader legal entities that stakeholders naturally conceive.
+   and the broader legal entities that stakeholders naturally conceive
+   (see 6.3.4).
 
    The direct service provider of an OP is its _originating service
    provider_ (_OSP_).  For a given phone call, there may be complexity
@@ -301,12 +306,12 @@ Table of Contents
 3.1.4.  Accountable Party
 
    For a given call, the _accountable party_ (_AP_) is the organization
-   or individual that has the right to use the originating phone number,
-   according to the regulator of that number.  When a TP asks, "Who's
-   calling?", they have little interest in the technicalities of the OP,
-   and it is almost always the AP that they want to identify.  The AP is
-   accountable for the call, and thus "the caller", as far as the
-   regulator and the TP are concerned.
+   or individual (the TNU) that has the right to use the originating
+   phone number, according to the regulator of that number.  When a TP
+   asks, "Who's calling?", they have little interest in the
+   technicalities of the OP, and it is almost always the AP that they
+   want to identify.  The AP is accountable for the call, and thus "the
+   caller", as far as the regulator and the TP are concerned.
 
    APs can operate their own SBCs and therefore be their own OPs.
    However, APs can also use a UCaaS provider that makes the AP-OP
@@ -379,7 +384,11 @@ Table of Contents
    A call secured by VVP begins when the OP (3.1.3) generates a new VVP
    passport (6.2.6) that complies with STIR [RFC8224] requirements.  In
    its compact-serialized JWT [RFC7519] form, this passport is then
-   passed as an Identity header in a SIP INVITE [RFC3261].
+   passed as an Identity header in a SIP INVITE [RFC3261].  The passport
+   _constitutes_ lightweight, direct, and ephemeral evidence; it _cites_
+   and therefore depends upon comprehensive, indirect, and long-lived
+   evidence (the dossier; see 6.3.2).  Safely and efficiently citing
+   stronger evidence is one way that VVP differs from alternatives.
 
 4.1.  Questions answered by a passport
 
@@ -390,8 +399,8 @@ Table of Contents
    *  How can a verifier determine the OP's key state at the time the
       passport was created?
 
-   *  How can a verifier identify and fetch evidence that connects the
-      OP to the asserted AP?
+   *  How can a verifier identify and fetch more evidence that connects
+      the OP to the asserted AP?
 
    *  What brand attributes are asserted to accompany the call?
 
@@ -399,7 +408,7 @@ Table of Contents
    communicated in the required evd claim.  The fourth answer is
    communicated in the optional card and goal claims.
 
-   Evidence can then be fetched to indirectly answer the following
+   More evidence can then be fetched to indirectly answer the following
    additional questions:
 
    *  What is the legal identity of the AP?
@@ -458,15 +467,15 @@ Table of Contents
       the OP (3.1.3).  An OOBI is a special URL that facilitates ACDC's
       viral discoverability goals.  It returns IANA content-type
       application/json+cesr, which provides some important security
-      guarantees.  This OOBI returns a KEL (6.2.8).  Typically the AID
-      in question does not identify the OP as a legal entity, but rather
-      software running on or invoked by the SBC operated by the OP.
-      (The AID that identifies the OP as a legal entity may be
-      controlled by a multisig scheme and thus require multiple humans
-      to create a signature.  The AID for kid MUST be singlesig and, in
-      the common case where it is not the legal entity AID, MUST have a
-      delegate relationship with the legal entity AID, proved through
-      Delegate Evidence 6.3.4.)
+      guarantees.  The content for this particular OOBI MUST be a KEL
+      (6.2.8).  Typically the AID in question does not identify the OP
+      as a legal entity, but rather software running on or invoked by
+      the SBC operated by the OP.  (The AID that identifies the OP as a
+      legal entity may be controlled by a multisig scheme and thus
+      require multiple humans to create a signature.  The AID for kid
+      MUST be singlesig and, in the common case where it is not the
+      legal entity AID, MUST have a delegate relationship with the legal
+      entity AID, proved through Delegate Evidence 6.3.4.)
 
    *  orig _(required)_ MUST conform to SHAKEN requirements
       ([ATIS-1000074]), with the additional constraint that only one
@@ -631,15 +640,15 @@ Table of Contents
 
    The evidence that's available in today's telecom ecosystems resembles
    some of the evidence described here, in concept.  However, existing
-   evidence has gaps, and its format is fragile.  Furthermore, if it is
-   organized for discovery, it is typically assembled into large,
-   centralized registries at a regional or national level.  These
-   registries become a trusted third party, which defeats some of the
-   purpose of creating decentralized and independently verifiable
-   evidence in the first place.  Sharing such evidence across
-   jurisdiction boundaries requires regulatory compatibility and
-   bilateral agreements.  Sharing at scale is impractical at best, if
-   not illegal.
+   evidence has gaps, and its format is fragile.  It requires direct
+   trust in the proximate issuer, and it is typically organized for
+   discovery; both characteristics lead to large, centralized registries
+   at a regional or national level.  These registries become a trusted
+   third party, which defeats some of the purpose of creating
+   decentralized and independently verifiable evidence in the first
+   place.  Sharing such evidence across jurisdiction boundaries requires
+   regulatory compatibility and bilateral agreements.  Sharing at scale
+   is impractical at best, if not illegal.
 
    How evidence is issued, propagated, quality-controlled, and
    referenced is therefore an important concern for this specification.
@@ -685,26 +694,27 @@ Table of Contents
    issue both types of credentials after a composite analysis.  However,
    the credentials themselves MUST NOT use a combined schema, the
    credentials MUST have independent lifecycles, and the assurances
-   associated with each credential type MUST remain independent.  A
-   brand vetter MUST verify the canonical properties of a brand, but it
-   MUST do more than this: it MUST issue the brand credential to the AID
-   6.2.3 of an issuee that is also the issuee of a vetting credential
-   that already exists, and it MUST verify that the legal entity in the
-   vetting credential has a right to use the brand in question.  This
-   link MUST NOT be based on mere weak evidence such as an observation
-   that the legal entity's name and the brand name have some or all
-   words in common, or the fact that a single person requested both
-   credentials.  Further, the brand vetter MUST agree to revoke brand
-   credentials in a timely manner if the associated vetting credential
-   is revoked, if the legal entity's right to use the brand changes, or
-   if characteristics of the brand evolve.
+   associated with each credential type MUST remain independent.
+
+   A brand vetter MUST verify the canonical properties of a brand, but
+   it MUST do more than this: it MUST issue the brand credential to the
+   AID 6.2.3 of an issuee that is also the issuee of a vetting
+   credential that already exists, and it MUST verify that the legal
+   entity in the vetting credential has a right to use the brand in
+   question.  This link MUST NOT be based on mere weak evidence such as
+   an observation that the legal entity's name and the brand name have
+   some or all words in common, or the fact that a single person
+   requested both credentials.  Further, the brand vetter MUST agree to
+   revoke brand credentials in a timely manner if the associated vetting
+   credential is revoked, if the legal entity's right to use the brand
+   changes, or if characteristics of the brand evolve.
 
 6.1.4.  Allocating TNs
 
    At the option of the AP and OP, VVP MAY prove the right to use the
    originating phone number.  When this feature is active, regulators
    MUST issue TNAlloc credentials (6.3.6) to range holders, and range
-   holders MUST issue them to telephone number users (TNUs; 3.1.1).
+   holders MUST issue them to telephone number users (TNUs; see 3.1.1).
    TNUs MAY in turn issue them to a delegate such as a call center.  If
    aggregators or other intemediaries hold an RTU in the eyes of a
    regulator, then intermediate TNAlloc credentials MUST be created to
@@ -721,13 +731,13 @@ Table of Contents
    AP's brand.  Without this credential, the OP only has the right to
    use the AP's phone number.
 
-   Issuing vetting and brand credentials might be driven by large
-   databases of metadata about organizations and brands, but how such
-   systems work is out of scope.  The credentials themselves contain all
-   necessary information, and once credentials are issued, they
-   constitute an independent source of truth as far as VVP is concerned.
-   No party has to return to the operators of such databases to validate
-   anything.
+   Decisions about whether to issue vetting and brand credentials might
+   be driven by large databases of metadata about organizations and
+   brands, but how such systems work is out of scope.  The credentials
+   themselves contain all necessary information, and once credentials
+   are issued, they constitute an independent source of truth as far as
+   VVP is concerned.  No party has to return to the operators of such
+   databases to validate anything.
 
 6.1.6.  Delegating signing authority
 
@@ -744,14 +754,14 @@ Table of Contents
 6.1.7.  Revoking
 
    Revoking an ACDC is as simple as the issuer signing a revocation
-   event and distributing it to witnesses.  Parties that perform a full
-   validation of a given ACDC (5) will automatically detect the
-   revocation event in realtime, because they will contact one or more
-   of these witnesses.  Parties that are caching their validations MAY
-   poll witnesses very efficiently to discover revocation events.  Some
-   witnesses may choose to offer the option of registering a callback,
-   allowing interested parties to learn about revocations even more
-   efficiently.
+   event and distributing it to witnesse (see 11).  Parties that perform
+   a full validation of a given ACDC (see 5) will automatically detect
+   the revocation event in realtime, because they will contact one or
+   more of these witnesses.  Parties that are caching their validations
+   MAY poll witnesses very efficiently to discover revocation events.
+   Some witnesses may choose to offer the option of registering a
+   callback, allowing interested parties to learn about revocations even
+   more efficiently.
 
 6.2.  General evidence categories
 
@@ -818,15 +828,16 @@ Table of Contents
    An example of an AID is EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa.
    AIDs are created by calculating the hash of the identifier's initial
    state; since this state is typically a canonicalized JSON object,
-   AIDs usually match the same regex as SAIDs in general.  A noteworthy
-   exception is that non-transferrable AIDs begin with B instead of E or
-   another letter.  Such AIDs are analogous to did:key values, and play
-   a limited role in VVP.  They are incapable of rotating keys or
-   anchoring events to a KEL.  They therefore lack OOBIs and can receive
-   but not issue ACDCs.  However, their virtue is that they can be
-   created and used without a sophisticated wallet.  This may make them
-   a convenient way to identify the automation that signs passports and
-   receives a delegated signer credential (see 6.1.6).
+   AIDs usually match the same regex as SAIDs (which are hashes of
+   JSON).  A noteworthy exception is that non-transferrable AIDs begin
+   with B instead of E or another letter.  Such AIDs hash only their
+   public key, not a document.  They are analogous to did:key values,
+   and play a limited role in VVP.  They are incapable of rotating keys
+   or anchoring events to a KEL.  They therefore lack OOBIs and can
+   receive but not issue ACDCs.  However, their virtue is that they can
+   be created and used without a sophisticated wallet.  This may make
+   them a convenient way to identify the automation that signs passports
+   and receives a delegated signer credential (see 6.1.6).
 
    An example of an OOBI for an AID is https://agentsrus.net/oobi/
    EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/
@@ -872,14 +883,15 @@ Table of Contents
 6.2.6.  Passport
 
    VVP emits and verifies a STIR PASSporT [RFC8225] that is fully
-   compliant in all respects, except that it lacks the x5u header that
-   links it to an X509 certificate.  The passport is a form of evidence
-   suitable for evaluation during the brief interval when a call is
-   being initiated, and it is carefully backed by evidence with a longer
-   lifespan (6.3.2).  Conceptually, VVP's version is similar to a SHAKEN
-   passport [RFC8588].  It MAY also reference brand-related evidence,
-   allowing it to play an additional role similar to the RCD passport
-   [RCD-PASSPORT].
+   compliant in all respects, except that it MAY omit the x5u header
+   that links it to an X509 certificate (see 7.1).
+
+   The passport is a form of evidence suitable for evaluation during the
+   brief interval when a call is being initiated, and it is carefully
+   backed by evidence with a longer lifespan (6.3.2).  Conceptually,
+   VVP's version is similar to a SHAKEN passport [RFC8588].  It MAY also
+   reference brand-related evidence, allowing it to play an additional
+   role similar to the RCD passport [RCD-PASSPORT].
 
    Neither VVP's backing evidence nor its passport depends on a
    certificate authority ecosystem.  The passport MUST be secured by an
@@ -1051,12 +1063,20 @@ Table of Contents
    middle elided) is: 0BNzaC1lZD...yRLAYeKNQvYx.
 
    The signature MUST be the result of running the EdDSA algorithm over
-   input data that consists of the following ordered metadata about a
-   call: the source phone number (orig claim in the JWT), the
-   destination phone number (dest claim), an OOBI for the OP (kid), a
-   timestamp (iat), optional brand information (card with value null if
-   missing), optional call-reason (with value null if missing), optional
-   goal (with value null if missing), and a reference to evidence (evd).
+   input data in the manner required by [RFC7519]: signature =
+   sign(base64url(header) + "." + base64url(payload).  Also per the JWT
+   spec, the signature MUST then be base64url-encoded and appended to
+   the other two portions of the JWT, with a . delimiter preceding it,
+   and it MUST then be followed by ";ppt=vvp" so tools that scan the
+   Identity header of the passport can decide how to process the
+   passport without doing a full parse of the JWT.
+
+   The headers MUST include alg, typ, ppt, and kid, as described in 4.2.
+   They MAY include other values, notably x5u (see 7.1).  The claims
+   MUST include orig, dest, iat, exp, and evd, and MAY include card,
+   goal, call_reason, jti, origId, and other values (also described in
+   4.2).  The signature MUST use all headers and all claims as input to
+   the data stream that will be signed.
 
 6.3.2.  Dossier
 
@@ -1269,7 +1289,44 @@ Table of Contents
 
 7.  Interoperability
 
-   The basic evidence that drives VVP -- vetting credential (6.3.5),
+   VVP can achieve its goals without any dependence on RCD, SHAKEN, or
+   similar mechanisms.  However, it also provides easy bridges so value
+   can flow to and from other ecosystems with similar goals.
+
+7.1.  Certificates
+
+   Verifiers who prefer to operate in certificate ecosystems such as
+   SHAKEN and RCD can be satisfied by having an intermediary verify
+   according to VVP rules (see 5), and then signing a new passport in a
+   certificate-dependent format (e.g., for SHAKEN and/or RCD), where the
+   new passport contains an x5u header pointing to the certificate of
+   the new signer.  If the certificate fetched from the x5u URL
+   satisfies enough trust requirements of the verifier, the goals of the
+   new context are achieved.  If this intermediary is the OSP, the
+   standard assumptions of SHAKEN are fully met, but the OSP's
+   attestation can always be A, since VVP conclusively proves the
+   identity of the AP and OP.
+
+   In the preceding example, a new passport is created with an x5u value
+   completely unknown to VVP.  However, in an alternative mode, a VVP
+   passport MAY itself contain an x5u header.  If it does, the x5u
+   header MUST NOT be used to achieve any VVP verification guarantees;
+   its inclusion is intended to make trust flow the other way.  The
+   associated X509 certificate SHOULD be issued to the public key of the
+   party that plays the OP role in VVP.  If and only if it does so, the
+   full weight of VVP evidence about the OP's status as a trusted signer
+   for the AP transfers to the certificate, even if the certificate is
+   self-issued or otherwise fails to chain back to a known certificate
+   authority.  Valid VVP passports that obey this requirement can thus
+   be used to enable VVP-unaware but certificate-based checks without
+   certificate authorities (or without prior knowledge of them).  The
+   certificate-based checks are ephemeral and MUST be done in real-time,
+   since the binding between a key and the owner of a cert cannot be
+   known to be valid except at the current moment.
+
+7.2.  Other credential formats
+
+   The stable evidence that drives VVP -- vetting credential (6.3.5),
    TNAlloc credential (6.3.6), brand credential (6.3.7), brand proxy
    credential (6.3.8), and delegated signer credential (6.3.9) -- MUST
    all be ACDCs.  This is because only when the data in these
@@ -1659,9 +1716,9 @@ Table of Contents
    [RCD-DRAFT]
               Wendt, C. and J. Peterson, "SIP Call-Info Parameters for
               Rich Call Data", Work in Progress, Internet-Draft, draft-
-              ietf-sipcore-callinfo-rcd-13, 27 January 2025,
+              ietf-sipcore-callinfo-rcd-14, 17 February 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-sipcore-
-              callinfo-rcd-13>.
+              callinfo-rcd-14>.
 
    [RCD-PASSPORT]
               Wendt, C. and J. Peterson, "PASSporT Extension for Rich
