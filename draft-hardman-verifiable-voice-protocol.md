@@ -783,9 +783,8 @@ Both institutions and individuals that make phone calls may have privacy goals. 
 
 ACDCs support a technique called *graduated disclosure* that enables this.
 
+## Graduated Disclosure
 The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the *hashes* of child objects.
-
-This means is that any given child JSON object in an ACDC can be replaced with its hash, *without altering the hash of the parent data*. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are replaced by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.
 
 <figure>
 <name>ACDC hashes like a Merkle tree</name>
@@ -866,9 +865,42 @@ Expanded ACDC      Compact ACDC
   </artset>
 </figure>
 
+This means is that any given child JSON object in an ACDC can be replaced with its hash, *without altering the hash of the parent data*. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are opaquely represented by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.
+
 In combination with the `evd` claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.
 
 For example, suppose that a company in jurisdiction X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to X's TSP or to X, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since both forms of the ACDC have the same hash.
+
+X doesn't have to engage in sophisticated sniffing of traffic by geography to achieve goals like this. It can simply say that anonymous and unsigned HTTP requests for the dossier return the compact form; anyone who wants the expanded form must make an HTTP request that includes in its body a signature over terms and conditions that enforce privacy and make the recipient legally accountable not to reshare.
+
+Importantly, transformations from expanded to compact versions of an ACDC can be performed by anyone, not just the issuer or holder. This means that a verifier can achieve trust on the basis of expanded data, and then cache or share a compacted version of the data, meaning that any subsequent or downstream verifications can have equal assurance but higher privacy. The same policy can be applied to data any time it crosses a regulatory, jurisdictional boundary where terms and conditions for disclosure have weaker enforcement. It can also be used when business relationships should be redacted outside of a privileged context.
+
+Schemas for credentials should be designed to allow graduated disclosure in increments that match likely privacy goals of stakeholders. ACDC schema design typically includes a salty nonce in each increment, avoiding rainbow attacks on the hashed data. VVP encourages but does not require this.
+
+## Correlation
+Privacy theorists will note that, even with contractually protected graduated disclosure and maximally compact ACDCs, verifiers can still correlate by using some fields in ephemeral passports or long-lived ACDCs, and that this may undermine some privacy goals.
+
+There are three correlators in each passport:
+
+1. Any brand information in `card` (may strongly identify an AP)
+1. the `kid` header (identifies the OP)
+1. the `evd` claim (uniquely identifies a dossier used by an AP)
+
+We discount the first correlator, because if it is present, the AP is explicitly associating its correlated reputation with a call. It has asserted this brand publicly, to every stakeholder in the SIP pipeline. In such cases, any question of the AP's privacy is off the table.
+
+If the first correlator is present, no privacy protections on the other two correlators will be effective. However, if the first correlator is missing, the other two correlators become more interesting.
+
+### kid
+In VVP, the OP role that's identified by `kid` is played by automation. Automation is unlikely to have any direct privacy goal. The company that operates it is likely to be either a service provider, or a large corporation capable of significant IT investments. Either way, the OP is in the business of servicing phone calls, and is likely to be content for its traffic to be correlated publicly. Therefore, the fact that `kid` correlates the OP is not particularly interesting.
+
+However, could the OP be used as an indirect correlator for the AP?
+
+The OP's SBC can service many thousands or millions of callers, providing a some herd privacy. This is not a perfect protection, but it is a beginning. We add to this the crucial observation that *the OP doesn't need to have a stable reputation to support VVP goals*. Trust in the OP comes from the existence of a delegated signer credential (see {{<delegated-signer-credential}}), not from a certificate or any other long-term identity. Therefore, the AID that provides cryptographic identity for an OP MAY be rotated often (as often as APs are willing to delegate to a new one). Further, even without rotation, an OP organization MAY provide multiple instances of its automation, each using a different AID. Also, an AP MAY delegate signing authority to multiple OP organizations, each of which is using various strategies to mitigate correlation. Taken together, these measures offers reasonable protection -- protection that an AP can tune -- against correlating an AP via `kid`.
+
+### evd
+The other correlator, `evd`, tracks an AP more directly, because a dossier is uniquely identified by its SAID, and can only be used by a single AP. Furthermore, if someone resolves `evd` to an actual dossier (something that might be avoidable with judicious use of graduated disclosure), the dossier will at a minimum have an issuer field that ties it to the AP as a perfect correlator.
+
+The answer here is to introduce an *AP blinding service*. This service creates *derived dossiers* on a schedule or by policy. Each derivation includes the hash of the original dossier, in a field that is hidden but available (along with a salty nonce) via graduated disclosure. The derived dossier is signed by the blinding service rather than the original AP. It embodies an assertion, by the blinding service, that it has verified the original dossier according to published rules, and that it will revoke the derivative if the original is revoked. AP blinding services would have to be trusted by verifiers, much like root CAs in SHAKEN. However, unlike CAs, their actions could be trivially audited for correctness, since every derivation would have to be backed dossier that has the associated hash. Such a mechanism is probably unnecessary for b2c calling, but may be justified when VVP is used by individual APs if they wish not to disclose their identity to a TP.
 
 # Appendix A: Evidence theory
 {:appendix #appendix-a}
