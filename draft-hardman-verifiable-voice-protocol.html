@@ -1331,6 +1331,22 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-privacy" class="internal xref">Privacy</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-graduated-disclosure" class="internal xref">Graduated Disclosure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-correlation" class="internal xref">Correlation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2.2.1">
+                    <p id="section-toc.1-1.9.2.2.2.1.1"><a href="#section-9.2.1" class="auto internal xref">9.2.1</a>.  <a href="#name-kid" class="internal xref">kid</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2.2.2">
+                    <p id="section-toc.1-1.9.2.2.2.2.1"><a href="#section-9.2.2" class="auto internal xref">9.2.2</a>.  <a href="#name-evd" class="internal xref">evd</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-appendix-a-evidence-theory" class="internal xref">Appendix A: Evidence theory</a></p>
@@ -2281,63 +2297,114 @@ Validation also includes comparing data structure and values against the declare
       </h2>
 <p id="section-9-1">Both institutions and individuals that make phone calls may have privacy goals. Although their goals might differ in some ways, both will wish to disclose some attributes to the TP, and both may wish to suppress some of that same information from intermediaries. Both will want control over how this disclosure works.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <p id="section-9-2">ACDCs support a technique called <em>graduated disclosure</em> that enables this.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the <em>hashes</em> of child objects.<a href="#section-9-3" class="pilcrow">¶</a></p>
-<p id="section-9-4">This means is that any given child JSON object in an ACDC can be replaced with its hash, <em>without altering the hash of the parent data</em>. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are replaced by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.<a href="#section-9-4" class="pilcrow">¶</a></p>
+<div id="graduated-disclosure">
+<section id="section-9.1">
+        <h3 id="name-graduated-disclosure">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-graduated-disclosure" class="section-name selfRef">Graduated Disclosure</a>
+        </h3>
+<p id="section-9.1-1">The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the <em>hashes</em> of child objects.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <span id="name-acdc-hashes-like-a-merkle-t"></span><figure id="figure-4">
-        <div id="section-9-5.1">
-          <div class="alignLeft art-svg artwork" id="section-9-5.1.1">
+          <div id="section-9.1-2.1">
+            <div class="alignLeft art-svg artwork" id="section-9.1-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="368" width="264" viewBox="0 0 264 368" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-              <path d="M 8,32 L 8,256" fill="none" stroke="black"></path>
-              <path d="M 112,32 L 112,256" fill="none" stroke="black"></path>
-              <path d="M 152,32 L 152,144" fill="none" stroke="black"></path>
-              <path d="M 256,32 L 256,144" fill="none" stroke="black"></path>
-              <path d="M 8,32 L 112,32" fill="none" stroke="black"></path>
-              <path d="M 152,32 L 256,32" fill="none" stroke="black"></path>
-              <path d="M 152,144 L 256,144" fill="none" stroke="black"></path>
-              <path d="M 8,256 L 112,256" fill="none" stroke="black"></path>
-              <g class="text">
-                <text x="56" y="20">Expanded ACDC</text>
-                <text x="204" y="20">Compact ACDC</text>
-                <text x="40" y="52">a = {</text>
-                <text x="184" y="52">a = {</text>
-                <text x="60" y="68">b = N,</text>
-                <text x="204" y="68">b = N,</text>
-                <text x="56" y="84">C = {</text>
-                <text x="196" y="84">H(c)</text>
-                <text x="76" y="100">d = M,</text>
-                <text x="204" y="100">g = Q,</text>
-                <text x="76" y="116">e = O,</text>
-                <text x="196" y="116">H(i)</text>
-                <text x="72" y="132">f = P</text>
-                <text x="168" y="132">}</text>
-                <text x="44" y="148">},</text>
-                <text x="60" y="164">g = Q,</text>
-                <text x="56" y="180">i = {</text>
-                <text x="76" y="196">j = R,</text>
-                <text x="72" y="212">k = S</text>
-                <text x="40" y="228">}</text>
-                <text x="24" y="244">}</text>
-                <text x="48" y="276">H(a) = H(</text>
-                <text x="192" y="276">H(a) = H(</text>
-                <text x="88" y="292">b</text>
-                <text x="232" y="292">b</text>
-                <text x="100" y="308">H(c)</text>
-                <text x="244" y="308">H(c)</text>
-                <text x="88" y="324">g</text>
-                <text x="232" y="324">g</text>
-                <text x="100" y="340">H(i)</text>
-                <text x="244" y="340">H(i)</text>
-                <text x="80" y="356">)</text>
-                <text x="224" y="356">)</text>
-              </g>
-            </svg><a href="#section-9-5.1.1" class="pilcrow">¶</a>
+                <path d="M 8,32 L 8,256" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,256" fill="none" stroke="black"></path>
+                <path d="M 152,32 L 152,144" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,144" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 112,32" fill="none" stroke="black"></path>
+                <path d="M 152,32 L 256,32" fill="none" stroke="black"></path>
+                <path d="M 152,144 L 256,144" fill="none" stroke="black"></path>
+                <path d="M 8,256 L 112,256" fill="none" stroke="black"></path>
+                <g class="text">
+                  <text x="56" y="20">Expanded ACDC</text>
+                  <text x="204" y="20">Compact ACDC</text>
+                  <text x="40" y="52">a = {</text>
+                  <text x="184" y="52">a = {</text>
+                  <text x="60" y="68">b = N,</text>
+                  <text x="204" y="68">b = N,</text>
+                  <text x="56" y="84">C = {</text>
+                  <text x="196" y="84">H(c)</text>
+                  <text x="76" y="100">d = M,</text>
+                  <text x="204" y="100">g = Q,</text>
+                  <text x="76" y="116">e = O,</text>
+                  <text x="196" y="116">H(i)</text>
+                  <text x="72" y="132">f = P</text>
+                  <text x="168" y="132">}</text>
+                  <text x="44" y="148">},</text>
+                  <text x="60" y="164">g = Q,</text>
+                  <text x="56" y="180">i = {</text>
+                  <text x="76" y="196">j = R,</text>
+                  <text x="72" y="212">k = S</text>
+                  <text x="40" y="228">}</text>
+                  <text x="24" y="244">}</text>
+                  <text x="48" y="276">H(a) = H(</text>
+                  <text x="192" y="276">H(a) = H(</text>
+                  <text x="88" y="292">b</text>
+                  <text x="232" y="292">b</text>
+                  <text x="100" y="308">H(c)</text>
+                  <text x="244" y="308">H(c)</text>
+                  <text x="88" y="324">g</text>
+                  <text x="232" y="324">g</text>
+                  <text x="100" y="340">H(i)</text>
+                  <text x="244" y="340">H(i)</text>
+                  <text x="80" y="356">)</text>
+                  <text x="224" y="356">)</text>
+                </g>
+              </svg><a href="#section-9.1-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-acdc-hashes-like-a-merkle-t" class="selfRef">ACDC hashes like a Merkle tree</a>
-        </figcaption></figure>
-<p id="section-9-6">In combination with the <code>evd</code> claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.<a href="#section-9-6" class="pilcrow">¶</a></p>
-<p id="section-9-7">For example, suppose that a company in jurisdiction X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to X's TSP or to X, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since both forms of the ACDC have the same hash.<a href="#section-9-7" class="pilcrow">¶</a></p>
+          </figcaption></figure>
+<p id="section-9.1-3">This means is that any given child JSON object in an ACDC can be replaced with its hash, <em>without altering the hash of the parent data</em>. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are opaquely represented by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">In combination with the <code>evd</code> claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.1-5">For example, suppose that a company in jurisdiction X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to X's TSP or to X, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since both forms of the ACDC have the same hash.<a href="#section-9.1-5" class="pilcrow">¶</a></p>
+<p id="section-9.1-6">X doesn't have to engage in sophisticated sniffing of traffic by geography to achieve goals like this. It can simply say that anonymous and unsigned HTTP requests for the dossier return the compact form; anyone who wants the expanded form must make an HTTP request that includes in its body a signature over terms and conditions that enforce privacy and make the recipient legally accountable not to reshare.<a href="#section-9.1-6" class="pilcrow">¶</a></p>
+<p id="section-9.1-7">Importantly, transformations from expanded to compact versions of an ACDC can be performed by anyone, not just the issuer or holder. This means that a verifier can achieve trust on the basis of expanded data, and then cache or share a compacted version of the data, meaning that any subsequent or downstream verifications can have equal assurance but higher privacy. The same policy can be applied to data any time it crosses a regulatory, jurisdictional boundary where terms and conditions for disclosure have weaker enforcement. It can also be used when business relationships should be redacted outside of a privileged context.<a href="#section-9.1-7" class="pilcrow">¶</a></p>
+<p id="section-9.1-8">Schemas for credentials should be designed to allow graduated disclosure in increments that match likely privacy goals of stakeholders. ACDC schema design typically includes a salty nonce in each increment, avoiding rainbow attacks on the hashed data. VVP encourages but does not require this.<a href="#section-9.1-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="correlation">
+<section id="section-9.2">
+        <h3 id="name-correlation">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-correlation" class="section-name selfRef">Correlation</a>
+        </h3>
+<p id="section-9.2-1">Privacy theorists will note that, even with contractually protected graduated disclosure and maximally compact ACDCs, verifiers can still correlate by using some fields in ephemeral passports or long-lived ACDCs, and that this may undermine some privacy goals.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">There are three correlators in each passport:<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-9.2-3">
+<li id="section-9.2-3.1">
+            <p id="section-9.2-3.1.1">Any brand information in <code>card</code> (may strongly identify an AP)<a href="#section-9.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-9.2-3.2">
+            <p id="section-9.2-3.2.1">the <code>kid</code> header (identifies the OP)<a href="#section-9.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-9.2-3.3">
+            <p id="section-9.2-3.3.1">the <code>evd</code> claim (uniquely identifies a dossier used by an AP)<a href="#section-9.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-9.2-4">We discount the first correlator, because if it is present, the AP is explicitly associating its correlated reputation with a call. It has asserted this brand publicly, to every stakeholder in the SIP pipeline. In such cases, any question of the AP's privacy is off the table.<a href="#section-9.2-4" class="pilcrow">¶</a></p>
+<p id="section-9.2-5">If the first correlator is present, no privacy protections on the other two correlators will be effective. However, if the first correlator is missing, the other two correlators become more interesting.<a href="#section-9.2-5" class="pilcrow">¶</a></p>
+<div id="kid">
+<section id="section-9.2.1">
+          <h4 id="name-kid">
+<a href="#section-9.2.1" class="section-number selfRef">9.2.1. </a><a href="#name-kid" class="section-name selfRef">kid</a>
+          </h4>
+<p id="section-9.2.1-1">In VVP, the OP role that's identified by <code>kid</code> is played by automation. Automation is unlikely to have any direct privacy goal. The company that operates it is likely to be either a service provider, or a large corporation capable of significant IT investments. Either way, the OP is in the business of servicing phone calls, and is likely to be content for its traffic to be correlated publicly. Therefore, the fact that <code>kid</code> correlates the OP is not particularly interesting.<a href="#section-9.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.2.1-2">However, could the OP be used as an indirect correlator for the AP?<a href="#section-9.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.2.1-3">The OP's SBC can service many thousands or millions of callers, providing a some herd privacy. This is not a perfect protection, but it is a beginning. We add to this the crucial observation that <em>the OP doesn't need to have a stable reputation to support VVP goals</em>. Trust in the OP comes from the existence of a delegated signer credential (see <a href="#delegated-signer-credential" class="auto internal xref">6.3.9</a>), not from a certificate or any other long-term identity. Therefore, the AID that provides cryptographic identity for an OP <span class="bcp14">MAY</span> be rotated often (as often as APs are willing to delegate to a new one). Further, even without rotation, an OP organization <span class="bcp14">MAY</span> provide multiple instances of its automation, each using a different AID. Also, an AP <span class="bcp14">MAY</span> delegate signing authority to multiple OP organizations, each of which is using various strategies to mitigate correlation. Taken together, these measures offers reasonable protection -- protection that an AP can tune -- against correlating an AP via <code>kid</code>.<a href="#section-9.2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="evd">
+<section id="section-9.2.2">
+          <h4 id="name-evd">
+<a href="#section-9.2.2" class="section-number selfRef">9.2.2. </a><a href="#name-evd" class="section-name selfRef">evd</a>
+          </h4>
+<p id="section-9.2.2-1">The other correlator, <code>evd</code>, tracks an AP more directly, because a dossier is uniquely identified by its SAID, and can only be used by a single AP. Furthermore, if someone resolves <code>evd</code> to an actual dossier (something that might be avoidable with judicious use of graduated disclosure), the dossier will at a minimum have an issuer field that ties it to the AP as a perfect correlator.<a href="#section-9.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2.2-2">The answer here is to introduce an <em>AP blinding service</em>. This service creates <em>derived dossiers</em> on a schedule or by policy. Each derivation includes the hash of the original dossier, in a field that is hidden but available (along with a salty nonce) via graduated disclosure. The derived dossier is signed by the blinding service rather than the original AP. It embodies an assertion, by the blinding service, that it has verified the original dossier according to published rules, and that it will revoke the derivative if the original is revoked. AP blinding services would have to be trusted by verifiers, much like root CAs in SHAKEN. However, unlike CAs, their actions could be trivially audited for correctness, since every derivation would have to be backed dossier that has the associated hash. Such a mechanism is probably unnecessary for b2c calling, but may be justified when VVP is used by individual APs if they wish not to disclose their identity to a TP.<a href="#section-9.2.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="appendix-a">
