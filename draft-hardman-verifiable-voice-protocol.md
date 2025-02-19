@@ -751,7 +751,7 @@ One example of a possible vetting credential is an LE vLEI; see {{ISO-17442-3}} 
 ### TNAlloc credential
 A TNAlloc credential is a targeted credential that confers on its issuee the right to control how one or more phone numbers are used. Regulators issue TNAlloc credentials to range holders, who issue them to TNUs. TNUs often play the AP role in VVP. If an AP delegates RTU to a proxy (e.g., an employee or call center), the AP MUST also issue a TNAlloc credential to the proxy, to confer the RTU. With each successive reallocation, the set of numbers in the new TNAlloc credential gets smaller. Except for TNAlloc credentials issued by regulators, all TNAlloc credentials MUST contain a JL to a parent TNAlloc credential, having a bigger set of numbers that includes those in the current credential. This JL in a child credential documents the fact that the child's issuer possessed an equal or broader RTU, from which the subset RTU in child credential derives.
 
-To achieve various design goals, a TNAlloc credential MUST be an ACDC, but this ACDC MAY be a transformation of a credential in another format (e.g., a TNAuthList from {{RFC8226}}). See {{<interoperability}}.
+To achieve various design goals, a TNAlloc credential MUST be an ACDC, but this ACDC MAY be a transformation of a credential in another format (e.g., a TNAuthList from {{RFC8226}}). See {{<other-credential-formats}}.
 
 An example TNAlloc credential and its schema are described in {{<tn-cred-sample}}.
 
@@ -760,17 +760,17 @@ A brand credential is a targeted credential that enumerates brand properties suc
 
 This credential MUST be issued according to a documented process that offers formal assurance that it is only issued with accurate information, and only to a legal entity that has the right to use the described brand. A single AP MAY have multiple brand credentials (e.g., a fictional corporation, `Amce Space Travel Deutschland, GmbH`, might hold brand credentials for both `Sky Ride` and for `Orbítame Latinoamérica`). Rights to use the same brand MAY be conferred on multiple APs (`Acme Space Travel Deutschland, Gmbh` and `Acme Holdings Canada, Ltd` may both possess brand credentials for `Sky Ride`). A brand credential MUST contain a JL to a vetting credential, that shows that the right to use the brand was evaluated only after using a vetting credential to prove the identity of the issuee.
 
-An example brand credential and its schema are shown in {{<appendix-c}}.
+An example brand credential and its schema are described in {{<bcred-sample}}.
 
 ### Brand proxy credential
 A brand proxy credential confers on an OP the right to project the brand of an AP when making phone calls, subject to a carefully selected set of constraints. This is different from the simple RTU conferred by TNAlloc. Without a brand proxy credential, a call center could make calls on behalf of an AP, using the AP's allocated phone number, but would be forced to do so under its own name or brand, because it lacks evidence that the AP intended anything different. If an AP intends for phone calls to be made by a proxy, and wants the proxy to project the AP's brand, the AP MUST issue this credential.
 
-An example brand credential and its schema are shown in {{<appendix-c}}.
+An example brand proxy credential and its schema are shown in {{<bprox-cred-sample}}.
 
 ### Delegated signer credential
 A delegated signer credential proves that automation running under the control of the OP has been authorized by the AP to originate VVP traffic (and thus, sign VVP passports) on its behalf.
 
-An example delegated signer credential and its schema are shown in {{<appendix-c}}.
+An example delegated signer credential and its schema are shown in {{<dsig-cred-sample}}.
 
 # Interoperability
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
@@ -1091,48 +1091,12 @@ Here is a sample TNAlloc credential that meets these requirements.
 
 The schema used by this particular credential, `EFvn...GgSQ`, is published at {{TN-ALLOC-SCHEMA}}.
 
-## Delegated signer credential
-A delegated signer credential ({{<delegated-signer-credential}}) must prove that the issuer is giving authority to the issuee. This authority should be carefully constrained so that it applies only to outbound voice calls, not to signing invoices or legal contracts. It can also be constrained so it only applies on a particular schedule, or when the call originates or terminates in a particular geo or jurisdiction.
-
-A Generalized Cooperative Delegation (GCD) credential embodies delegated but constrained authority in exactly this way. A GCD credential suitable for use as a delegated signer credential in VVP might look like this:
-
-~~~json
-{
-    "v": "ACDC10JSON00096c_",
-    "d": "EDQpU3nrKyJBgUJGw5461CbWcug9BZj7WXUkKbNOlnFR",
-    "u": "0ADE6oAxBl4E7uKeGUb7BEYi",
-    "i": "EC4SuEyzrRwu3FWFrK0Ubd9xejlo5bUwAtGcbBGUk2nL",
-    "ri": "EM2YZ78SKE8eO4W1lQOJeer5xKZqLmJV7SPr3Ji5DMBZ",
-    "s": "EL7irIKYJL9Io0hhKSGWI4OznhwC7qgJG5Qf4aEs6j0o",
-    "a": {
-        "d": "EPQhEk5tfXvxyKe5Hk4DG63dSgoP-F2VZrxuIeIKrT9B",
-        "u": "0AC9kH8q99PTCQNteGyI-F4g",
-        "i": "EIkxoE8eYnPLCydPcyc_lhQgwOdBHwzkSe36e2gqEH-5",
-        "dt": "2024-12-27T13:11:29.062000+00:00",
-        "c_goal": ["ops.telco.send.sign"],
-        "c_proto": ["VVP:OP"]
-    },
-    "r": {
-        "d": "EFthNcTE20MLMaCOoXlSmNtdooGEbZF8uGmO5G85eMSF",
-        "noRoleSemanticsWithoutGfw": "All parties agree...",
-        "issuerNotResponsibleOutsideConstraints": "Although verifiers...",
-        "noConstraintSansPrefix": "Issuers agree...",
-        "useStdIfPossible": "Issuers agree...",
-        "onlyDelegateHeldAuthority": "Issuers agree..."
-    }
-}
-~~~
-
-Note the `c_goal` field that limits goals that can be justified with this credential, and the `c_proto` field that says the delegate can only exercise this authority in the context of the "VVP" protocol with the "OP" role.
-
-The schema for GCD credentials, and an explanation how to add additional constraints, is documented at {{GCD-SCHEMA}}.
-
-## Brand credential ((#bcred-sample))
+## Brand credential {#bcred-sample}
 TODO
 ~~~json
 ~~~
 
-## Brand proxy credential {{#bprox-cred-sample}}
+## Brand proxy credential {#bprox-cred-sample}
 A brand proxy credential ({{<brand-proxy-credential}}) is very similar to a delegated signer credential, in that it proves carefully constrained delegated authority. The difference lies in what authority is delegated (proxy a brand vs. sign passports).
 
 A Generalized Cooperative Delegation (GCD) credential embodies delegated but constrained authority in exactly this way. A GCD credential suitable for use as a brand proxy in VVP might look like this:
@@ -1165,6 +1129,42 @@ A Generalized Cooperative Delegation (GCD) credential embodies delegated but con
 ~~~
 
 Note the `c_goal` field that limits goals that can be justified with this credential, and the `c_proto` field that says the delegate can only exercise this authority in the context of the "VVP" protocol with the "OP" or "TP" role. The wildcard in `c_goal` and the addition of the "TP" role in `c_proto` are complementary changes that allow this credential to justify proxying the brand on both outbound and inbound calls. (Branding on inbound calls is out of scope for VVP, but is included here just to show that the same credentials can be used for both VVP and non-VVP solutions. To convert this credential to a purely outbound authorization, replace the wildcard with `send`, and limit the roles in `VVP` to `OP`.)
+
+The schema for GCD credentials, and an explanation how to add additional constraints, is documented at {{GCD-SCHEMA}}.
+
+## Delegated signer credential {#dsig-cred-sample}
+A delegated signer credential ({{<delegated-signer-credential}}) must prove that the issuer is giving authority to the issuee. This authority should be carefully constrained so that it applies only to outbound voice calls, not to signing invoices or legal contracts. It can also be constrained so it only applies on a particular schedule, or when the call originates or terminates in a particular geo or jurisdiction.
+
+A Generalized Cooperative Delegation (GCD) credential embodies delegated but constrained authority in exactly this way. A GCD credential suitable for use as a delegated signer credential in VVP might look like this:
+
+~~~json
+{
+    "v": "ACDC10JSON00096c_",
+    "d": "EDQpU3nrKyJBgUJGw5461CbWcug9BZj7WXUkKbNOlnFR",
+    "u": "0ADE6oAxBl4E7uKeGUb7BEYi",
+    "i": "EC4SuEyzrRwu3FWFrK0Ubd9xejlo5bUwAtGcbBGUk2nL",
+    "ri": "EM2YZ78SKE8eO4W1lQOJeer5xKZqLmJV7SPr3Ji5DMBZ",
+    "s": "EL7irIKYJL9Io0hhKSGWI4OznhwC7qgJG5Qf4aEs6j0o",
+    "a": {
+        "d": "EPQhEk5tfXvxyKe5Hk4DG63dSgoP-F2VZrxuIeIKrT9B",
+        "u": "0AC9kH8q99PTCQNteGyI-F4g",
+        "i": "EIkxoE8eYnPLCydPcyc_lhQgwOdBHwzkSe36e2gqEH-5",
+        "dt": "2024-12-27T13:11:29.062000+00:00",
+        "c_goal": ["ops.telco.send.sign"],
+        "c_proto": ["VVP:OP"]
+    },
+    "r": {
+        "d": "EFthNcTE20MLMaCOoXlSmNtdooGEbZF8uGmO5G85eMSF",
+        "noRoleSemanticsWithoutGfw": "All parties agree...",
+        "issuerNotResponsibleOutsideConstraints": "Although verifiers...",
+        "noConstraintSansPrefix": "Issuers agree...",
+        "useStdIfPossible": "Issuers agree...",
+        "onlyDelegateHeldAuthority": "Issuers agree..."
+    }
+}
+~~~
+
+Note the `c_goal` field that limits goals that can be justified with this credential, and the `c_proto` field that says the delegate can only exercise this authority in the context of the "VVP" protocol with the "OP" role.
 
 The schema for GCD credentials, and an explanation how to add additional constraints, is documented at {{GCD-SCHEMA}}.
 
