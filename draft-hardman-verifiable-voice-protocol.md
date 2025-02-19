@@ -33,6 +33,7 @@ author:
 
 normative:
   RFC3261:
+  RFC5626:
   RFC5280:
   RFC4648:
   RFC8032:
@@ -127,7 +128,7 @@ informative:
     target: https://github.com/provenant-dev/public-schema/blob/main/gcd/index.md
     title: "Generalized Cooperative Delegation (GCD) Credentials"
     author:
-      org: Daniel Hardman
+      name: Daniel Hardman
     date: 18 Dec 2023
   DOSSIER-SCHEMA:
     target: https://github.com/provenant-dev/public-schema/blob/main/gcd/index.md
@@ -151,7 +152,7 @@ Regulators have mandated protections, and industry has responded. However, exist
 * Each jurisdiction has its own governance and its own set of signers. Sharing information across boundaries is fraught with logistical and regulatory problems.
 * Deployment and maintenance costs are high.
 * Market complexities such as the presence of aggregators, wholesalers, and call centers that proxy a brand are difficult to model safely.
-* What might work for enterprises offers little benefit for individual callers.
+* What might work for enterprises offers few benefits and many drawbacks for individual callers.
 
 VVP solves these problems by applying two crucial innovations.
 
@@ -165,7 +166,7 @@ Although VVP interoperates with governance frameworks such as SHAKEN {{ATIS-1000
 
 Millions of institutions have already undergone LEI vetting, and they already use the resulting evidence of their organizational identity in day-to-day behaviors all over the world. By adopting tooling that's compatible with the vLEI ecosystem, VVP gives adopters an intriguing option: *just skip the task of inventing a whole new vetting regime unique to telco, with its corresponding learning curve, costs, and legal and business adoption challenges.*
 
-To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially, to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
+To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially (see {{<interoperability}}), to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
 
 # Conventions and Definitions
 
@@ -173,7 +174,7 @@ To be clear, VVP does not *require* that vLEIs be used for vetting. However, by 
 
 # Overview
 
-Fundamentally, VVP requires a caller to assemble a dossier ({{<dossier}}) of stable evidence that proves identity and authorization. This is done once or occasionally, in advance, as a configuration precondition. Then, for each call, an ephemeral STIR-compatible VVP PASSporT ({{<passport}}) is generated that cites the preconfigured dossier. Verifiers check the passport and its corresponding dossier, including realtime revocation status, to make decisions.
+Fundamentally, VVP requires a caller to curate ({{<curating}}) a dossier ({{<dossier}}) of stable evidence that proves identity and authorization. This is done once or occasionally, in advance, as a configuration precondition. Then, for each call, an ephemeral STIR-compatible VVP PASSporT ({{<passport}}) is generated that cites ({{<citing}}) the preconfigured dossier. Verifiers check the passport and its corresponding dossier, including realtime revocation status, to make decisions ({{<verifying}}).
 
 ## Roles
 
@@ -217,7 +218,7 @@ VVP depends on three interrelated activities with evidence:
 
 Chronologically, evidence must be curated before it can be cited or verified. In addition, some vulnerabilities in existing approaches occur because evidence requirements are too loose. Therefore, understanding the nature of backing evidence, and how that evidence is created and maintained, is a crucial consideration for VVP. This specification includes normative statements about evidence.
 
-However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows. Therefore, we defer the question of curation to {{<curating}}. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions that come later.
+However, curating does not occur in realtime during phone calls. Citing and verifying are the heart of VVP, and implementers will probably approach VVP from the standpoint of SIP flows {{RFC3261}}, {{RFC5626}}. Therefore, we defer the question of curation to {{<curating}}. Where not-yet-explained evidence concepts are used, inline references allow easy cross-reference to formal definitions that come later.
 
 # Citing
 A call secured by VVP begins when the OP ({{<OP}}) generates a new VVP passport ({{<passport}}) that complies with STIR {{RFC8224}} requirements. In its compact-serialized JWT {{RFC7519}} form, this passport is then passed as an `Identity` header in a SIP INVITE {{RFC3261}}. The passport *constitutes* lightweight, direct, and ephemeral evidence; it *cites* and therefore depends upon comprehensive, indirect, and long-lived evidence (the dossier; see {{<dossier}}). Safely and efficiently citing stronger evidence is one way that VVP differs from alternatives.
@@ -273,18 +274,18 @@ The semantics of the fields are:
 * `typ` *(required)* Per {{RFC8225}}, MUST be "passport".
 * `ppt` *(required)* Per {{RFC8225}}, MUST identify the specific PASSporT type -- in this case, "vvp".
 * `kid` *(required)* MUST be the OOBI of an AID ({{<aid}}) controlled by the OP ({{<OP}}). An OOBI is a special URL that facilitates ACDC's viral discoverability goals. It returns IANA content-type `application/json+cesr`, which provides some important security guarantees. The content for this particular OOBI MUST be a KEL ({{<KEL}}). Typically the AID in question does not identify the OP as a legal entity, but rather software running on or invoked by the SBC operated by the OP. (The AID that identifies the OP as a legal entity may be controlled by a multisig scheme and thus require multiple humans to create a signature. The AID for `kid` MUST be singlesig and, in the common case where it is not the legal entity AID, MUST have a delegate relationship with the legal entity AID, proved through Delegate Evidence {{<DE}}.)
-* `orig` *(required)* MUST conform to SHAKEN requirements ({{ATIS-1000074}}), with the additional constraint that only one phone number is allowed. Although the containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
-* `dest` *(required)* MUST conform to SHAKEN requirements.
+* `orig` *(required)* Although VVP does not depend on SHAKEN, the format of this field MUST conform to SHAKEN requirements ({{ATIS-1000074}}), for interoperability reasons (see {{<interoperability}}). It MUST also satisfy one additional constraint, which is that only one phone number is allowed. Depite the fact that a containing SIP INVITE may allow multiple originating phone numbers, only one can be tied to evidence evaluated by verifiers.
+* `dest` *(required)* For interoperability reasons, MUST conform to SHAKEN requirements.
 * `card` *(optional)* Contains one or more brand attributes. These are analogous to {{RCD-DRAFT}} or {{CTIA-BCID}} data, but differ in that they MUST be justified by evidence in the dossier. Because of this strong foundation that interconnects with formal legal identity, they can be used to derive other brand evidence (e.g., an RCD passport) as needed. Individual attributes MUST conform to the VCard standard {{RFC6350}}.
 * `goal` *(optional)* A machine-readable, localizable goal code, as described informally by {{ARIES-RFC-0519}}. If present, the dossier MUST prove that the OP is authorized by the AP to initiate calls with this particular goal.
-* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is discouraged. However it is not formally deprecated. It is included in VVP to facilitate the construction of derivative RCD passports which have the property.
+* `call-reason` *(optional)* A human-readable, arbitrary phrase that describes the self-asserted intent of the caller. This claim is largely redundant with `goal`; most calls will either omit both, or choose one or the other. Since `call-reason` cannot be analyzed or verified in any way, it is discouraged. However it is not formally deprecated. It is included in VVP to facilitate the construction of derivative RCD passports which have the property (see {{<interoperability}}).
 * `evd` *(required)* MUST be the OOBI of a bespoke ACDC (the dossier, {{<dossier}}) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. This URL can be hosted on any convenient web server, and is somewhat analogous to the `x5u` header in X509 contexts. See below for details.
 * `origId` *(optional)* Follows SHAKEN semantics.
-* `iat` *(required)* Follows standard JWT semantics.
+* `iat` *(required)* Follows standard JWT semantics (see {{RFC7519}}).
 * `exp` *(required)* Follows standard JWT semantics. As this sets a window for potential replay attacks between the same two phone numbers, a recommended expiration should be 30 seconds, with a minimum of 10 seconds and a maximum of 300 seconds.
 * `jti` *(optional)* Follows standard JWT semantics.
 
-For information about the signature over the passport, see {{<pss}}.
+For information about the signature over a passport, see {{<pss}}.
 
 # Verifying
 
@@ -567,7 +568,7 @@ A *justifying link* (*JL*) is a reference, inside of one CVD, to another CVD tha
 ### PSS
 Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP ({{<OP}}). This *passpport-specific signature* (*PSS*) MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
 
-The signature MUST be the result of running the EdDSA algorithm over input data in the manner required by {{RFC7519}}: `signature = sign(base64url(header) + "." + base64url(payload)`. Also per the JWT spec, when the signature is added to the compact form of the JWT, it MUST be base64url-encoded and appended to the other two portions of the JWT, with a `.` delimiter preceding it, and it MUST then be followed by ";ppt=vvp" so tools that scan the `Identity` header of the passport can decide how to process the passport without doing a full parse of the JWT.
+The signature MUST be the result of running the EdDSA algorithm over input data in the manner required by {{RFC7519}}: `signature = sign(base64url(header) + "." + base64url(payload)`. Also per the JWT spec, when the signature is added to the compact form of the JWT, it MUST be appended to the other two portions of the JWT, with a `.` delimiter preceding it. Per STIR conventions, it MUST then be followed by ";ppt=vvp" so tools that scan the `Identity` header of the passport can decide how to process the passport without doing a full parse of the JWT.
 
 The headers MUST include `alg`, `typ`, `ppt`, and `kid`, as described in {{<sample-passport}}. They MAY include other values, notably `x5u` (see {{<interop-certs}}). The claims MUST include `orig`, `dest`, `iat`, `exp`, and `evd`, and MAY include `card`, `goal`, `call_reason`, `jti`, `origId`, and other values (also described in {{<sample-passport}}). The signature MUST use all headers and all claims as input to the data stream that will be signed.
 
@@ -776,9 +777,15 @@ An example delegated signer credential and its schema are shown in {{<dsig-cred-
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
 
 ## Certificates {#interop-certs}
-Verifiers who prefer to operate in certificate ecosystems such as SHAKEN and RCD can be satisfied by having an intermediary verify according to VVP rules (see {{<verifying}}), and then signing a new passport in a certificate-dependent format (e.g., for SHAKEN and/or RCD), where the new passport contains an `x5u` header pointing to the certificate of the new signer. This form of trust handoff is called *cascaded mode*. If the certificate fetched from the `x5u` URL satisfies enough trust requirements of the verifier, the goals of the new context are achieved. If this intermediary is the OSP, the standard assumptions of SHAKEN are fully met, but the OSP's attestation can always be `A`, since VVP conclusively proves the identity of the AP and OP.
+### Cascaded mode
+Verifiers who prefer to operate in certificate ecosystems such as SHAKEN and RCD can be satisfied by having an intermediary verify according to VVP rules (see {{<verifying}}), and then signing a new passport in a certificate-dependent format (e.g., for SHAKEN and/or RCD). In such cases, the new passport contains an `x5u` header pointing to the certificate of the new signer.
 
-In another pattern called *foundation mode*, a VVP passport MAY itself contain an `x5u` header. If it does, the `x5u` header MUST NOT be used to achieve any VVP verification guarantees; the key state of the OP's AID MUST still justify any acceptance of the signature. However, the associated X509 certificate SHOULD be issued to the public key of the party that plays the OP role in VVP. If and only if it does so, the full weight of VVP evidence about the OP's status as a trusted signer for the AP can be transferred to the certificate, even if the certificate is self-issued or otherwise chains back to something other than a known, high-reputation certificate authority. Valid VVP passports that obey this requirement can thus be used to enable VVP-unaware but certificate-based checks without certificate authorities (or without prior knowledge of them). Such certificate-based checks should be done in real-time, since the binding between a key and the owner of a cert cannot be known to be valid except at the current moment. (Note the lack of normative language in several preceding sentences. How foreign ecosystems impute trust is out of scope in this specification; VVP merely describes reasonable choices.)
+This form of trust handoff is called *cascaded mode*. In cascaded mode, if the certificate fetched from the `x5u` URL satisfies enough trust requirements of the verifier, the goals of the new context are achieved. If this intermediary is the OSP, the standard assumptions of SHAKEN are fully met, but the OSP's attestation can always be `A`, since VVP conclusively proves the identity of the AP and OP.
+
+### Foundation mode
+In another pattern called *foundation mode*, a VVP passport MAY itself contain an `x5u` header. If it does, the `x5u` header MUST NOT be used to achieve any VVP verification guarantees; the key state of the OP's AID MUST still justify any acceptance of the signature. However, the associated X509 certificate SHOULD be issued to the public key of the party that plays the OP role in VVP. If and only if it does so, the full weight of VVP evidence about the OP's status as a trusted signer for the AP can be transferred to the certificate, even if the certificate is self-issued or otherwise chains back to something other than a known, high-reputation certificate authority.
+
+Valid VVP passports that obey this requirement can thus be used to enable VVP-unaware but certificate-based checks without certificate authorities (or without prior knowledge of them). Such certificate-based checks should be done in real-time, since the binding between a key and the owner of a cert cannot be known to be valid except at the current moment. (Note the lack of normative language in several preceding sentences. How foreign ecosystems impute trust is out of scope in this specification; VVP merely describes reasonable choices.)
 
 ## Other credential formats {#interop-creds}
 The stable evidence that drives VVP -- vetting credential ({{<vetting-credential}}), TNAlloc credential ({{<tnalloc-credential}}), brand credential ({{<brand-credential}}), brand proxy credential ({{<brand-proxy-credential}}), and delegated signer credential ({{<delegated-signer-credential}}) -- MUST all be ACDCs. This is because only when the data in these credentials is modeled as an ACDC is it associated with permanent identities that possess appropriate security guarantees.
@@ -1020,7 +1027,7 @@ Some structure is common to all ACDCs. For details, consult {{TOIP-ACDC}}. Here,
 All ACDCs are validated against a schema that conforms to {{JSON-SCHEMA}}. Below we show some sample credentials and their corresponding schemas. VVP does not require these specific schemas, but rather is compatible with any that have roughly the same information content.
 
 ## Vetting credential {#vet-cred-sample}
-The schema of a vetting credential {{<vetting-credential}} can be very simple; it needs to identify the issuer and issuee by AID, and it needs to identify the vetted legal entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets these requirements. The issuer's AID appears in the first `i` field, the issuee in the second `i` field, and the connection to a vetted legal entity in the `LEI` field. (The validity of this credential depends on its issuer having a valid, unrevoked QVI credential; the specifc credential it links to is conveyed in `e`. The full text of rules has been elided to keep the example short.)
+The schema of a vetting credential ({{<vetting-credential}}) can be very simple; it needs to identify the issuer and issuee by AID, and it needs to identify the vetted legal entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets these requirements. The issuer's AID appears in the first `i` field, the issuee in the second `i` field, and the connection to a vetted legal entity in the `LEI` field. (The validity of this credential depends on its issuer having a valid, unrevoked QVI credential; the specifc credential it links to is conveyed in `e`. The full text of rules has been elided to keep the example short.)
 
 ~~~json
 {
