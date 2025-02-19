@@ -777,7 +777,7 @@ An example delegated signer credential and its schema are shown in {{<dsig-cred-
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
 
 ## Certificates {#interop-certs}
-Certificates can add value to VVP, and VVP can add value to certificate-based ecosystems or stacks. In the rest of this section, note the difference between normative language (imposing requirements on VVP implementations) and non-normative language (suggesting how other solutions could react). 
+Certificates can add value to VVP, and VVP can add value to certificate-based ecosystems or stacks. In the rest of this section, note the difference between normative language (imposing requirements on VVP implementations) and non-normative language (suggesting how other solutions could react).
 
 ### Cascaded mode
 Verifiers who prefer to operate in certificate ecosystems such as SHAKEN and RCD can be satisfied by having an intermediary verify according to VVP rules (see {{<verifying}}), and then signing a new passport in a certificate-dependent format (e.g., for SHAKEN and/or RCD). In such cases, the new passport contains an `x5u` header pointing to the certificate of the new signer.
@@ -787,7 +787,7 @@ This form of trust handoff is called *cascaded mode*. In cascaded mode, if the c
 ### Foundation mode
 In another pattern called *foundation mode*, a VVP passport MAY itself contain an `x5u` header. If it does, the `x5u` header MUST NOT be used to achieve any VVP verification guarantees; the key state of the OP's AID MUST still justify any acceptance of the signature. However, the associated X509 certificate SHOULD be issued to the public key of the party that plays the OP role in VVP. If and only if it does so, the full weight of VVP evidence about the OP's status as a trusted signer for the AP could be transferred to the certificate, even if the certificate is self-issued or otherwise chains back to something other than a known, high-reputation certificate authority.
 
-Valid VVP passports that obey this requirement can thus be used to enable VVP-unaware but certificate-based checks without certificate authorities (or without prior knowledge of them). Such certificate-based checks should be done in real-time, since the binding between a key and the owner of a cert cannot be known to be valid except at the current moment. 
+Valid VVP passports that obey this requirement can thus be used to enable VVP-unaware but certificate-based checks without certificate authorities (or without prior knowledge of them). Such certificate-based checks should be done in real-time, since the binding between a key and the owner of a cert cannot be known to be valid except at the current moment.
 
 ## Other credential formats {#interop-creds}
 The stable evidence that drives VVP -- vetting credential ({{<vetting-credential}}), TNAlloc credential ({{<tnalloc-credential}}), brand credential ({{<brand-credential}}), brand proxy credential ({{<brand-proxy-credential}}), and delegated signer credential ({{<delegated-signer-credential}}) -- MUST all be ACDCs. This is because only when the data in these credentials is modeled as an ACDC is it associated with permanent identities that possess appropriate security guarantees.
