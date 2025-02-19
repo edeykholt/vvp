@@ -794,21 +794,30 @@ All VVP stakeholders need to understand that accepting foreign evidence does muc
 Verifiers MAY choose to accept such derivative ACDCs, but the indirection SHOULD color their confidence. They MUST NOT assume that identifiers in the foreign evidence and in the ACDC have the same referents or controllers. They MUST NOT hold the bridging party accountable for the claims -- only for the claim that they verified the original issuer's commitment to the claims. They MUST accept that there is no defined relationship between revocation of the foreign evidence and revocation of the ACDC.
 
 # Security Considerations
+Complying with a specification may forestall certain easy-to-anticipate attacks. However, *it does not mean that vulnerabilities don't exist, or that they won't be exploited*. The overall assurance of VVP requires reasonable vigilance. Given that a major objective of VVP is to ensure security, implementers are strongly counseled to understand the underlying principles, the assumptions, and the ways that choices by their own or other implementations could introduce risk.
 
 Like most cryptographic mechanisms, VVP depends on the foundational assumption that people will manage cryptographic keys carefully. VVP enforces this assumption more thoroughly than many existing solutions:
 
 * Parties that issue credentials MUST be identified with AIDs ({{<aid}}) that use witnesses ({{<appendix-b}}). This guarantees a non-repudiable, publicly accessible audit log of how their key state evolves, and it makes key rotation easy. It also offers compromise and duplicity detection. Via prerotation, it enables recovery from key compromise. AIDs can be upgraded to use quantum-proof signing algorithms without changing the identifier.
 * Parties that issue credentials MUST do so using ACDCs ({{<acdcs}}) signed by their AID rather than a raw key. This makes evidence revocable. It also makes it stable across key rotation, and prevents retrograde attacks by allowing verifiers to map an issuance or revocation event to an unambiguous key state in the {{<KEL}}.
 
-However, it is still possible to make choices that weaken the security posture of the ecosystem. Therefore, the following best practices SHOULD be followed:
+Nonetheless, it is still possible to make choices that weaken the security posture of the ecosystem, including at least the following:
 
-1. Passports SHOULD have an aggressive timeout (e.g., 1 minutes). Signatures on passports are not anchored in a KEL, and must therefore be evaluated for age with respect to the time they were received. Overly old passports could be a replay attack (a purported second call with the same orig and dest numbers, using the same backing evidence, soon after the first.)
+* Sharing keys or controlling access to them carelessly
+* Issuing credentials with a flimsy basis for trust
+* Delegating authority to untrustworthy parties
+* Delegating authority without adequate constraints
+* Failing to fully verify evidence
 
-1. Witnesses SHOULD be used in such a way that high availability is guaranteed, and in such a way that duplicity by the controller of an AID is detected. (Verifiers will be able to see the witness policy of each AID controller, and SHOULD decide for themselves whether the party is reliable, depending on what they observe.)
+Generally understood best practices in cybersecurity will avoid many of these problems. In addition, the following policies that are specific to VVP are strongly recommended:
 
-1. Revocations MUST be timely.
+1. Passports SHOULD have an aggressive timeout (e.g., 1 minute). Signatures on passports are not anchored in a KEL, and must therefore be evaluated for age with respect to the time they were received. Overly old passports could be a replay attack (a purported second call with the same orig and dest numbers, using the same backing evidence, soon after the first.)
 
-1. Watchers MUST propagate events to local caches with a low latency, and MUST provide information that allows verifiers to decide whether that latency meets their freshness requirements.
+1. Witnesses (see {{<appendix-b}}) SHOULD be used in such a way that high availability is guaranteed, and in such a way that duplicity by the controller of an AID is detected. (Verifiers will be able to see the witness policy of each AID controller, and SHOULD decide for themselves whether the party is reliable, depending on what they observe.)
+
+1. Revocations SHOULD be timely.
+
+1. Watchers SHOULD propagate events to local caches with a low latency, and MUST provide information that allows verifiers to decide whether that latency meets their freshness requirements.
 
 # Privacy
 
