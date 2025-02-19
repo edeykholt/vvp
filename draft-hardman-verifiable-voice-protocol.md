@@ -104,7 +104,7 @@ informative:
     title: "Aries RFC 0519: Goal Codes"
     author:
       name: Daniel Hardman
-      date: Apr 2021
+    date: Apr 2021
   JSON-SCHEMA:
     target: https://json-schema.org/specification
     title: "JSON Schema Specification 2020-12"
@@ -131,10 +131,10 @@ informative:
     date: 18 Dec 2023
   DOSSIER-SCHEMA:
     target: https://github.com/provenant-dev/public-schema/blob/main/gcd/index.md
-    title: "Generalized Cooperative Delegation (GCD) Credentials"
+    title: "Verifiable Voice Dossier"
     author:
-      org: Daniel Hardman
-    date: 18 Dec 2023
+      name: Arshdeep Singh
+    date: 2 Jan 2025
 
 --- abstract
 
