@@ -4,8 +4,8 @@
 
 Network Working Group                                         D. Hardman
 Internet-Draft                                            Provenant, Inc
-Intended status: Standards Track                        18 February 2025
-Expires: 22 August 2025
+Intended status: Standards Track                        19 February 2025
+Expires: 23 August 2025
 
 
                        Verifiable Voice Protocol
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 August 2025.
+   This Internet-Draft will expire on 23 August 2025.
 
 Copyright Notice
 
@@ -144,6 +144,10 @@ Table of Contents
    12. Appendix C: Sample Credentials
      12.1.  Vetting credential
      12.2.  TNAlloc credential
+     12.3.  Delegated signer credential
+     12.4.  Brand credential
+     12.5.  Brand proxy credential
+     12.6.  Dossier
    13. IANA Considerations
    14. References
      14.1.  Normative References
@@ -521,7 +525,14 @@ Table of Contents
 
    *  iat _(required)_ Follows standard JWT semantics.
 
+   *  exp _(required)_ Follows standard JWT semantics.  As this sets a
+      window for potential replay attacks between the same two phone
+      numbers, a recommended expiration should be 30 seconds, with a
+      minimum of 10 seconds and a maximum of 300 seconds.
+
    *  jti _(optional)_ Follows standard JWT semantics.
+
+   For information about the signature over the passport, see 6.3.1.
 
 5.  Verifying
 
@@ -1069,11 +1080,12 @@ Table of Contents
    The signature MUST be the result of running the EdDSA algorithm over
    input data in the manner required by [RFC7519]: signature =
    sign(base64url(header) + "." + base64url(payload).  Also per the JWT
-   spec, the signature MUST then be base64url-encoded and appended to
-   the other two portions of the JWT, with a . delimiter preceding it,
-   and it MUST then be followed by ";ppt=vvp" so tools that scan the
-   Identity header of the passport can decide how to process the
-   passport without doing a full parse of the JWT.
+   spec, when the signature is added to the compact form of the JWT, it
+   MUST be base64url-encoded and appended to the other two portions of
+   the JWT, with a . delimiter preceding it, and it MUST then be
+   followed by ";ppt=vvp" so tools that scan the Identity header of the
+   passport can decide how to process the passport without doing a full
+   parse of the JWT.
 
    The headers MUST include alg, typ, ppt, and kid, as described in 4.2.
    They MAY include other values, notably x5u (see 7.1).  The claims
@@ -1436,10 +1448,10 @@ Table of Contents
    suppress some of that same information from intermediaries.  Both
    will want control over how this disclosure works.
 
+9.1.  Graduated Disclosure
+
    ACDCs support a technique called _graduated disclosure_ that enables
    this.
-
-9.1.  Graduated Disclosure
 
    The hashing algorithm for ACDCs resembles the hashing algorithm for a
    merkle tree.  An ACDC is a hierarchical data structure that can be
@@ -1447,6 +1459,8 @@ Table of Contents
    consist of a mixture of simple scalar values and child objects.  The
    input to the hashing function for a layer of content equals the
    content of scalar fields and the _hashes_ of child objects.
+
+   TODO: in compact, is it H(c) or c = H(c)?
 
    <![CDATA[
    Expanded ACDC      Compact ACDC
@@ -1489,19 +1503,21 @@ Table of Contents
    see different variations on an ACDC, each of which is guaranteed to
    pass the same verification tests and has the same revocation status.
 
-   For example, suppose that a company in jurisdiction X wants to make a
+   For example, suppose that company C in jurisdiction X wants to make a
    call to an individual in jurisdiction Y, and further suppose that
-   auditor Z requires proof that X is operating lawfully, without
-   knowing the name of X as a legal entity.  X can serve the KEL for its
-   dossier from a web server that knows to return the expanded form of
-   the vetting credential in the dossier to X's TSP or to X, but a
-   compacted form of the vetting credential (revealing just the vetter's
-   identity and their signature, but not the legal identity of the
-   issuee) to auditor Z.  Later, if law enforcement sees the work of the
-   auditor and demands to know the legal identity of X, discovery of the
-   expanded form can be compelled.  When the expanded form is disclosed,
-   it will demonstrably be associated with the compact form that Z
-   recorded, since both forms of the ACDC have the same hash.
+   auditor Z requires proof that C is operating lawfully, without
+   knowing the name of C as a legal entity.  In other words, the auditor
+   needs to _qualify_ C but not necessarily _identify_ C.  C can serve
+   the KEL for its dossier from a web server that knows to return the
+   expanded form of the vetting credential in the dossier to the
+   individual or the individual's TSP in Y, but a compacted form of the
+   vetting credential (revealing just the vetter's identity and their
+   signature, but not the legal identity of the issuee, C) to auditor Z.
+   Later, if law enforcement sees the work of the auditor and demands to
+   know the legal identity of X, discovery of the expanded form can be
+   compelled.  When the expanded form is disclosed, it will demonstrably
+   be associated with the compact form that Z recorded, since the
+   qualifying and identifying forms of the ACDC have the same hash.
 
    X doesn't have to engage in sophisticated sniffing of traffic by
    geography to achieve goals like this.  It can simply say that
@@ -1761,15 +1777,27 @@ Table of Contents
    vetted entity in at least one way that is unambiguous.  Here is a
    sample LE vLEI that meets that requirement:
 
-   (Artwork only available as JSON: see https://www.ietf.org/archive/id/
-   draft-hardman-verifiable-voice-protocol-latest.html)
+   TODO ~~~json ~~~
 
 12.2.  TNAlloc credential
 
-   (Artwork only available as JSON: see https://www.ietf.org/archive/id/
-   draft-hardman-verifiable-voice-protocol-latest.html)
+   TODO ~~~json ~~~
 
-   ##
+12.3.  Delegated signer credential
+
+   TODO ~~~json ~~~
+
+12.4.  Brand credential
+
+   TODO ~~~json ~~~
+
+12.5.  Brand proxy credential
+
+   TODO ~~~json ~~~
+
+12.6.  Dossier
+
+   TODO ~~~json ~~~
 
 13.  IANA Considerations
 
