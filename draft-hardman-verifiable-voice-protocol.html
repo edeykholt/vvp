@@ -1358,22 +1358,25 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-appendix-c-sample-credentia" class="internal xref">Appendix C: Sample Credentials</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-vetting-credential-2" class="internal xref">Vetting credential</a></p>
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-common-fields" class="internal xref">Common fields</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
-                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-tnalloc-credential-2" class="internal xref">TNAlloc credential</a></p>
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-vetting-credential-2" class="internal xref">Vetting credential</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3">
-                <p id="section-toc.1-1.12.2.3.1"><a href="#section-12.3" class="auto internal xref">12.3</a>.  <a href="#name-delegated-signer-credential-2" class="internal xref">Delegated signer credential</a></p>
+                <p id="section-toc.1-1.12.2.3.1"><a href="#section-12.3" class="auto internal xref">12.3</a>.  <a href="#name-tnalloc-credential-2" class="internal xref">TNAlloc credential</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.4">
-                <p id="section-toc.1-1.12.2.4.1"><a href="#section-12.4" class="auto internal xref">12.4</a>.  <a href="#name-brand-credential-2" class="internal xref">Brand credential</a></p>
+                <p id="section-toc.1-1.12.2.4.1"><a href="#section-12.4" class="auto internal xref">12.4</a>.  <a href="#name-delegated-signer-credential-2" class="internal xref">Delegated signer credential</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.5">
-                <p id="section-toc.1-1.12.2.5.1"><a href="#section-12.5" class="auto internal xref">12.5</a>.  <a href="#name-brand-proxy-credential-2" class="internal xref">Brand proxy credential</a></p>
+                <p id="section-toc.1-1.12.2.5.1"><a href="#section-12.5" class="auto internal xref">12.5</a>.  <a href="#name-brand-credential-2" class="internal xref">Brand credential</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.6">
-                <p id="section-toc.1-1.12.2.6.1"><a href="#section-12.6" class="auto internal xref">12.6</a>.  <a href="#name-dossier-2" class="internal xref">Dossier</a></p>
+                <p id="section-toc.1-1.12.2.6.1"><a href="#section-12.6" class="auto internal xref">12.6</a>.  <a href="#name-brand-proxy-credential-2" class="internal xref">Brand proxy credential</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.7">
+                <p id="section-toc.1-1.12.2.7.1"><a href="#section-12.7" class="auto internal xref">12.7</a>.  <a href="#name-dossier-2" class="internal xref">Dossier</a></p>
 </li>
             </ul>
 </li>
@@ -2319,10 +2322,9 @@ Validation also includes comparing data structure and values against the declare
         </h3>
 <p id="section-9.1-1">ACDCs support a technique called <em>graduated disclosure</em> that enables this.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.1-2">The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the <em>hashes</em> of child objects.<a href="#section-9.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.1-3">TODO: in compact, is it H(c) or c = H(c)?<a href="#section-9.1-3" class="pilcrow">¶</a></p>
 <span id="name-acdc-hashes-like-a-merkle-t"></span><figure id="figure-4">
-          <div id="section-9.1-4.1">
-            <div class="alignLeft art-svg artwork" id="section-9.1-4.1.1">
+          <div id="section-9.1-3.1">
+            <div class="alignLeft art-svg artwork" id="section-9.1-3.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="432" width="408" viewBox="0 0 408 432" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,272" fill="none" stroke="black"></path>
                 <path d="M 72,320 L 72,328" fill="none" stroke="black"></path>
@@ -2390,18 +2392,18 @@ Validation also includes comparing data structure and values against the declare
                   <text x="72" y="404">recurse</text>
                   <text x="44" y="420">) = SAID</text>
                 </g>
-              </svg><a href="#section-9.1-4.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-9.1-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-acdc-hashes-like-a-merkle-t" class="selfRef">ACDC hashes like a Merkle tree</a>
           </figcaption></figure>
-<p id="section-9.1-5">This means is that any given child JSON object in an ACDC can be replaced with its hash, <em>without altering the hash of the parent data</em>. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are opaquely represented by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.<a href="#section-9.1-5" class="pilcrow">¶</a></p>
-<p id="section-9.1-6">In combination with the <code>evd</code> claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.<a href="#section-9.1-6" class="pilcrow">¶</a></p>
-<p id="section-9.1-7">For example, suppose that company X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. In other words, the auditor needs to <em>qualify</em> X but not necessarily <em>identify</em> X. Company X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to the individual or the individual's TSP in Y, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee, X) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since the qualifying and identifying forms of the ACDC have the same hash.<a href="#section-9.1-7" class="pilcrow">¶</a></p>
-<p id="section-9.1-8">Company X doesn't have to engage in sophisticated sniffing of traffic by geography to achieve goals like this. It can simply say that anonymous and unsigned HTTP requests for the dossier return the compact form; anyone who wants the expanded form must make an HTTP request that includes in its body a signature over terms and conditions that enforce privacy and make the recipient legally accountable not to reshare.<a href="#section-9.1-8" class="pilcrow">¶</a></p>
-<p id="section-9.1-9">Importantly, transformations from expanded to compact versions of an ACDC can be performed by anyone, not just the issuer or holder. This means that a verifier can achieve trust on the basis of expanded data, and then cache or share a compacted version of the data, meaning that any subsequent or downstream verifications can have equal assurance but higher privacy. The same policy can be applied to data any time it crosses a regulatory, jurisdictional boundary where terms and conditions for disclosure have weaker enforcement. It can also be used when business relationships should be redacted outside of a privileged context.<a href="#section-9.1-9" class="pilcrow">¶</a></p>
-<p id="section-9.1-10">Schemas for credentials should be designed to allow graduated disclosure in increments that match likely privacy goals of stakeholders. ACDC schema design typically includes a salty nonce in each increment, avoiding rainbow attacks on the hashed data. VVP encourages but does not require this.<a href="#section-9.1-10" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">This means is that any given child JSON object in an ACDC can be replaced with its hash, <em>without altering the hash of the parent data</em>. Thus, there can be expanded ACDCs (where all data inside child objects is visible) or compacted ACDCs (where some or all of the child objects are opaquely represented by their equivalent hashes). A signature over an expanded ACDC is also a signature over any of the compacted versions of the same ACDC, and a revocation event over any of the versions is guaranteed to mean the same thing.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.1-5">In combination with the <code>evd</code> claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.<a href="#section-9.1-5" class="pilcrow">¶</a></p>
+<p id="section-9.1-6">For example, suppose that company X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. In other words, the auditor needs to <em>qualify</em> X but not necessarily <em>identify</em> X. Company X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to the individual or the individual's TSP in Y, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee, X) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since the qualifying and identifying forms of the ACDC have the same hash.<a href="#section-9.1-6" class="pilcrow">¶</a></p>
+<p id="section-9.1-7">Company X doesn't have to engage in sophisticated sniffing of traffic by geography to achieve goals like this. It can simply say that anonymous and unsigned HTTP requests for the dossier return the compact form; anyone who wants the expanded form must make an HTTP request that includes in its body a signature over terms and conditions that enforce privacy and make the recipient legally accountable not to reshare.<a href="#section-9.1-7" class="pilcrow">¶</a></p>
+<p id="section-9.1-8">Importantly, transformations from expanded to compact versions of an ACDC can be performed by anyone, not just the issuer or holder. This means that a verifier can achieve trust on the basis of expanded data, and then cache or share a compacted version of the data, meaning that any subsequent or downstream verifications can have equal assurance but higher privacy. The same policy can be applied to data any time it crosses a regulatory, jurisdictional boundary where terms and conditions for disclosure have weaker enforcement. It can also be used when business relationships should be redacted outside of a privileged context.<a href="#section-9.1-8" class="pilcrow">¶</a></p>
+<p id="section-9.1-9">Schemas for credentials should be designed to allow graduated disclosure in increments that match likely privacy goals of stakeholders. ACDC schema design typically includes a salty nonce in each increment, avoiding rainbow attacks on the hashed data. VVP encourages but does not require this.<a href="#section-9.1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="correlation">
@@ -2479,65 +2481,132 @@ Validation also includes comparing data structure and values against the declare
       <h2 id="name-appendix-c-sample-credentia">
 <a href="#section-12" class="section-number selfRef">12. </a><a href="#name-appendix-c-sample-credentia" class="section-name selfRef">Appendix C: Sample Credentials</a>
       </h2>
-<div id="vetting-credential-1">
+<div id="common-fields">
 <section id="section-12.1">
-        <h3 id="name-vetting-credential-2">
-<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-vetting-credential-2" class="section-name selfRef">Vetting credential</a>
+        <h3 id="name-common-fields">
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-common-fields" class="section-name selfRef">Common fields</a>
         </h3>
-<p id="section-12.1-1">The schema of a vetting credential can be very simple; it <span class="bcp14">MUST</span> identify the issuer and issuee by AID, and it <span class="bcp14">MUST</span> identify the vetted entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets that requirement:<a href="#section-12.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.1-2">TODO
-~~~json
-~~~<a href="#section-12.1-2" class="pilcrow">¶</a></p>
+<p id="section-12.1-1">Some structure is common to all ACDCs. For details, consult <span>[<a href="#TOIP-ACDC" class="cite xref">TOIP-ACDC</a>]</span>. Here, we provide a short summary.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-12.1-2.1">
+            <p id="section-12.1-2.1.1"><code>v</code> <em>(required)</em> Contains a version statement.<a href="#section-12.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.2">
+            <p id="section-12.1-2.2.1"><code>d</code> <em>(required)</em> Contains the SAID (<a href="#said" class="auto internal xref">6.2.1</a>) of the ACDC. (Nested <code>d</code> fields contain SAIDs of nested JSON objects, as discussed in <a href="#graduated-disclosure" class="auto internal xref">9.1</a>.<a href="#section-12.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.3">
+            <p id="section-12.1-2.3.1"><code>i</code> <em>(required)</em> In the outermost structure, contains the AID (<a href="#aid" class="auto internal xref">6.2.3</a>) of an issuer. Inside <code>a</code>, contains the AID of the issuee.<a href="#section-12.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.4">
+            <p id="section-12.1-2.4.1"><code>ri</code> <em>(optional)</em> Identifies a registry that tracks revocations that might include one for this credential.<a href="#section-12.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.5">
+            <p id="section-12.1-2.5.1"><code>s</code> <em>(required)</em> Contains the SAID of a schema to which the associated ACDC conforms.<a href="#section-12.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.6">
+            <p id="section-12.1-2.6.1"><code>a</code> <em>(required)</em> Contains additional attributes for this specific schema.<a href="#section-12.1-2.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.7">
+            <p id="section-12.1-2.7.1"><code>e</code> <em>(optional)</em> Contains edges that connect this ACDC to other data upon which it depends.<a href="#section-12.1-2.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-12.1-2.8">
+            <p id="section-12.1-2.8.1"><code>r</code> <em>(optional)</em> Contains one or more rules that govern the use of the ACDC. Holding the credential requires a cryptographically nonrepudiable <code>admit</code> action with a wallet, and therefore proves that the holder agreed to these terms and conditions.<a href="#section-12.1-2.8.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-12.1-3">All ACDCs are validated against a schema that conforms to <span>[<a href="#JSON-SCHEMA" class="cite xref">JSON-SCHEMA</a>]</span>. Below we show some sample credentials and their corresponding schemas. VVP does not require these specific schemas, but rather is compatible with any that have roughly the same information content.<a href="#section-12.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="vetting-credential-1">
+<section id="section-12.2">
+        <h3 id="name-vetting-credential-2">
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-vetting-credential-2" class="section-name selfRef">Vetting credential</a>
+        </h3>
+<p id="section-12.2-1">The schema of a vetting credential can be very simple; it <span class="bcp14">MUST</span> identify the issuer and issuee by AID, and it <span class="bcp14">MUST</span> identify the vetted legal entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets these requirements. The issuer's AID appears in the first <code>i</code> field, the issuee in the second <code>i</code> field, and the connection to a vetted legal entity in the <code>LEI</code> field. (The validity of this credential depends on its issuer having a valid, unrevoked QVI credential; the specifc credential it links to is conveyed in <code>e</code>. The full text of rules has been elided to keep the example short.)<a href="#section-12.2-1" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-12.2-2">
+<pre>
+{
+  "v":"ACDC10JSON0005c8_",
+  "d":"Ebyg1epjv7D4-6mvl44Nlde1hTyL8413LZbY-mz60yI9",
+  "i":"Ed88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm",
+  "ri":"Ekfi58Jiv-NVqr6GOrxgxzhrE5RsDaH4QNwv9rCyZCwZ",
+  "s":"ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
+  "a":{
+    "d":"EdjPlxlRyujxarfXHCwFAqSV-yr0XrTE3m3XdFaS6U3K",
+    "i":"Eeu5zT9ChsawBt2UXdU3kPIf9_lFqT5S9Q3yLZvKVfN6",
+    "dt":"2024-09-19T13:48:21.779000+00:00",
+    "LEI":"9845006A4378DFB4ED29"
+  },
+  "e":{
+    "d":"EeyVJC9yZKpbIC-LcDhmlS8YhrjD4VIUBZUOibohGXit",
+    "qvi":{
+      "n":"EmatUqz_u9BizxwOc3JishC4MyXfiWzQadDpgCBA6X9n",
+      "s":"EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao"
+    }
+  },
+  "r":{
+    "d":"EgZ97EjPSINR-O-KHDN_uw4fdrTxeuRXrqT5ZHHQJujQ",
+    "usageDisclaimer":{
+      "l":"Usage of a valid...fulfilled."
+    },
+    "issuanceDisclaimer":{
+      "l":"All information...Governance Framework."
+    }
+  }
+}
+</pre><a href="#section-12.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-12.2-3">The schema that governs this credential, <code>ENPX...DZWY</code>, is shown in the <code>s</code> field. LE vLEI credential schemas are managed by GLEIF and published at <span>[<a href="#LE-VLEI-SCHEMA" class="cite xref">LE-VLEI-SCHEMA</a>]</span>.<a href="#section-12.2-3" class="pilcrow">¶</a></p>
+<p id="section-12.2-4">As fundamentally public artifacts that are issued only to organizations, not individuals, vLEIs are not designed for graduated disclosure <a href="#graduated-disclosure" class="auto internal xref">9.1</a>. Vetting credentials for individuals would require a different schema -- perhaps one that documents their full legal name but allows disclosure strategies such as first name + last initial, or first initial plus last name.<a href="#section-12.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="tnalloc-credential-1">
-<section id="section-12.2">
-        <h3 id="name-tnalloc-credential-2">
-<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-tnalloc-credential-2" class="section-name selfRef">TNAlloc credential</a>
-        </h3>
-<p id="section-12.2-1">TODO
-~~~json
-~~~<a href="#section-12.2-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="delegated-signer-credential-1">
 <section id="section-12.3">
-        <h3 id="name-delegated-signer-credential-2">
-<a href="#section-12.3" class="section-number selfRef">12.3. </a><a href="#name-delegated-signer-credential-2" class="section-name selfRef">Delegated signer credential</a>
+        <h3 id="name-tnalloc-credential-2">
+<a href="#section-12.3" class="section-number selfRef">12.3. </a><a href="#name-tnalloc-credential-2" class="section-name selfRef">TNAlloc credential</a>
         </h3>
 <p id="section-12.3-1">TODO
 ~~~json
 ~~~<a href="#section-12.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="brand-credential-1">
+<div id="delegated-signer-credential-1">
 <section id="section-12.4">
-        <h3 id="name-brand-credential-2">
-<a href="#section-12.4" class="section-number selfRef">12.4. </a><a href="#name-brand-credential-2" class="section-name selfRef">Brand credential</a>
+        <h3 id="name-delegated-signer-credential-2">
+<a href="#section-12.4" class="section-number selfRef">12.4. </a><a href="#name-delegated-signer-credential-2" class="section-name selfRef">Delegated signer credential</a>
         </h3>
 <p id="section-12.4-1">TODO
 ~~~json
 ~~~<a href="#section-12.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="brand-proxy-credential-1">
+<div id="brand-credential-1">
 <section id="section-12.5">
-        <h3 id="name-brand-proxy-credential-2">
-<a href="#section-12.5" class="section-number selfRef">12.5. </a><a href="#name-brand-proxy-credential-2" class="section-name selfRef">Brand proxy credential</a>
+        <h3 id="name-brand-credential-2">
+<a href="#section-12.5" class="section-number selfRef">12.5. </a><a href="#name-brand-credential-2" class="section-name selfRef">Brand credential</a>
         </h3>
 <p id="section-12.5-1">TODO
 ~~~json
 ~~~<a href="#section-12.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="dossier-1">
+<div id="brand-proxy-credential-1">
 <section id="section-12.6">
-        <h3 id="name-dossier-2">
-<a href="#section-12.6" class="section-number selfRef">12.6. </a><a href="#name-dossier-2" class="section-name selfRef">Dossier</a>
+        <h3 id="name-brand-proxy-credential-2">
+<a href="#section-12.6" class="section-number selfRef">12.6. </a><a href="#name-brand-proxy-credential-2" class="section-name selfRef">Brand proxy credential</a>
         </h3>
 <p id="section-12.6-1">TODO
 ~~~json
 ~~~<a href="#section-12.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="dossier-1">
+<section id="section-12.7">
+        <h3 id="name-dossier-2">
+<a href="#section-12.7" class="section-number selfRef">12.7. </a><a href="#name-dossier-2" class="section-name selfRef">Dossier</a>
+        </h3>
+<p id="section-12.7-1">TODO
+~~~json
+~~~<a href="#section-12.7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2637,6 +2706,14 @@ Validation also includes comparing data structure and values against the declare
 <dt id="CTIA-BCID">[CTIA-BCID]</dt>
         <dd>
 <span class="refAuthor">CTIA</span>, <span class="refTitle">"Branded Calling ID Best Practices"</span>, <time datetime="2022-11" class="refDate">November 2022</time>, <span>&lt;<a href="https://api.ctia.org/wp-content/uploads/2022/11/Branded-Calling-Best-Practices.pdf">https://api.ctia.org/wp-content/uploads/2022/11/Branded-Calling-Best-Practices.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="JSON-SCHEMA">[JSON-SCHEMA]</dt>
+        <dd>
+<span class="refAuthor">JSON Schema Community</span>, <span class="refTitle">"JSON Schema Specification 2020-12"</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://json-schema.org/specification">https://json-schema.org/specification</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="LE-VLEI-SCHEMA">[LE-VLEI-SCHEMA]</dt>
+        <dd>
+<span class="refAuthor">GLEIF</span>, <span class="refTitle">"Legal Entity vLEI Credential"</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://github.com/GLEIF-IT/vLEI-schema/blob/main/legal-entity-vLEI-credential.json">https://github.com/GLEIF-IT/vLEI-schema/blob/main/legal-entity-vLEI-credential.json</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RCD-DRAFT">[RCD-DRAFT]</dt>
         <dd>
