@@ -1503,23 +1503,23 @@ Table of Contents
    see different variations on an ACDC, each of which is guaranteed to
    pass the same verification tests and has the same revocation status.
 
-   For example, suppose that company C in jurisdiction X wants to make a
-   call to an individual in jurisdiction Y, and further suppose that
-   auditor Z requires proof that C is operating lawfully, without
-   knowing the name of C as a legal entity.  In other words, the auditor
-   needs to _qualify_ C but not necessarily _identify_ C.  C can serve
+   For example, suppose that company X wants to make a call to an
+   individual in jurisdiction Y, and further suppose that auditor Z
+   requires proof that X is operating lawfully, without knowing the name
+   of X as a legal entity.  In other words, the auditor needs to
+   _qualify_ X but not necessarily _identify_ X.  Company X can serve
    the KEL for its dossier from a web server that knows to return the
    expanded form of the vetting credential in the dossier to the
    individual or the individual's TSP in Y, but a compacted form of the
    vetting credential (revealing just the vetter's identity and their
-   signature, but not the legal identity of the issuee, C) to auditor Z.
+   signature, but not the legal identity of the issuee, X) to auditor Z.
    Later, if law enforcement sees the work of the auditor and demands to
    know the legal identity of X, discovery of the expanded form can be
    compelled.  When the expanded form is disclosed, it will demonstrably
    be associated with the compact form that Z recorded, since the
    qualifying and identifying forms of the ACDC have the same hash.
 
-   Company C doesn't have to engage in sophisticated sniffing of traffic
+   Company X doesn't have to engage in sophisticated sniffing of traffic
    by geography to achieve goals like this.  It can simply say that
    anonymous and unsigned HTTP requests for the dossier return the
    compact form; anyone who wants the expanded form must make an HTTP
