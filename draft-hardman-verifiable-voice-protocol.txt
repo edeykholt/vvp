@@ -1519,8 +1519,8 @@ Table of Contents
    be associated with the compact form that Z recorded, since the
    qualifying and identifying forms of the ACDC have the same hash.
 
-   X doesn't have to engage in sophisticated sniffing of traffic by
-   geography to achieve goals like this.  It can simply say that
+   Company C doesn't have to engage in sophisticated sniffing of traffic
+   by geography to achieve goals like this.  It can simply say that
    anonymous and unsigned HTTP requests for the dossier return the
    compact form; anyone who wants the expanded form must make an HTTP
    request that includes in its body a signature over terms and
