@@ -2283,28 +2283,47 @@ Validation also includes comparing data structure and values against the declare
       <h2 id="name-security-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">Like most cryptographic mechanisms, VVP depends on the foundational assumption that people will manage cryptographic keys carefully. VVP enforces this assumption more thoroughly than many existing solutions:<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">Complying with a specification may forestall certain easy-to-anticipate attacks. However, <em>it does not mean that vulnerabilities don't exist, or that they won't be exploited</em>. The overall assurance of VVP requires reasonable vigilance. Given that a major objective of VVP is to ensure security, implementers are strongly counseled to understand the underlying principles, the assumptions, and the ways that choices by their own or other implementations could introduce risk.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Like most cryptographic mechanisms, VVP depends on the foundational assumption that people will manage cryptographic keys carefully. VVP enforces this assumption more thoroughly than many existing solutions:<a href="#section-8-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8-2.1">
-          <p id="section-8-2.1.1">Parties that issue credentials <span class="bcp14">MUST</span> be identified with AIDs (<a href="#aid" class="auto internal xref">6.2.3</a>) that use witnesses (<a href="#appendix-b" class="auto internal xref">11</a>). This guarantees a non-repudiable, publicly accessible audit log of how their key state evolves, and it makes key rotation easy. It also offers compromise and duplicity detection. Via prerotation, it enables recovery from key compromise. AIDs can be upgraded to use quantum-proof signing algorithms without changing the identifier.<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8-3.1">
+          <p id="section-8-3.1.1">Parties that issue credentials <span class="bcp14">MUST</span> be identified with AIDs (<a href="#aid" class="auto internal xref">6.2.3</a>) that use witnesses (<a href="#appendix-b" class="auto internal xref">11</a>). This guarantees a non-repudiable, publicly accessible audit log of how their key state evolves, and it makes key rotation easy. It also offers compromise and duplicity detection. Via prerotation, it enables recovery from key compromise. AIDs can be upgraded to use quantum-proof signing algorithms without changing the identifier.<a href="#section-8-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-8-2.2">
-          <p id="section-8-2.2.1">Parties that issue credentials <span class="bcp14">MUST</span> do so using ACDCs (<a href="#acdcs" class="auto internal xref">6.2.7</a>) signed by their AID rather than a raw key. This makes evidence revocable. It also makes it stable across key rotation, and prevents retrograde attacks by allowing verifiers to map an issuance or revocation event to an unambiguous key state in the <a href="#KEL" class="auto internal xref">6.2.8</a>.<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-3.2">
+          <p id="section-8-3.2.1">Parties that issue credentials <span class="bcp14">MUST</span> do so using ACDCs (<a href="#acdcs" class="auto internal xref">6.2.7</a>) signed by their AID rather than a raw key. This makes evidence revocable. It also makes it stable across key rotation, and prevents retrograde attacks by allowing verifiers to map an issuance or revocation event to an unambiguous key state in the <a href="#KEL" class="auto internal xref">6.2.8</a>.<a href="#section-8-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-8-3">However, it is still possible to make choices that weaken the security posture of the ecosystem. Therefore, the following best practices <span class="bcp14">SHOULD</span> be followed:<a href="#section-8-3" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-8-4">
-<li id="section-8-4.1">
-          <p id="section-8-4.1.1">Passports <span class="bcp14">SHOULD</span> have an aggressive timeout (e.g., 1 minutes). Signatures on passports are not anchored in a KEL, and must therefore be evaluated for age with respect to the time they were received. Overly old passports could be a replay attack (a purported second call with the same orig and dest numbers, using the same backing evidence, soon after the first.)<a href="#section-8-4.1.1" class="pilcrow">¶</a></p>
+<p id="section-8-4">Nonetheless, it is still possible to make choices that weaken the security posture of the ecosystem, including at least the following:<a href="#section-8-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8-5.1">
+          <p id="section-8-5.1.1">Sharing keys or controlling access to them carelessly<a href="#section-8-5.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-8-4.2">
-          <p id="section-8-4.2.1">Witnesses <span class="bcp14">SHOULD</span> be used in such a way that high availability is guaranteed, and in such a way that duplicity by the controller of an AID is detected. (Verifiers will be able to see the witness policy of each AID controller, and <span class="bcp14">SHOULD</span> decide for themselves whether the party is reliable, depending on what they observe.)<a href="#section-8-4.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-5.2">
+          <p id="section-8-5.2.1">Issuing credentials with a flimsy basis for trust<a href="#section-8-5.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-8-4.3">
-          <p id="section-8-4.3.1">Revocations <span class="bcp14">MUST</span> be timely.<a href="#section-8-4.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-5.3">
+          <p id="section-8-5.3.1">Delegating authority to untrustworthy parties<a href="#section-8-5.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-8-4.4">
-          <p id="section-8-4.4.1">Watchers <span class="bcp14">MUST</span> propagate events to local caches with a low latency, and <span class="bcp14">MUST</span> provide information that allows verifiers to decide whether that latency meets their freshness requirements.<a href="#section-8-4.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-5.4">
+          <p id="section-8-5.4.1">Delegating authority without adequate constraints<a href="#section-8-5.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-8-5.5">
+          <p id="section-8-5.5.1">Failing to fully verify evidence<a href="#section-8-5.5.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-8-6">Generally understood best practices in cybersecurity will avoid many of these problems. In addition, the following policies that are specific to VVP are strongly recommended:<a href="#section-8-6" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-8-7">
+<li id="section-8-7.1">
+          <p id="section-8-7.1.1">Passports <span class="bcp14">SHOULD</span> have an aggressive timeout (e.g., 1 minute). Signatures on passports are not anchored in a KEL, and must therefore be evaluated for age with respect to the time they were received. Overly old passports could be a replay attack (a purported second call with the same orig and dest numbers, using the same backing evidence, soon after the first.)<a href="#section-8-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-8-7.2">
+          <p id="section-8-7.2.1">Witnesses (see <a href="#appendix-b" class="auto internal xref">11</a>) <span class="bcp14">SHOULD</span> be used in such a way that high availability is guaranteed, and in such a way that duplicity by the controller of an AID is detected. (Verifiers will be able to see the witness policy of each AID controller, and <span class="bcp14">SHOULD</span> decide for themselves whether the party is reliable, depending on what they observe.)<a href="#section-8-7.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-8-7.3">
+          <p id="section-8-7.3.1">Revocations <span class="bcp14">SHOULD</span> be timely.<a href="#section-8-7.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-8-7.4">
+          <p id="section-8-7.4.1">Watchers <span class="bcp14">SHOULD</span> propagate events to local caches with a low latency, and <span class="bcp14">MUST</span> provide information that allows verifiers to decide whether that latency meets their freshness requirements.<a href="#section-8-7.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 </section>

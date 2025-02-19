@@ -1398,6 +1398,15 @@ Table of Contents
 
 8.  Security Considerations
 
+   Complying with a specification may forestall certain easy-to-
+   anticipate attacks.  However, _it does not mean that vulnerabilities
+   don't exist, or that they won't be exploited_. The overall assurance
+   of VVP requires reasonable vigilance.  Given that a major objective
+   of VVP is to ensure security, implementers are strongly counseled to
+   understand the underlying principles, the assumptions, and the ways
+   that choices by their own or other implementations could introduce
+   risk.
+
    Like most cryptographic mechanisms, VVP depends on the foundational
    assumption that people will manage cryptographic keys carefully.  VVP
    enforces this assumption more thoroughly than many existing
@@ -1418,26 +1427,40 @@ Table of Contents
       issuance or revocation event to an unambiguous key state in the
       6.2.8.
 
-   However, it is still possible to make choices that weaken the
-   security posture of the ecosystem.  Therefore, the following best
-   practices SHOULD be followed:
+   Nonetheless, it is still possible to make choices that weaken the
+   security posture of the ecosystem, including at least the following:
 
-   1.  Passports SHOULD have an aggressive timeout (e.g., 1 minutes).
+   *  Sharing keys or controlling access to them carelessly
+
+   *  Issuing credentials with a flimsy basis for trust
+
+   *  Delegating authority to untrustworthy parties
+
+   *  Delegating authority without adequate constraints
+
+   *  Failing to fully verify evidence
+
+   Generally understood best practices in cybersecurity will avoid many
+   of these problems.  In addition, the following policies that are
+   specific to VVP are strongly recommended:
+
+   1.  Passports SHOULD have an aggressive timeout (e.g., 1 minute).
        Signatures on passports are not anchored in a KEL, and must
        therefore be evaluated for age with respect to the time they were
        received.  Overly old passports could be a replay attack (a
        purported second call with the same orig and dest numbers, using
        the same backing evidence, soon after the first.)
 
-   2.  Witnesses SHOULD be used in such a way that high availability is
-       guaranteed, and in such a way that duplicity by the controller of
-       an AID is detected.  (Verifiers will be able to see the witness
-       policy of each AID controller, and SHOULD decide for themselves
-       whether the party is reliable, depending on what they observe.)
+   2.  Witnesses (see 11) SHOULD be used in such a way that high
+       availability is guaranteed, and in such a way that duplicity by
+       the controller of an AID is detected.  (Verifiers will be able to
+       see the witness policy of each AID controller, and SHOULD decide
+       for themselves whether the party is reliable, depending on what
+       they observe.)
 
-   3.  Revocations MUST be timely.
+   3.  Revocations SHOULD be timely.
 
-   4.  Watchers MUST propagate events to local caches with a low
+   4.  Watchers SHOULD propagate events to local caches with a low
        latency, and MUST provide information that allows verifiers to
        decide whether that latency meets their freshness requirements.
 
