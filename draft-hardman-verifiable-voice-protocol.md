@@ -105,6 +105,18 @@ informative:
     author:
       name: Daniel Hardman
       date: Apr 2021
+  JSON-SCHEMA:
+    target: https://json-schema.org/specification
+    title: "JSON Schema Specification 2020-12"
+    author:
+      org: JSON Schema Community
+    date: 16 June 2022
+  LE-VLEI-SCHEMA:
+    target: https://github.com/GLEIF-IT/vLEI-schema/blob/main/legal-entity-vLEI-credential.json
+    title: "Legal Entity vLEI Credential"
+    author:
+      org: GLEIF
+    date: 20 Nov 2023
 
 --- abstract
 
@@ -789,8 +801,6 @@ ACDCs support a technique called *graduated disclosure* that enables this.
 
 The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the *hashes* of child objects.
 
-TODO: in compact, is it H(c) or c = H(c)?
-
 <figure>
 <name>ACDC hashes like a Merkle tree</name>
 <artset>
@@ -967,12 +977,58 @@ Witnesses are chosen according to the preference of each party that controls an 
 # Appendix C: Sample Credentials
 {:appendix #appendix-c}
 
-## Vetting credential
-The schema of a vetting credential can be very simple; it MUST identify the issuer and issuee by AID, and it MUST identify the vetted entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets that requirement:
+## Common fields
+Some structure is common to all ACDCs. For details, consult {{TOIP-ACDC}}. Here, we provide a short summary.
 
-TODO
+* `v` *(required)* Contains a version statement.
+* `d` *(required)* Contains the SAID ({{<said}}) of the ACDC. (Nested `d` fields contain SAIDs of nested JSON objects, as discussed in {{<graduated-disclosure}}.
+* `i` *(required)* In the outermost structure, contains the AID ({{<aid}}) of an issuer. Inside `a`, contains the AID of the issuee.
+* `ri` *(optional)* Identifies a registry that tracks revocations that might include one for this credential.
+* `s` *(required)* Contains the SAID of a schema to which the associated ACDC conforms.
+* `a` *(required)* Contains additional attributes for this specific schema.
+* `e` *(optional)* Contains edges that connect this ACDC to other data upon which it depends.
+* `r` *(optional)* Contains one or more rules that govern the use of the ACDC. Holding the credential requires a cryptographically nonrepudiable `admit` action with a wallet, and therefore proves that the holder agreed to these terms and conditions.
+
+All ACDCs are validated against a schema that conforms to {{JSON-SCHEMA}}. Below we show some sample credentials and their corresponding schemas. VVP does not require these specific schemas, but rather is compatible with any that have roughly the same information content.
+
+## Vetting credential
+The schema of a vetting credential can be very simple; it MUST identify the issuer and issuee by AID, and it MUST identify the vetted legal entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets these requirements. The issuer's AID appears in the first `i` field, the issuee in the second `i` field, and the connection to a vetted legal entity in the `LEI` field. (The validity of this credential depends on its issuer having a valid, unrevoked QVI credential; the specifc credential it links to is conveyed in `e`. The full text of rules has been elided to keep the example short.)
+
 ~~~json
+{
+  "v":"ACDC10JSON0005c8_",
+  "d":"Ebyg1epjv7D4-6mvl44Nlde1hTyL8413LZbY-mz60yI9",
+  "i":"Ed88Jn6CnWpNbSYz6vp9DOSpJH2_Di5MSwWTf1l34JJm",
+  "ri":"Ekfi58Jiv-NVqr6GOrxgxzhrE5RsDaH4QNwv9rCyZCwZ",
+  "s":"ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
+  "a":{
+    "d":"EdjPlxlRyujxarfXHCwFAqSV-yr0XrTE3m3XdFaS6U3K",
+    "i":"Eeu5zT9ChsawBt2UXdU3kPIf9_lFqT5S9Q3yLZvKVfN6",
+    "dt":"2024-09-19T13:48:21.779000+00:00",
+    "LEI":"9845006A4378DFB4ED29"
+  },
+  "e":{
+    "d":"EeyVJC9yZKpbIC-LcDhmlS8YhrjD4VIUBZUOibohGXit",
+    "qvi":{
+      "n":"EmatUqz_u9BizxwOc3JishC4MyXfiWzQadDpgCBA6X9n",
+      "s":"EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao"
+    }
+  },
+  "r":{
+    "d":"EgZ97EjPSINR-O-KHDN_uw4fdrTxeuRXrqT5ZHHQJujQ",
+    "usageDisclaimer":{
+      "l":"Usage of a valid...fulfilled."
+    },
+    "issuanceDisclaimer":{
+      "l":"All information...Governance Framework."
+    }
+  }
+}
 ~~~
+
+The schema that governs this credential, `ENPX...DZWY`, is shown in the `s` field. LE vLEI credential schemas are managed by GLEIF and published at {{LE-VLEI-SCHEMA}}.
+
+As fundamentally public artifacts that are issued only to organizations, not individuals, vLEIs are not designed for graduated disclosure {{<graduated-disclosure}}. Vetting credentials for individuals would require a different schema -- perhaps one that documents their full legal name but allows disclosure strategies such as first name + last initial, or first initial plus last name.
 
 ## TNAlloc credential
 TODO
