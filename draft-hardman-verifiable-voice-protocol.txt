@@ -145,9 +145,9 @@ Table of Contents
      12.1.  Common fields
      12.2.  Vetting credential
      12.3.  TNAlloc credential
-     12.4.  Delegated signer credential
-     12.5.  Brand credential
-     12.6.  Brand proxy credential
+     12.4.  Brand credential
+     12.5.  Brand proxy credential
+     12.6.  Delegated signer credential
      12.7.  Dossier
    13. IANA Considerations
    14. References
@@ -1230,7 +1230,7 @@ Table of Contents
    another format (e.g., W3C VC, SD-JWT, X509 certificate).  See 7.
 
    One example of a possible vetting credential is an LE vLEI; see
-   [ISO-17442-3] and 12.
+   [ISO-17442-3] and 12.2.
 
 6.3.6.  TNAlloc credential
 
@@ -1250,9 +1250,9 @@ Table of Contents
 
    To achieve various design goals, a TNAlloc credential MUST be an
    ACDC, but this ACDC MAY be a transformation of a credential in
-   another format (e.g., a TNAuthList from [RFC8226]).  See 7.
+   another format (e.g., a TNAuthList from [RFC8226]).  See 7.2.
 
-   An example TNAlloc credential and its schema are shown in 12.
+   An example TNAlloc credential and its schema are described in 12.3.
 
 6.3.7.  Brand credential
 
@@ -1278,7 +1278,7 @@ Table of Contents
    shows that the right to use the brand was evaluated only after using
    a vetting credential to prove the identity of the issuee.
 
-   An example brand credential and its schema are shown in 12.
+   An example brand credential and its schema are described in 12.4.
 
 6.3.8.  Brand proxy credential
 
@@ -1293,7 +1293,7 @@ Table of Contents
    and wants the proxy to project the AP's brand, the AP MUST issue this
    credential.
 
-   An example brand credential and its schema are shown in 12.
+   An example brand proxy credential and its schema are shown in 12.5.
 
 6.3.9.  Delegated signer credential
 
@@ -1302,7 +1302,7 @@ Table of Contents
    traffic (and thus, sign VVP passports) on its behalf.
 
    An example delegated signer credential and its schema are shown in
-   12.
+   12.6.
 
 7.  Interoperability
 
@@ -1793,7 +1793,15 @@ Table of Contents
       associated ACDC conforms.
 
    *  a _(required)_ Contains additional attributes for this specific
-      schema.
+      ACDC, as allowed by its schema.
+
+   *  dt _(optional)_ Contains the date when the issuer claims to have
+      issued the ACDC.  This data will correspond closely with a
+      timestamp saved in the issuer's KEL, at the point where the
+      signature on the ACDC was signed and anchored there.  The ordering
+      of the signature in the KEL, relative to other key state events,
+      is what is definitive here; the timestamp itself should be viewed
+      more as a hint.
 
    *  e _(optional)_ Contains edges that connect this ACDC to other data
       upon which it depends.
@@ -1811,12 +1819,12 @@ Table of Contents
 
 12.2.  Vetting credential
 
-   The schema of a vetting credential can be very simple; it MUST
-   identify the issuer and issuee by AID, and it MUST identify the
-   vetted legal entity in at least one way that is unambiguous.  Here is
-   a sample LE vLEI that meets these requirements.  The issuer's AID
-   appears in the first i field, the issuee in the second i field, and
-   the connection to a vetted legal entity in the LEI field.  (The
+   The schema of a vetting credential 6.3.5 can be very simple; it needs
+   to identify the issuer and issuee by AID, and it needs to identify
+   the vetted legal entity in at least one way that is unambiguous.
+   Here is a sample LE vLEI that meets these requirements.  The issuer's
+   AID appears in the first i field, the issuee in the second i field,
+   and the connection to a vetted legal entity in the LEI field.  (The
    validity of this credential depends on its issuer having a valid,
    unrevoked QVI credential; the specifc credential it links to is
    conveyed in e.  The full text of rules has been elided to keep the
@@ -1858,34 +1866,216 @@ Table of Contents
 
    As fundamentally public artifacts that are issued only to
    organizations, not individuals, vLEIs are not designed for graduated
-   disclosure 9.1.  Vetting credentials for individuals would require a
-   different schema -- perhaps one that documents their full legal name
-   but allows disclosure strategies such as first name + last initial,
-   or first initial plus last name.
+   disclosure (9.1).  Vetting credentials for individuals would require
+   a different schema -- perhaps one that documents their full legal
+   name but allows disclosure strategies such as first name + last
+   initial, or first initial plus last name.
 
 12.3.  TNAlloc credential
 
+   A TNAlloc credential needs to identify its issuer and issuee.  If and
+   only if it isn't issued by a national regulator that acts as a root
+   of trust on allocation questions, it also needs to cite an upstream
+   allocation that justifies the issuer's right to pass along a subset
+   of the numbers it controls.
+
+   Here is a sample TNAlloc credential that meets these requirements.
+
+   {
+     "v": "ACDC10JSON0003cd_",
+     "d": "EEeg55Yr01gDyCScFUaE2QgzC7IOjQRpX2sTckFZp1RP",
+     "u": "0AC8kpfo-uHQvxkuGZdlSjGy",
+     "i": "EANghOmfYKURt3rufd9JNzQDw_7sQFxnDlIew4C3YCnM",
+     "ri": "EDoSO5PEPLsstDr_XXa8aHAf0YKfPlJQcxZvkpMSzQDB",
+     "s": "EFvnoHDY7I-kaBBeKlbDbkjG4BaI0nKLGadxBdjMGgSQ",
+     "a": {
+         "d": "ECFFejktQA0ThTqLtAUTmW46unVGf28I_arbBFnIwnWB",
+         "u": "0ADSLntzn8x8eNU6PhUF26hk",
+         "i": "EERawEn-XgvmDR_-2ESVUVC6pW-rkqBkxMTsL36HosAz",
+         "dt": "2024-12-20T20:40:57.888000+00:00",
+         "numbers": {
+             "rangeStart": "+33801361002",
+             "rangeEnd": "+33801361009"
+         },
+         "channel": "voice",
+         "doNotOriginate": false
+     },
+     "e": {
+         "d": "EI9qlgiDbMeJ7JTZTJfVanUFAoa0TMz281loi63nCSAH",
+         "tnalloc": {
+             "n": "EG16t8CpJROovnGpgEW1_pLxH5nSBs1xQCbRexINYJgz",
+             "s": "EFvnoHDY7I-kaBBeKlbDbkjG4BaI0nKLGadxBdjMGgSQ",
+             "o": "I2I"
+         }
+     },
+     "r": {
+         "d": "EJFhpp0uU7D7PKooYM5QIO1hhPKTjHE18sR4Dn0GFscR",
+         "perBrand": "Issuees agree not to share..."
+     }
+   }
+
+   The schema used by this particular credential, EFvn...GgSQ, is
+   published at [TN-ALLOC-SCHEMA].
+
+12.4.  Brand credential
+
    TODO ~~~json ~~~
 
-12.4.  Delegated signer credential
+12.5.  Brand proxy credential
 
-   TODO ~~~json ~~~
+   A brand proxy credential (6.3.8) is very similar to a delegated
+   signer credential, in that it proves carefully constrained delegated
+   authority.  The difference lies in what authority is delegated (proxy
+   a brand vs. sign passports).
 
-12.5.  Brand credential
+   A Generalized Cooperative Delegation (GCD) credential embodies
+   delegated but constrained authority in exactly this way.  A GCD
+   credential suitable for use as a brand proxy in VVP might look like
+   this:
 
-   TODO ~~~json ~~~
+   {
+       "v": "ACDC10JSON00096c_",
+       "d": "EWQpU3nrKyJBgUJGw5461CbWcug9BZj7WXUkKbNOlnFx",
+       "u": "0ADE6oAxBl4E7uKeGUb7BEYi",
+       "i": "EC4SuEyzrRwu3FWFrK0Ubd9xejlo5bUwAtGcbBGUk2nL",
+       "ri": "EM2YZ78SKE8eO4W1lQOJeer5xKZqLmJV7SPr3Ji5DMBZ",
+       "s": "EL7irIKYJL9Io0hhKSGWI4OznhwC7qgJG5Qf4aEs6j0o",
+       "a": {
+           "d": "EPQhEk5tfXvxyKe5Hk4DG63dSgoP-F2VZrxuIeIKrT9B",
+           "u": "0AC9kH8q99PTCQNteGyI-F4g",
+           "i": "EIkxoE8eYnPLCydPcyc_lhQgwOdBHwzkSe36e2gqEH-5",
+           "dt": "2024-12-27T13:11:29.062000+00:00",
+           "c_goal": ["ops.telco.*.proxybrand"],
+           "c_proto": ["VVP:OP,TP"]
+       },
+       "r": {
+           "d": "EFthNcTE20MLMaCOoXlSmNtdooGEbZF8uGmO5G85eMSF",
+           "noRoleSemanticsWithoutGfw": "All parties agree...",
+           "issuerNotResponsibleOutsideConstraints": "Although verifiers...",
+           "noConstraintSansPrefix": "Issuers agree...",
+           "useStdIfPossible": "Issuers agree...",
+           "onlyDelegateHeldAuthority": "Issuers agree..."
+       }
+   }
 
-12.6.  Brand proxy credential
+   Note the c_goal field that limits goals that can be justified with
+   this credential, and the c_proto field that says the delegate can
+   only exercise this authority in the context of the "VVP" protocol
+   with the "OP" or "TP" role.  The wildcard in c_goal and the addition
+   of the "TP" role in c_proto are complementary changes that allow this
+   credential to justify proxying the brand on both outbound and inbound
+   calls.  (Branding on inbound calls is out of scope for VVP, but is
+   included here just to show that the same credentials can be used for
+   both VVP and non-VVP solutions.  To convert this credential to a
+   purely outbound authorization, replace the wildcard with send, and
+   limit the roles in VVP to OP.)
 
-   TODO ~~~json ~~~
+   The schema for GCD credentials, and an explanation how to add
+   additional constraints, is documented at [GCD-SCHEMA].
+
+12.6.  Delegated signer credential
+
+   A delegated signer credential (6.3.9) must prove that the issuer is
+   giving authority to the issuee.  This authority should be carefully
+   constrained so that it applies only to outbound voice calls, not to
+   signing invoices or legal contracts.  It can also be constrained so
+   it only applies on a particular schedule, or when the call originates
+   or terminates in a particular geo or jurisdiction.
+
+   A Generalized Cooperative Delegation (GCD) credential embodies
+   delegated but constrained authority in exactly this way.  A GCD
+   credential suitable for use as a delegated signer credential in VVP
+   might look like this:
+
+   {
+       "v": "ACDC10JSON00096c_",
+       "d": "EDQpU3nrKyJBgUJGw5461CbWcug9BZj7WXUkKbNOlnFR",
+       "u": "0ADE6oAxBl4E7uKeGUb7BEYi",
+       "i": "EC4SuEyzrRwu3FWFrK0Ubd9xejlo5bUwAtGcbBGUk2nL",
+       "ri": "EM2YZ78SKE8eO4W1lQOJeer5xKZqLmJV7SPr3Ji5DMBZ",
+       "s": "EL7irIKYJL9Io0hhKSGWI4OznhwC7qgJG5Qf4aEs6j0o",
+       "a": {
+           "d": "EPQhEk5tfXvxyKe5Hk4DG63dSgoP-F2VZrxuIeIKrT9B",
+           "u": "0AC9kH8q99PTCQNteGyI-F4g",
+           "i": "EIkxoE8eYnPLCydPcyc_lhQgwOdBHwzkSe36e2gqEH-5",
+           "dt": "2024-12-27T13:11:29.062000+00:00",
+           "c_goal": ["ops.telco.send.sign"],
+           "c_proto": ["VVP:OP"]
+       },
+       "r": {
+           "d": "EFthNcTE20MLMaCOoXlSmNtdooGEbZF8uGmO5G85eMSF",
+           "noRoleSemanticsWithoutGfw": "All parties agree...",
+           "issuerNotResponsibleOutsideConstraints": "Although verifiers...",
+           "noConstraintSansPrefix": "Issuers agree...",
+           "useStdIfPossible": "Issuers agree...",
+           "onlyDelegateHeldAuthority": "Issuers agree..."
+       }
+   }
+
+   Note the c_goal field that limits goals that can be justified with
+   this credential, and the c_proto field that says the delegate can
+   only exercise this authority in the context of the "VVP" protocol
+   with the "OP" role.
+
+   The schema for GCD credentials, and an explanation how to add
+   additional constraints, is documented at [GCD-SCHEMA].
 
 12.7.  Dossier
 
-   TODO ~~~json ~~~
+   A dossier (6.3.2) is almost all edges -- that is, links to other
+   credentials.  Here's what one might look like:
+
+   {
+     "v": "ACDC10JSON00036f_",
+     "d": "EKvpcshjgjzdCWwR4q9VnlsUwPgfWzmy9ojMpTSzNcEr",
+     "i": "EIkxoE8eYnPLCydPcyc_lhQgwOdBHwzkSe36e2gqEH-5",
+     "ri": "EMU5wN33VsrJKlGCwk2ts_IJi67IXE6vrYV3v9Xdxw3p",
+     "s": "EFv3_L64_xNhOGQkaAHQTI-lzQYDvlaHcuZbuOTuDBXj",
+     "a": {
+       "d": "EJnMhz8MJxmI0epkq7D1zzP5pGTbSb2YxkSdczNfcHQM",
+       "dt": "2024-12-27T13:11:41.865000+00:00"
+     },
+     "e": {
+       "d": "EPVc2ktYnZQOwNs34lO1YXFOkT51lzaILFEMXNfZbGrh",
+       "vetting": {
+         "n": "EIpaOx1NJc0N_Oj5xzWhFQp6EpB847yTex62xQ7uuSQL",
+         "s": "ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY",
+         "o": "NI2I"
+       },
+       "alloc": {
+         "n": "EEeg55Yr01gDyCScFUaE2QgzC7IOjQRpX2sTckFZp1RP",
+         "s": "EFvnoHDY7I-kaBBeKlbDbkjG4BaI0nKLGadxBdjMGgSQ",
+         "o": "I2I"
+       },
+       "brand": {
+         "n": "EKSZT4yTtsZ2AqriNKBvS7GjmsU3X1t-S3c69pHceIXW",
+         "s": "EaWmoHDYbkjG4BaI0nK7I-kaBBeKlbDLGadxBdSQjMGg",
+         "o": "I2I"
+       },
+       "bproxy": {
+         "n": "EWQpU3nrKyJBgUJGw5461CbWcug9BZj7WXUkKbNOlnFx",
+         "s": "EL7irIKYJL9Io0hhKSGWI4OznhwC7qgJG5Qf4aEs6j0o",
+         "o": "I2I"
+       },
+       "delsig": {
+         "n": "EMKcp1-AvpW0PZdThjK3JCbMsXAmrqB9ONa1vZyTppQE",
+         "s": "EL7irIKYJL9Io0hhKSGWI4OznhwC7qgJG5Qf4aEs6j0o",
+         "o": "NI2I"
+       }
+     }
+   }
+
+   Notice how each named edge references one of the previous sample
+   credentials in its n field, and that other credential's associated
+   schema in the s field.
+
+   The schema for this credential is documented at [DOSSIER-SCHEMA].
 
 13.  IANA Considerations
 
-   This document has no IANA actions.
+   This specification requires no IANA actions.  However, it does depend
+   on OOBIs (see 6.2.3) being served as web resources with IANA content
+   type application/json+cesr.
 
 14.  References
 
@@ -1982,6 +2172,16 @@ Table of Contents
               <https://api.ctia.org/wp-content/uploads/2022/11/Branded-
               Calling-Best-Practices.pdf>.
 
+   [DOSSIER-SCHEMA]
+              Daniel Hardman, "Generalized Cooperative Delegation (GCD)
+              Credentials", December 2023, <https://github.com/
+              provenant-dev/public-schema/blob/main/gcd/index.md>.
+
+   [GCD-SCHEMA]
+              Daniel Hardman, "Generalized Cooperative Delegation (GCD)
+              Credentials", December 2023, <https://github.com/
+              provenant-dev/public-schema/blob/main/gcd/index.md>.
+
    [JSON-SCHEMA]
               JSON Schema Community, "JSON Schema Specification
               2020-12", June 2022,
@@ -2041,6 +2241,11 @@ Table of Contents
               January 2025, <https://datatracker.ietf.org/doc/html/
               draft-ietf-oauth-selective-disclosure-jwt-15>.
 
+   [TN-ALLOC-SCHEMA]
+              Provenant, "TN Allocation Credential", December 2024,
+              <https://github.com/provenant-dev/public-schema/blob/main/
+              tn-alloc/tn-alloc.schema.json>.
+
    [W3C-DID]  Guy, A., Ed., Reed, D., Ed., Sporny, M., Ed., and M.
               Sabadello, Ed., "Decentralized Identifiers (DIDs) v1.0",
               W3C REC REC-did-core-20220719, W3C REC-did-core-20220719,
@@ -2056,7 +2261,17 @@ Table of Contents
 
 Acknowledgments
 
-   TODO acknowledge.
+   Much of the cybersecurity infrastructure used by VVP depends on KERI,
+   which was invented by Sam Smith, and first implemented by Sam plus
+   Phil Fairheller, Kevin Griffin, and other technical staff at GLEIF.
+   Thanks to logistical support from Trust Over IP and the Linux
+   Foundation, and to a diverse community of technical experts in those
+   communities and in the Web of Trust group.
+
+   Techniques that apply KERI to telecom use cases were developed by
+   Daniel Hardman, Randy Warshaw, and Ruth Choueka, with additional
+   contributions from Dmitrii Tychinin, Yaroslav Lazarev, Arshdeep
+   Singh, and many other staff members at Provenant, Inc.
 
 Author's Address
 
