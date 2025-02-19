@@ -132,6 +132,7 @@ Table of Contents
        6.3.9.  Delegated signer credential
    7.  Interoperability
      7.1.  Certificates
+       7.1.1.  Foundation mode
      7.2.  Other credential formats
    8.  Security Considerations
    9.  Privacy
@@ -178,8 +179,8 @@ Table of Contents
       wholesalers, and call centers that proxy a brand are difficult to
       model safely.
 
-   *  What might work for enterprises offers little benefit for
-      individual callers.
+   *  What might work for enterprises offers few benefits and many
+      drawbacks for individual callers.
 
    VVP solves these problems by applying two crucial innovations.
 
@@ -222,12 +223,12 @@ Table of Contents
    To be clear, VVP does not _require_ that vLEIs be used for vetting.
    However, by choosing an evidence format that is high-precision and
    lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt
-   in, either wholly or partially, to trust bases that are already
-   adopted, and that are not limited to any particular jurisdiction or
-   to the telecom industry.  It thus offers two-way, easy bridges
-   between identity in phone calls and identity in financial, legal,
-   technical, logistic, regulatory, web, email, and social media
-   contexts.
+   in, either wholly or partially (see 7), to trust bases that are
+   already adopted, and that are not limited to any particular
+   jurisdiction or to the telecom industry.  It thus offers two-way,
+   easy bridges between identity in phone calls and identity in
+   financial, legal, technical, logistic, regulatory, web, email, and
+   social media contexts.
 
 2.  Conventions and Definitions
 
@@ -239,13 +240,13 @@ Table of Contents
 
 3.  Overview
 
-   Fundamentally, VVP requires a caller to assemble a dossier (6.3.2) of
-   stable evidence that proves identity and authorization.  This is done
-   once or occasionally, in advance, as a configuration precondition.
-   Then, for each call, an ephemeral STIR-compatible VVP PASSporT
-   (6.2.6) is generated that cites the preconfigured dossier.  Verifiers
-   check the passport and its corresponding dossier, including realtime
-   revocation status, to make decisions.
+   Fundamentally, VVP requires a caller to curate (6) a dossier (6.3.2)
+   of stable evidence that proves identity and authorization.  This is
+   done once or occasionally, in advance, as a configuration
+   precondition.  Then, for each call, an ephemeral STIR-compatible VVP
+   PASSporT (6.2.6) is generated that cites (4) the preconfigured
+   dossier.  Verifiers check the passport and its corresponding dossier,
+   including realtime revocation status, to make decisions (5).
 
 3.1.  Roles
 
@@ -383,10 +384,10 @@ Table of Contents
 
    However, curating does not occur in realtime during phone calls.
    Citing and verifying are the heart of VVP, and implementers will
-   probably approach VVP from the standpoint of SIP flows.  Therefore,
-   we defer the question of curation to 6.  Where not-yet-explained
-   evidence concepts are used, inline references allow easy cross-
-   reference to formal definitions that come later.
+   probably approach VVP from the standpoint of SIP flows [RFC3261],
+   [RFC5626].  Therefore, we defer the question of curation to 6.  Where
+   not-yet-explained evidence concepts are used, inline references allow
+   easy cross-reference to formal definitions that come later.
 
 4.  Citing
 
@@ -486,13 +487,16 @@ Table of Contents
       legal entity AID, MUST have a delegate relationship with the legal
       entity AID, proved through Delegate Evidence 6.3.4.)
 
-   *  orig _(required)_ MUST conform to SHAKEN requirements
-      ([ATIS-1000074]), with the additional constraint that only one
-      phone number is allowed.  Although the containing SIP INVITE may
-      allow multiple originating phone numbers, only one can be tied to
-      evidence evaluated by verifiers.
+   *  orig _(required)_ Although VVP does not depend on SHAKEN, the
+      format of this field MUST conform to SHAKEN requirements
+      ([ATIS-1000074]), for interoperability reasons (see 7).  It MUST
+      also satisfy one additional constraint, which is that only one
+      phone number is allowed.  Depite the fact that a containing SIP
+      INVITE may allow multiple originating phone numbers, only one can
+      be tied to evidence evaluated by verifiers.
 
-   *  dest _(required)_ MUST conform to SHAKEN requirements.
+   *  dest _(required)_ For interoperability reasons, MUST conform to
+      SHAKEN requirements.
 
    *  card _(optional)_ Contains one or more brand attributes.  These
       are analogous to [RCD-DRAFT] or [CTIA-BCID] data, but differ in
@@ -513,7 +517,8 @@ Table of Contents
       choose one or the other.  Since call-reason cannot be analyzed or
       verified in any way, it is discouraged.  However it is not
       formally deprecated.  It is included in VVP to facilitate the
-      construction of derivative RCD passports which have the property.
+      construction of derivative RCD passports which have the property
+      (see 7).
 
    *  evd _(required)_ MUST be the OOBI of a bespoke ACDC (the dossier,
       6.3.2) that constitutes a verifiable data graph of all evidence
@@ -524,7 +529,7 @@ Table of Contents
 
    *  origId _(optional)_ Follows SHAKEN semantics.
 
-   *  iat _(required)_ Follows standard JWT semantics.
+   *  iat _(required)_ Follows standard JWT semantics (see [RFC7519]).
 
    *  exp _(required)_ Follows standard JWT semantics.  As this sets a
       window for potential replay attacks between the same two phone
@@ -533,7 +538,7 @@ Table of Contents
 
    *  jti _(optional)_ Follows standard JWT semantics.
 
-   For information about the signature over the passport, see 6.3.1.
+   For information about the signature over a passport, see 6.3.1.
 
 5.  Verifying
 
@@ -1082,8 +1087,8 @@ Table of Contents
    input data in the manner required by [RFC7519]: signature =
    sign(base64url(header) + "." + base64url(payload).  Also per the JWT
    spec, when the signature is added to the compact form of the JWT, it
-   MUST be base64url-encoded and appended to the other two portions of
-   the JWT, with a . delimiter preceding it, and it MUST then be
+   MUST be appended to the other two portions of the JWT, with a .
+   delimiter preceding it.  Per STIR conventions, it MUST then be
    followed by ";ppt=vvp" so tools that scan the Identity header of the
    passport can decide how to process the passport without doing a full
    parse of the JWT.
@@ -1312,17 +1317,21 @@ Table of Contents
 
 7.1.  Certificates
 
-   Verifiers who prefer to operate in certificate ecosystems such as
-   SHAKEN and RCD can be satisfied by having an intermediary verify
-   according to VVP rules (see 5), and then signing a new passport in a
-   certificate-dependent format (e.g., for SHAKEN and/or RCD), where the
-   new passport contains an x5u header pointing to the certificate of
-   the new signer.  This form of trust handoff is called _cascaded
-   mode_. If the certificate fetched from the x5u URL satisfies enough
+   ### Cascaded mode Verifiers who prefer to operate in certificate
+   ecosystems such as SHAKEN and RCD can be satisfied by having an
+   intermediary verify according to VVP rules (see 5), and then signing
+   a new passport in a certificate-dependent format (e.g., for SHAKEN
+   and/or RCD).  In such cases, the new passport contains an x5u header
+   pointing to the certificate of the new signer.
+
+   This form of trust handoff is called _cascaded mode_. In cascaded
+   mode, if the certificate fetched from the x5u URL satisfies enough
    trust requirements of the verifier, the goals of the new context are
    achieved.  If this intermediary is the OSP, the standard assumptions
    of SHAKEN are fully met, but the OSP's attestation can always be A,
    since VVP conclusively proves the identity of the AP and OP.
+
+7.1.1.  Foundation mode
 
    In another pattern called _foundation mode_, a VVP passport MAY
    itself contain an x5u header.  If it does, the x5u header MUST NOT be
@@ -1334,6 +1343,7 @@ Table of Contents
    as a trusted signer for the AP can be transferred to the certificate,
    even if the certificate is self-issued or otherwise chains back to
    something other than a known, high-reputation certificate authority.
+
    Valid VVP passports that obey this requirement can thus be used to
    enable VVP-unaware but certificate-based checks without certificate
    authorities (or without prior knowledge of them).  Such certificate-
@@ -1842,16 +1852,16 @@ Table of Contents
 
 12.2.  Vetting credential
 
-   The schema of a vetting credential 6.3.5 can be very simple; it needs
-   to identify the issuer and issuee by AID, and it needs to identify
-   the vetted legal entity in at least one way that is unambiguous.
-   Here is a sample LE vLEI that meets these requirements.  The issuer's
-   AID appears in the first i field, the issuee in the second i field,
-   and the connection to a vetted legal entity in the LEI field.  (The
-   validity of this credential depends on its issuer having a valid,
-   unrevoked QVI credential; the specifc credential it links to is
-   conveyed in e.  The full text of rules has been elided to keep the
-   example short.)
+   The schema of a vetting credential (6.3.5) can be very simple; it
+   needs to identify the issuer and issuee by AID, and it needs to
+   identify the vetted legal entity in at least one way that is
+   unambiguous.  Here is a sample LE vLEI that meets these requirements.
+   The issuer's AID appears in the first i field, the issuee in the
+   second i field, and the connection to a vetted legal entity in the
+   LEI field.  (The validity of this credential depends on its issuer
+   having a valid, unrevoked QVI credential; the specifc credential it
+   links to is conveyed in e.  The full text of rules has been elided to
+   keep the example short.)
 
    {
      "v":"ACDC10JSON0005c8_",
@@ -2149,6 +2159,12 @@ Table of Contents
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/rfc/rfc5280>.
 
+   [RFC5626]  Jennings, C., Ed., Mahy, R., Ed., and F. Audet, Ed.,
+              "Managing Client-Initiated Connections in the Session
+              Initiation Protocol (SIP)", RFC 5626,
+              DOI 10.17487/RFC5626, October 2009,
+              <https://www.rfc-editor.org/rfc/rfc5626>.
+
    [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
               Signature Algorithm (EdDSA)", RFC 8032,
               DOI 10.17487/RFC8032, January 2017,
@@ -2201,7 +2217,7 @@ Table of Contents
               schema/blob/main/gcd/index.md>.
 
    [GCD-SCHEMA]
-              Daniel Hardman, "Generalized Cooperative Delegation (GCD)
+              Hardman, D., "Generalized Cooperative Delegation (GCD)
               Credentials", December 2023, <https://github.com/
               provenant-dev/public-schema/blob/main/gcd/index.md>.
 
