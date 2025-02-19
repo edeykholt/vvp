@@ -2163,7 +2163,7 @@ Table of Contents
 14.2.  Informative References
 
    [ARIES-RFC-0519]
-              Hardman, D., "Aries RFC 0519: Goal Codes", n.d.,
+              Hardman, D., "Aries RFC 0519: Goal Codes", April 2021,
               <https://github.com/hyperledger/aries-rfcs/blob/main/
               concepts/0519-goal-codes/README.md>.
 
@@ -2173,9 +2173,9 @@ Table of Contents
               Calling-Best-Practices.pdf>.
 
    [DOSSIER-SCHEMA]
-              Daniel Hardman, "Generalized Cooperative Delegation (GCD)
-              Credentials", December 2023, <https://github.com/
-              provenant-dev/public-schema/blob/main/gcd/index.md>.
+              Singh, A., "Verifiable Voice Dossier", January 2025,
+              <https://github.com/provenant-dev/public-
+              schema/blob/main/gcd/index.md>.
 
    [GCD-SCHEMA]
               Daniel Hardman, "Generalized Cooperative Delegation (GCD)
