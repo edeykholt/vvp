@@ -251,7 +251,10 @@ The semantics of the fields are:
 * `evd` *(required)* MUST be the OOBI of a bespoke ACDC (the dossier, {{<dossier}}) that constitutes a verifiable data graph of all evidence justifying belief in the identity and authorization of the AP, the OP, and any relevant delegations. This URL can be hosted on any convenient web server, and is somewhat analogous to the `x5u` header in X509 contexts. See below for details.
 * `origId` *(optional)* Follows SHAKEN semantics.
 * `iat` *(required)* Follows standard JWT semantics.
+* `exp` *(required)* Follows standard JWT semantics. As this sets a window for potential replay attacks between the same two phone numbers, a recommended expiration should be 30 seconds, with a minimum of 10 seconds and a maximum of 300 seconds.
 * `jti` *(optional)* Follows standard JWT semantics.
+
+For information about the signature over the passport, see {{<pss}}.
 
 # Verifying
 
@@ -534,7 +537,7 @@ A *justifying link* (*JL*) is a reference, inside of one CVD, to another CVD tha
 ### PSS
 Each voice call begins with a SIP INVITE, and in VVP, each SIP INVITE contains an `Identity` header that MUST contain a signature from the call's OP ({{<OP}}). This *passpport-specific signature* (*PSS*) MUST be an Ed25519 signature serialized as CESR; it is NOT a JWS. The 64 raw bytes of the signature are left-padded to 66 bytes, then base64url-encoded. The `AA` at the front of the result is cut and replaced with `0B`, giving an 88-character string. A regex that matches the result is: `0B[-_\w]{86}`, and a sample value (with the middle elided) is: `0BNzaC1lZD...yRLAYeKNQvYx`.
 
-The signature MUST be the result of running the EdDSA algorithm over input data in the manner required by {{RFC7519}}: `signature = sign(base64url(header) + "." + base64url(payload)`. Also per the JWT spec, the signature MUST then be base64url-encoded and appended to the other two portions of the JWT, with a `.` delimiter preceding it, and it MUST then be followed by ";ppt=vvp" so tools that scan the `Identity` header of the passport can decide how to process the passport without doing a full parse of the JWT.
+The signature MUST be the result of running the EdDSA algorithm over input data in the manner required by {{RFC7519}}: `signature = sign(base64url(header) + "." + base64url(payload)`. Also per the JWT spec, when the signature is added to the compact form of the JWT, it MUST be base64url-encoded and appended to the other two portions of the JWT, with a `.` delimiter preceding it, and it MUST then be followed by ";ppt=vvp" so tools that scan the `Identity` header of the passport can decide how to process the passport without doing a full parse of the JWT.
 
 The headers MUST include `alg`, `typ`, `ppt`, and `kid`, as described in {{<sample-passport}}. They MAY include other values, notably `x5u` (see {{<interop-certs}}). The claims MUST include `orig`, `dest`, `iat`, `exp`, and `evd`, and MAY include `card`, `goal`, `call_reason`, `jti`, `origId`, and other values (also described in {{<sample-passport}}). The signature MUST use all headers and all claims as input to the data stream that will be signed.
 
@@ -781,10 +784,12 @@ However, it is still possible to make choices that weaken the security posture o
 
 Both institutions and individuals that make phone calls may have privacy goals. Although their goals might differ in some ways, both will wish to disclose some attributes to the TP, and both may wish to suppress some of that same information from intermediaries. Both will want control over how this disclosure works.
 
+## Graduated Disclosure
 ACDCs support a technique called *graduated disclosure* that enables this.
 
-## Graduated Disclosure
 The hashing algorithm for ACDCs resembles the hashing algorithm for a merkle tree. An ACDC is a hierarchical data structure that can be modeled with nested JSON. Any given layer of the structure may consist of a mixture of simple scalar values and child objects. The input to the hashing function for a layer of content equals the content of scalar fields and the *hashes* of child objects.
+
+TODO: in compact, is it H(c) or c = H(c)?
 
 <figure>
 <name>ACDC hashes like a Merkle tree</name>
@@ -869,7 +874,7 @@ This means is that any given child JSON object in an ACDC can be replaced with i
 
 In combination with the `evd` claim in a passport, graduated disclosure can be used to achieve privacy goals, because different verifiers can see different variations on an ACDC, each of which is guaranteed to pass the same verification tests and has the same revocation status.
 
-For example, suppose that a company in jurisdiction X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that X is operating lawfully, without knowing the name of X as a legal entity. X can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to X's TSP or to X, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since both forms of the ACDC have the same hash.
+For example, suppose that company C in jurisdiction X wants to make a call to an individual in jurisdiction Y, and further suppose that auditor Z requires proof that C is operating lawfully, without knowing the name of C as a legal entity. In other words, the auditor needs to *qualify* C but not necessarily *identify* C. C can serve the KEL for its dossier from a web server that knows to return the expanded form of the vetting credential in the dossier to the individual or the individual's TSP in Y, but a compacted form of the vetting credential (revealing just the vetter's identity and their signature, but not the legal identity of the issuee, C) to auditor Z. Later, if law enforcement sees the work of the auditor and demands to know the legal identity of X, discovery of the expanded form can be compelled. When the expanded form is disclosed, it will demonstrably be associated with the compact form that Z recorded, since the qualifying and identifying forms of the ACDC have the same hash.
 
 X doesn't have to engage in sophisticated sniffing of traffic by geography to achieve goals like this. It can simply say that anonymous and unsigned HTTP requests for the dossier return the compact form; anyone who wants the expanded form must make an HTTP request that includes in its body a signature over terms and conditions that enforce privacy and make the recipient legally accountable not to reshare.
 
@@ -940,15 +945,34 @@ Witnesses are chosen according to the preference of each party that controls an 
 ## Vetting credential
 The schema of a vetting credential can be very simple; it MUST identify the issuer and issuee by AID, and it MUST identify the vetted entity in at least one way that is unambiguous. Here is a sample LE vLEI that meets that requirement:
 
+TODO
 ~~~json
 ~~~
 
 ## TNAlloc credential
-
+TODO
 ~~~json
 ~~~
 
-##
+## Delegated signer credential
+TODO
+~~~json
+~~~
+
+## Brand credential
+TODO
+~~~json
+~~~
+
+## Brand proxy credential
+TODO
+~~~json
+~~~
+
+## Dossier
+TODO
+~~~json
+~~~
 
 # IANA Considerations
 
