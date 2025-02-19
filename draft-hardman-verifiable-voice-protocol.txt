@@ -1463,13 +1463,14 @@ Table of Contents
    TODO: in compact, is it H(c) or c = H(c)?
 
    <![CDATA[
-   Expanded ACDC      Compact ACDC
-   +------------+    +------------+
-   | a = {      |    | a = {      |
-   |   b = N,   |    |   b = N,   |
-   |   C = {    |    |   H(c)     |
+       Fully            Partially          Fully
+   Expanded ACDC      Compact ACDC      Compact ACDC
+   +------------+    +------------+    +------------+
+   | a = {      |    | a = {      |    | a = H(...) |
+   |   b = N,   |    |   b = N,   |    +------------+
+   |   C = {    |    |   c = H(c),|
    |     d = M, |    |   g = Q,   |
-   |     e = O, |    |   H(i)     |
+   |     e = O, |    |   i = H(i) |
    |     f = P  |    | }          |
    |   },       |    +------------+
    |   g = Q,   |
@@ -1479,12 +1480,15 @@ Table of Contents
    |   }        |
    | }          |
    +------------+
-    H(a) = H(         H(a) = H(
-             b                 b
-             H(c)              H(c)
-             g                 g
-             H(i)              H(i)
-            )                 )
+
+    H(a) = H(         H(a) = H(         H(a) = SAID
+      b = N,            b = N,
+      c = H(c),         c = H(c),
+        recurse         g = Q,
+      g = Q,            i = H(i)
+      i = H(i)        ) = SAID
+        recurse
+    ) = SAID
    ]]>
 
                   Figure 4: ACDC hashes like a Merkle tree
