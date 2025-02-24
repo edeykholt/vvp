@@ -52,6 +52,9 @@ normative:
       -
         name: Sam Smith
       -
+        name: Kevin Griffin
+        role: editor
+      -
         org: Trust Over IP Foundation
     date: 7 Nov 2023
   TOIP-KERI:
@@ -60,6 +63,9 @@ normative:
     author:
       -
         name: Sam Smith
+      -
+        name: Kevin Griffin
+        role: editor
       -
         org: Trust Over IP Foundation
     date: 5 Jan 2024
@@ -71,6 +77,9 @@ normative:
         name: Sam Smith
       -
         name: Phil Feairheller
+      -
+        name: Kevin Griffin
+        role: editor
       -
         org: Trust Over IP Foundation
     date: 6 Nov 2023
