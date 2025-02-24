@@ -797,9 +797,9 @@ Table of Contents
    A _self-addressing identifier_ (_SAID_) is the hash of a
    canonicalized JSON object, encoded in self-describing CESR format
    [TOIP-CESR].  The raw bytes from the digest function are left-padded
-   to the nearest 24-bit boundary, transformed to base64url [RFC4648],
-   and prefixed with a character that tells which digest function was
-   used.
+   to the nearest 24-bit boundary and transformed to base64url
+   [RFC4648].  The left-pad char from the converted left-pad byte is
+   replaced with a code char that tells which digest function was used.
 
    An example of a SAID is E81Wmjyz5nXMCYrQqWyRLAYeKNQvYLYqMLYv_qm-qP7a,
    and a regex that matches all valid SAIDs is:
@@ -1057,7 +1057,7 @@ Table of Contents
 
 6.2.12.  Targeted credential
 
-   A _targeted credential_ is CVD that identifies an issuee as the
+   A _targeted credential_ is a CVD that identifies an issuee as the
    bearer, and that requires the issuee to prove their identity
    cryptographically (e.g., to produce a proper digital signature) in
    order to claim the associated privilege.  All credentials in VVP are
@@ -1660,11 +1660,11 @@ Table of Contents
    original is revoked.  AP blinding services would have to be trusted
    by verifiers, much like root CAs in SHAKEN.  However, unlike CAs,
    their actions could be trivially audited for correctness, since every
-   derivation would have to be backed dossier that has the associated
-   hash.  Such a mechanism is probably unnecessary for b2c calling, but
-   may be justified when VVP is used by individual APs if they wish to
-   merely qualify without identifying themselves to some intermediaries
-   or TPs.
+   derivation would have to be backed by a dossier that has the
+   associated hash.  Such a mechanism is probably unnecessary for b2c
+   calling, but may be justified when VVP is used by individual APs if
+   they wish to merely qualify without identifying themselves to some
+   intermediaries or TPs.
 
 10.  Appendix A: Evidence theory
 
