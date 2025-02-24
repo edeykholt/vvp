@@ -4,8 +4,8 @@
 
 Network Working Group                                         D. Hardman
 Internet-Draft                                            Provenant, Inc
-Intended status: Standards Track                        19 February 2025
-Expires: 23 August 2025
+Intended status: Standards Track                        24 February 2025
+Expires: 28 August 2025
 
 
                        Verifiable Voice Protocol
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2025.
+   This Internet-Draft will expire on 28 August 2025.
 
 Copyright Notice
 
@@ -103,10 +103,10 @@ Table of Contents
        6.1.2.  Vetting identity
        6.1.3.  Vetting brand
        6.1.4.  Allocating TNs
-       6.1.5.  Granting brand proxy rights
+       6.1.5.  Authorizing brand proxy
        6.1.6.  Delegating signing authority
        6.1.7.  Revoking
-     6.2.  General evidence categories
+     6.2.  Building blocks
        6.2.1.  SAID
        6.2.2.  Signature
        6.2.3.  AID
@@ -733,7 +733,7 @@ Table of Contents
 
 6.1.4.  Allocating TNs
 
-   At the option of the AP and OP, VVP MAY prove the right to use the
+   At the option of the AP and OP, VVP SHOULD prove the right to use the
    originating phone number.  When this feature is active, regulators
    MUST issue TNAlloc credentials (6.3.6) to range holders, and range
    holders MUST issue them to telephone number users (TNUs; see 3.1.1).
@@ -746,7 +746,7 @@ Table of Contents
    with range holders to assure that the appropriate TNAlloc credentials
    are issued to the TNUs.
 
-6.1.5.  Granting brand proxy rights
+6.1.5.  Authorizing brand proxy
 
    When VVP is used to prove brand, APs (3.1.4) MAY issue brand proxy
    credentials (6.3.8) to OPs (3.1.3), giving them the right to use the
@@ -776,16 +776,16 @@ Table of Contents
 6.1.7.  Revoking
 
    Revoking an ACDC is as simple as the issuer signing a revocation
-   event and distributing it to witnesse (see 11).  Parties that perform
-   a full validation of a given ACDC (see 5) will automatically detect
-   the revocation event in realtime, because they will contact one or
-   more of these witnesses.  Parties that are caching their validations
-   MAY poll witnesses very efficiently to discover revocation events.
-   Some witnesses may choose to offer the option of registering a
-   callback, allowing interested parties to learn about revocations even
-   more efficiently.
+   event and distributing it to witnesses (see 11).  Parties that
+   perform a full validation of a given ACDC (see 5) will automatically
+   detect the revocation event in realtime, because they will contact
+   one or more of these witnesses.  Parties that are caching their
+   validations MAY poll witnesses very efficiently to discover
+   revocation events.  Some witnesses may choose to offer the option of
+   registering a callback, allowing interested parties to learn about
+   revocations even more efficiently.
 
-6.2.  General evidence categories
+6.2.  Building blocks
 
    The term "credential" has a fuzzy meaning in casual conversation.
    However, understanding how evidence is built from credentials in VVP
@@ -839,7 +839,7 @@ Table of Contents
    resolved to one or more cryptographic keys at a specific version of
    the identifier's key state.  Using cryptographic keys, a party can
    prove it is the controller of an AID by creating digital signatures.
-   AIDs are like W3C DIDs [W3C-DID]}, and can be transformed into DIDs.
+   AIDs are like W3C DIDs [W3C-DID], and can be transformed into DIDs.
    The information required to resolve an AID to its cryptographic keys
    is communicated through a special form of URI called an _out-of-band
    invitation_ (_OOBI_).  An OOBI points to an HTTP resource that
@@ -996,9 +996,9 @@ Table of Contents
 
    ACDCs can be freely converted between text and binary
    representations, and either type of representation can also be
-   compacted or expanded to support nuanced disclosure goals.  An ACDC
-   is also uniquely identified by its SAID, which means that a SAID can
-   take the place of a full ACDC in certain data structures and
+   compacted or expanded to support nuanced disclosure goals (see 9.1).
+   An ACDC is also uniquely identified by its SAID, which means that a
+   SAID can take the place of a full ACDC in certain data structures and
    processes.  None of these transformations invalidate the associated
    digital signatures, which means that any variant of a given ACDC is
    equivalently verifiable.
@@ -1116,7 +1116,7 @@ Table of Contents
    evidence_ (_APE_).
 
    APE consists of several credentials, explored in detail below.  It
-   MUST include a vetting credential for the AP. it MUST include a
+   MUST include a vetting credential for the AP.  It SHOULD include a
    TNAlloc credential that proves RTU.  Normally the RTU MUST be
    assigned to the AP; however, if a proxy is the OP and uses their own
    phone number, the RTU MUST be assigned to the OP instead.  If the AP
@@ -1192,8 +1192,9 @@ Table of Contents
    two parties will be different.  Therefore, the DE in the dossier MUST
    include a delegated signer credential that authorizes the OP to act
    on the AP's behalf and that stipulates the constraints that govern
-   this delegation.  It SHOULD also include a vetting credential for the
-   OP, that proves the OP's identity.  If the APE includes a brand
+   this delegation.  In addition to the vetting credential for the AP,
+   which is required, it SHOULD also include a vetting credential for
+   the OP, that proves the OP's identity.  If the APE includes a brand
    credential, then the DE MUST also include a brand proxy credential,
    proving that the OP not only can use the AP's allocated phone number,
    but has AP's permission to project the AP's brand while doing so.
@@ -1211,7 +1212,7 @@ Table of Contents
    formal and legal attributes of a unique legal entity.  It MUST
    include a legal identifier that makes the entity unique in its home
    jurisdiction (e.g., an LEI), and it MUST include an AID for the legal
-   entity as an AP.  This AID is unique globally.
+   entity as an AP.  This AID is globally unique.
 
    The vetting credential is so called because it MUST be issued
    according to a documented vetting process that offers formal
@@ -1226,33 +1227,32 @@ Table of Contents
    that qualifies the issuer of the vetting credential MAY contain a JL
    that qualifies its own issuer, and such JLs MAY be repeated through
    as many layers as desired.  In VVP, the reference type of a vetting
-   credential is an LE vLEI.  This implies both a schema and a
-   governance framework.  Other vetting credential types are possible,
-   but they MUST be true credentials that meet the normative
-   requirements here.  They MUST NOT be bearer tokens.
+   credential is an LE vLEI; see [ISO-17442-3] and 12.2.  This implies
+   both a schema and a governance framework.  Other vetting credential
+   types are possible, but they MUST be true credentials that meet the
+   normative requirements here.  They MUST NOT be bearer tokens.
 
    To achieve various design goals, a vetting credential MUST be an
    ACDC, but this ACDC MAY be a transformation of a credential in
    another format (e.g., W3C VC, SD-JWT, X509 certificate).  See 7.
 
-   One example of a possible vetting credential is an LE vLEI; see
-   [ISO-17442-3] and 12.2.
-
 6.3.6.  TNAlloc credential
 
    A TNAlloc credential is a targeted credential that confers on its
    issuee the right to control how one or more phone numbers are used.
-   Regulators issue TNAlloc credentials to range holders, who issue them
-   to TNUs.  TNUs often play the AP role in VVP.  If an AP delegates RTU
-   to a proxy (e.g., an employee or call center), the AP MUST also issue
-   a TNAlloc credential to the proxy, to confer the RTU.  With each
-   successive reallocation, the set of numbers in the new TNAlloc
-   credential gets smaller.  Except for TNAlloc credentials issued by
-   regulators, all TNAlloc credentials MUST contain a JL to a parent
-   TNAlloc credential, having a bigger set of numbers that includes
-   those in the current credential.  This JL in a child credential
-   documents the fact that the child's issuer possessed an equal or
-   broader RTU, from which the subset RTU in child credential derives.
+   Regulators issue TNAlloc credentials to range holders, who in turn
+   issue them to TNUs.  TNUs often play the AP role in VVP.  If an AP
+   delegates RTU to a proxy (e.g., an employee or call center), the AP
+   MUST also issue a TNAlloc credential to the proxy, to confer the RTU.
+   With each successive reallocation, the set of numbers in the new
+   TNAlloc credential may get smaller.
+
+   Except for TNAlloc credentials issued by regulators, all TNAlloc
+   credentials MUST contain a JL to a parent TNAlloc credential, having
+   an equal or bigger set of numbers that includes those in the current
+   credential.  This JL in a child credential documents the fact that
+   the child's issuer possessed an equal or broader RTU, from which the
+   subset RTU in child credential derives.
 
    To achieve various design goals, a TNAlloc credential MUST be an
    ACDC, but this ACDC MAY be a transformation of a credential in
@@ -1443,7 +1443,7 @@ Table of Contents
       revocable.  It also makes it stable across key rotation, and
       prevents retrograde attacks by allowing verifiers to map an
       issuance or revocation event to an unambiguous key state in the
-      6.2.8.
+      KEL (6.2.8).
 
    Nonetheless, it is still possible to make choices that weaken the
    security posture of the ecosystem, including at least the following:
@@ -1469,14 +1469,15 @@ Table of Contents
        purported second call with the same orig and dest numbers, using
        the same backing evidence, soon after the first.)
 
-   2.  Witnesses (see 11) SHOULD be used in such a way that high
-       availability is guaranteed, and in such a way that duplicity by
-       the controller of an AID is detected.  (Verifiers will be able to
-       see the witness policy of each AID controller, and SHOULD decide
-       for themselves whether the party is reliable, depending on what
-       they observe.)
+   2.  Witnesses (which MUST be used) SHOULD be used in such a way that
+       high availability is guaranteed, and in such a way that duplicity
+       by the controller of an AID is detected.  See 11.  (Verifiers
+       will be able to see the witness policy of each AID controller,
+       and SHOULD decide for themselves whether the party is reliable,
+       depending on what they observe.)
 
-   3.  Revocations SHOULD be timely.
+   3.  Revocations SHOULD be timely, and the timeliness guarantees of
+       issuers SHOULD be published.
 
    4.  Watchers SHOULD propagate events to local caches with a low
        latency, and MUST provide information that allows verifiers to
@@ -1607,12 +1608,9 @@ Table of Contents
    explicitly associating its correlated reputation with a call.  It has
    asserted this brand publicly, to every stakeholder in the SIP
    pipeline.  In such cases, any question of the AP's privacy is off the
-   table.
-
-   If the first correlator is present, no privacy protections on the
-   other two correlators will be effective.  However, if the first
-   correlator is missing, the other two correlators become more
-   interesting.
+   table, and no privacy protections on the other two correlators will
+   be effective.  However, if the first correlator is missing, the other
+   two correlators become more interesting.
 
 9.2.1.  kid
 
@@ -1651,7 +1649,7 @@ Table of Contents
    disclosure), the dossier will at a minimum have an issuer field that
    ties it to the AP as a perfect correlator.
 
-   The answer here is to introduce an _AP blinding service_. This
+   One answer here is to introduce an _AP blinding service_. This
    service creates _derived dossiers_ on a schedule or by policy.  Each
    derivation includes the hash of the original dossier, in a field that
    is hidden but available (along with a salty nonce) via graduated
@@ -1664,8 +1662,9 @@ Table of Contents
    their actions could be trivially audited for correctness, since every
    derivation would have to be backed dossier that has the associated
    hash.  Such a mechanism is probably unnecessary for b2c calling, but
-   may be justified when VVP is used by individual APs if they wish not
-   to disclose their identity to a TP.
+   may be justified when VVP is used by individual APs if they wish to
+   merely qualify without identifying themselves to some intermediaries
+   or TPs.
 
 10.  Appendix A: Evidence theory
 
@@ -1785,12 +1784,12 @@ Table of Contents
    key state changes.
 
    An additional and optional feature in KERI is enabled by adding
-   _watchers_. Watchers are a lightweight service that synthesizes data
-   from many witnesses.  Watchers MAY monitor multiple witnesses and
-   enable hyper-efficient caching.  They SHOULD also compare what
-   multiple witnesses for a given identifier are saying, which prevents
-   controllers of an identifier from forking reality in a duplicitous
-   way, and which can detect malicious attempts to use stolen keys.
+   _watchers_. Watchers are lightweight services that synthesize witness
+   data.  They may MAY monitor multiple witnesses and enable hyper-
+   efficient caching.  They SHOULD also compare what multiple witnesses
+   for a given identifier are saying, which prevents controllers of an
+   identifier from forking reality in a duplicitous way, and which can
+   detect malicious attempts to use stolen keys.
 
    Witnesses are chosen according to the preference of each party that
    controls an identifier, and a mature ecosystem could have dozens,
@@ -1800,17 +1799,19 @@ Table of Contents
    can query.  Any verifier can operate a watcher at any time, without
    any coordination or approval.  Viral discoverability can
    automatically populate the watcher's cache, and keep it up-to-date as
-   witness data evolves.  Verifiers can share watchers if they prefer.
-   Anything that watchers assert must be independently verified by
-   consulting witnesses, so watchers need not have a complete picture of
-   the world, and they are a convenience rather than an oracle that must
-   be trusted.  The data that watchers synthesize is deliberately
-   published by witnesses for public consumption, at the request of each
-   data stream's associated data controllers, and does not represent
-   surveillance (9).  If a watcher can no longer find witness data to
-   back one of its assertions, it MUST delete the data to satisfy its
-   contract.  This means that acts of erasure on witnesses propagate to
-   watchers, again satisfying regulatory erasure requirements.
+   witness data evolves.
+
+   Verifiers can share watchers if they prefer.  Anything that watchers
+   assert must be independently verified by consulting witnesses, so
+   watchers need not have a complete picture of the world, and they are
+   a convenience rather than an oracle that must be trusted.  The data
+   that watchers synthesize is deliberately published by witnesses for
+   public consumption, at the request of each data stream's associated
+   data controllers, and does not represent surveillance (9).  If a
+   watcher can no longer find witness data to back one of its
+   assertions, it MUST delete the data to satisfy its contract.  This
+   means that acts of erasure on witnesses propagate to watchers, again
+   satisfying regulatory erasure requirements.
 
 12.  Appendix C: Sample Credentials
 
@@ -2193,17 +2194,17 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc8225>.
 
    [TOIP-ACDC]
-              Trust Over IP Foundation, "Authentic Chained Data
-              Containers (ACDC)", November 2023,
+              Smith, S., Feairheller, P., and Trust Over IP Foundation,
+              "Authentic Chained Data Containers (ACDC)", November 2023,
               <https://trustoverip.github.io/tswg-acdc-specification/>.
 
    [TOIP-CESR]
-              Trust Over IP Foundation, "Composable Event Streaming
-              Representation (CESR)", November 2023,
+              Smith, S. and Trust Over IP Foundation, "Composable Event
+              Streaming Representation (CESR)", November 2023,
               <https://trustoverip.github.io/tswg-cesr-specification/>.
 
    [TOIP-KERI]
-              Trust Over IP Foundation, "Key Event Receipt
+              Smith, S. and Trust Over IP Foundation, "Key Event Receipt
               Infrastructure (KERI)", January 2024,
               <https://trustoverip.github.io/tswg-keri-specification/>.
 
