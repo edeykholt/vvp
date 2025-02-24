@@ -2194,18 +2194,20 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc8225>.
 
    [TOIP-ACDC]
-              Smith, S., Feairheller, P., and Trust Over IP Foundation,
-              "Authentic Chained Data Containers (ACDC)", November 2023,
+              Smith, S., Feairheller, P., Griffin, K., Ed., and Trust
+              Over IP Foundation, "Authentic Chained Data Containers
+              (ACDC)", November 2023,
               <https://trustoverip.github.io/tswg-acdc-specification/>.
 
    [TOIP-CESR]
-              Smith, S. and Trust Over IP Foundation, "Composable Event
-              Streaming Representation (CESR)", November 2023,
+              Smith, S., Griffin, K., Ed., and Trust Over IP Foundation,
+              "Composable Event Streaming Representation (CESR)",
+              November 2023,
               <https://trustoverip.github.io/tswg-cesr-specification/>.
 
    [TOIP-KERI]
-              Smith, S. and Trust Over IP Foundation, "Key Event Receipt
-              Infrastructure (KERI)", January 2024,
+              Smith, S., Griffin, K., Ed., and Trust Over IP Foundation,
+              "Key Event Receipt Infrastructure (KERI)", January 2024,
               <https://trustoverip.github.io/tswg-keri-specification/>.
 
 14.2.  Informative References
