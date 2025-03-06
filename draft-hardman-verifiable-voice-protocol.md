@@ -395,7 +395,7 @@ An example of an AID is `EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa`. AIDs are
 
 An example of an OOBI for an AID is `https://agentsrus.net/oobi/EMCYrQqWyRLAYqMLYv_qm-qP7eKN81Wmjyz5nXQvYLYa/agent/EAxBDJkpA0rEjUG8vJrMdZKw8YL63r_7zYUMDrZMf1Wx`. Note the same `EMCY...` in the AID and its OOBI. Many constructs in KERI may have OOBIs, but when OOBIs are associated with AIDs, such OOBIs always contain their associated AID as the first URL segment that matches the AID regex. They point either to an agent or a witness that provides verifiable state information for the AID.
 
-AIDs possess several security properties that are not guaranteed by DIDs in general (self-certification, support for prerotation and multisig, support for witnesses, cooperative delegation, and so forth). These properties are vital to some of VVP's goals for high assurance.
+AIDs possess several security properties (e.g., self-certification, support for prerotation and multisig, support for witnesses, and cooperative delegation) that are not guaranteed by DIDs in general. Such properties are vital to some of VVP's goals for high assurance.
 
 ### Signatures over SAIDs
 Since neither a SAID value nor the data it hashes can be changed without breaking the correspondence between them, signing over a SAID is equivalent, in how it commits the signer to content and provides tamper evidence, to signing over the data that the SAID hashes. Since SAIDs can function as placeholders for JSON objects, a SAID can represent such an object in a larger data structure. And since SAIDs can function as a reference without making a claim about location, it is possible to combine these properties to achieve some indirections in evidence that are crucial in privacy and regulatory compliance.
