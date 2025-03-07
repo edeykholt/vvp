@@ -310,7 +310,7 @@ For information about the signature over a passport, see {{<pss}}.
 # Verifying
 
 ## Algorithm
-When a verifier encounters a VVP passport, they SHOULD verify by using an algorithm similar to following. (Optimizations may combine or reorder operations, but MUST achieve all of the same guarantees, in order to be compliant implementations.)
+When a verifier encounters a VVP passport, they SHOULD verify by using an algorithm similar to the following. (Optimizations may combine or reorder operations, but MUST achieve all of the same guarantees, in order to be compliant implementations.)
 
 1. Confirm that the `orig` and `dest` fields match contextual observations and other SIP metadata. That is, the passport appears aligned with what is known about the call from external sources. This is not a cryptographic analysis.
 1. Extract the `kid` field.
