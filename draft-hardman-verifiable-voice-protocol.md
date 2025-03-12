@@ -178,9 +178,9 @@ Regulators have mandated protections, and industry has responded. However, exist
 VVP solves these problems by applying three crucial innovations.
 
 ## Evidence scope
-Existing solutions aim to assert variable levels of confidence about a caller's identity, plus possibly some brand attributes. These assertions are testable only in the moment a call is initiated; later, they become repudiable.
+Existing solutions aim to assert variable levels of confidence about a caller's identity, plus possibly some brand attributes. These assertions rest entirely on a service provider's judgment and are testable only in the moment a call is initiated; later, they become repudiable.
 
-VVP proves more. It always proves the caller's legal identity, plus any authority that the caller has delegated to staff and service providers. It typically also proves brand attributes and right to use a phone number. If a call center is involved, it proves the constraints under which the call center operates as a representative. All VVP proof can be evaluated in the present or the past, guaranteeing accountability with a permanent, non-repudiable audit trail.
+VVP proves more. It always proves the caller's legal identity, plus any authority that the caller has delegated to staff and service providers. It typically also proves brand attributes and right to use a phone number. If a call center is involved, it proves the constraints under which the call center operates as a representative. All VVP proof is traceable back to justifying evidence and can be evaluated in the present or the past. This guarantees accountability for all parties with a permanent, non-repudiable audit trail.
 
 ## Evidence format
 VVP is rooted in an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. Other forms of evidence (e.g., JWTs/STIR PASSporTs, digital signatures, and optional interoperable inputs from W3C verifiable credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}}) also contribute. However, the foundation that VVP places beneath them is unique. For a discussion of the theory behind VVP evidence, see {{<appendix-a}}. For more about additional evidence types, see {{<building-blocks}} and {{<interoperability}}.
