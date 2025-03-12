@@ -14,6 +14,7 @@ v: 3
 keyword:
  - voip
  - telecom
+ - telco
  - telephone number
  - vetting
  - KYC
@@ -159,7 +160,7 @@ informative:
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and individuals making telephone calls. This eliminates trust gaps that scammers exploit. Like related technolgies such as SHAKEN, RCD, and BCID, VVP binds cryptographic evidence to a SIP INVITE, and verifies this evidence downstream. However, VVP builds from different technical and governance assumptions, and uses better evidence. This allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. Because it is easier to adopt, VVP can plug gaps or build bridges between other approaches, functioning as glue in hybrid ecosystems. For example, it can justify an A attestation in SHAKEN, or an RCD passport for branded calling, when a call originates outside SHAKEN or RCD ecosystems. VVP also works well as a standalone mechanism, independent of other solutions. An extra benefit is that VVP enables two-way evidence sharing with verifiable text and chat, as well as with other industry verticals that need verifiability in non-telco contexts.
+Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and individuals making telephone calls. This eliminates trust gaps that scammers exploit. Like related technolgies such as SHAKEN, RCD, and BCID, VVP binds cryptographic evidence to a SIP INVITE, and verifies this evidence downstream. However, VVP builds from different technical and governance assumptions, and uses better, richer evidence. This allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. Because it is easier to adopt, VVP can plug gaps or build bridges between other approaches, functioning as glue in hybrid ecosystems. For example, it may justify an A attestation in SHAKEN, or an RCD passport for branded calling, when a call originates outside SHAKEN or RCD ecosystems. VVP also works well as a standalone mechanism, independent of other solutions. An extra benefit is that VVP enables two-way evidence sharing with verifiable text and chat, as well as with other industry verticals that need verifiability in non-telco contexts.
 
 --- middle
 
@@ -174,7 +175,12 @@ Regulators have mandated protections, and industry has responded. However, exist
 * Market complexities such as the presence of aggregators, wholesalers, and call centers that proxy a brand are difficult to model safely.
 * What might work for enterprises offers few benefits and many drawbacks for individual callers.
 
-VVP solves these problems by applying two crucial innovations.
+VVP solves these problems by applying three crucial innovations.
+
+## Evidence scope
+Existing solutions aim to assert variable levels of confidence about a caller's identity, plus possibly some brand attributes. These assertions are testable only in the moment a call is initiated; later, they become repudiable.
+
+VVP proves more. It always proves the caller's legal identity, plus any authority that the caller has delegated to staff and service providers. It typically also proves brand attributes and right to use a phone number. If a call center is involved, it proves the constraints under which the call center operates as a representative. All VVP proof can be evaluated in the present or the past, guaranteeing accountability with a permanent, non-repudiable audit trail.
 
 ## Evidence format
 VVP is rooted in an evidence format called *authentic chained data container*s (*ACDC*s) -- {{TOIP-ACDC}}. Other forms of evidence (e.g., JWTs/STIR PASSporTs, digital signatures, and optional interoperable inputs from W3C verifiable credentials {{W3C-VC}} and SD-JWTs {{SD-JWT-DRAFT}}) also contribute. However, the foundation that VVP places beneath them is unique. For a discussion of the theory behind VVP evidence, see {{<appendix-a}}. For more about additional evidence types, see {{<building-blocks}} and {{<interoperability}}.
@@ -186,7 +192,7 @@ Although VVP interoperates with governance frameworks such as SHAKEN {{ATIS-1000
 
 Millions of institutions have already undergone LEI vetting, and they already use the resulting evidence of their organizational identity in day-to-day behaviors all over the world. By adopting tooling that's compatible with the vLEI ecosystem, VVP gives adopters an intriguing option: *just skip the task of inventing a whole new vetting regime unique to telco, with its corresponding learning curve, costs, and legal and business adoption challenges.*
 
-To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telecom ecosystems opt in, either wholly or partially (see {{<interoperability}}), to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telecom industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
+To be clear, VVP does not *require* that vLEIs be used for vetting. However, by choosing an evidence format that is high-precision and lossless enough to accommodate vLEIs, VVP lets telco ecosystems opt in, either wholly or partially (see {{<interoperability}}), to trust bases that are already adopted, and that are not limited to any particular jurisdiction or to the telco industry. It thus offers two-way, easy bridges between identity in phone calls and identity in financial, legal, technical, logistic, regulatory, web, email, and social media contexts.
 
 # Conventions and Definitions
 
@@ -338,7 +344,7 @@ Furthermore, because SAIDs and their associated data (including links to other n
 *In toto*, these characteristics mean that no centralized registry is required in any given ecosystem. Data can be fetched directly from its source, across jurisdictional boundaries. Because it is fetched from its source, it comes with consent. Privacy can be tuned (see {{<privacy}}). Simple opportunistic, uncoordinated reuse (e.g., in or across the datacenters of TSPs) will arise spontaneously and will dramatically improve the scale and efficiency of the system.
 
 # Curating
-The evidence that's available in today's telecom ecosystems resembles some of the evidence described here, in concept. However, existing evidence has gaps, and its format is fragile. It requires direct trust in the proximate issuer, and it is typically organized for discovery; both characteristics lead to large, centralized registries at a regional or national level. These registries become a trusted third party, which defeats some of the purpose of creating decentralized and independently verifiable evidence in the first place. Sharing such evidence across jurisdiction boundaries requires regulatory compatibility and bilateral agreements. Sharing at scale is impractical at best, if not illegal.
+The evidence that's available in today's telco ecosystems resembles some of the evidence described here, in concept. However, existing evidence has gaps, and its format is fragile. It requires direct trust in the proximate issuer, and it is typically organized for discovery; both characteristics lead to large, centralized registries at a regional or national level. These registries become a trusted third party, which defeats some of the purpose of creating decentralized and independently verifiable evidence in the first place. Sharing such evidence across jurisdiction boundaries requires regulatory compatibility and bilateral agreements. Sharing at scale is impractical at best, if not illegal.
 
 How evidence is issued, propagated, quality-controlled, and referenced is therefore an important concern for this specification.
 
@@ -386,7 +392,7 @@ SAIDs are evidence that hashed data has not changed. They can also function like
 ### Signature
 A digital signature over arbitrary data D constitutes evidence that the signer processed D with a signing function that took D and the signer's private key as inputs: `signature = sign(D, privkey)`. The evidence can be verified by checking that the signature is bound to D and the public key of the signer: `valid = verify(signature, D, pubkey)`. Assuming that the signer has not lost unique control of the private key, and that cryptography is appropriately strong, we are justified in the belief that the signer must have taken deliberate action that required seeing an unmodified D in its entirety.
 
-The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telecom. VVP explicitly addresses this concern by anchoring signatures on non-ephemeral evidence to KELs ({{<KEL}}).
+The assumption that a signer has control over their private keys may often be true (or at least believed, by the signer) at the time a signature is created. However, after key compromise, an attacker can create and sign evidence that purports to come from the current or an earlier time period, unless signatures are anchored to a data source that detects anachronisms. Lack of attention to this detail undermines the security of many credential schemes, including in telco. VVP explicitly addresses this concern by anchoring signatures on non-ephemeral evidence to KELs ({{<KEL}}).
 
 ### AID
 An *autonomic identifier* (*AID*) is a short string that can be resolved to one or more cryptographic keys at a specific version of the identifier's key state. Using cryptographic keys, a party can prove it is the controller of an AID by creating digital signatures. AIDs are like W3C DIDs {{W3C-DID}}, and can be transformed into DIDs. The information required to resolve an AID to its cryptographic keys is communicated through a special form of URI called an *out-of-band invitation* (*OOBI*). An OOBI points to an HTTP resource that returns IANA content-type `application/json+cesr`; it is somewhat analogous to a combination of the `kid` and `x5u` constructs in many JWTs. AIDs and OOBIs are defined in the KERI spec {{TOIP-KERI}}.
@@ -1266,4 +1272,4 @@ This specification requires no IANA actions. However, it does depend on OOBIs (s
 
 Much of the cybersecurity infrastructure used by VVP depends on KERI, which was invented by Sam Smith, and first implemented by Sam plus Phil Fairheller, Kevin Griffin, and other technical staff at GLEIF. Thanks to logistical support from Trust Over IP and the Linux Foundation, and to a diverse community of technical experts in those communities and in the Web of Trust group.
 
-Techniques that apply KERI to telecom use cases were developed by Daniel Hardman, Randy Warshaw, and Ruth Choueka, with additional contributions from Dmitrii Tychinin, Yaroslav Lazarev, Arshdeep Singh, and many other staff members at Provenant, Inc. Thanks as well to Ed Eykholt for multiple editorial improvements.
+Techniques that apply KERI to telco use cases were developed by Daniel Hardman, Randy Warshaw, and Ruth Choueka, with additional contributions from Dmitrii Tychinin, Yaroslav Lazarev, Arshdeep Singh, and many other staff members at Provenant, Inc. Thanks as well to Ed Eykholt for multiple editorial improvements.
