@@ -111,6 +111,13 @@ informative:
   RFC6350:
   RFC7095:
   VCON-DRAFT: I-D.ietf-vcon-vcon-container
+  GSMA-RCS:
+    target: https://www.gsma.com/solutions-and-impact/technologies/networks/wp-content/uploads/2019/10/RCC.07-v11.0.pdf
+    title: "Rich Communication Suite - Advanced Communications
+Services and Client Specification, version 11.0"
+    author:
+      org: GSMA
+    date: 16 Oct 2019
   RCD-DRAFT: I-D.ietf-sipcore-callinfo-rcd
   RCD-PASSPORT: I-D.ietf-stir-passport-rcd
   SD-JWT-DRAFT: I-D.ietf-oauth-selective-disclosure-jwt
@@ -807,7 +814,7 @@ VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mech
 Certificates can add value to VVP, and VVP can add value to certificate-based ecosystems or stacks. In the rest of this section, note the difference between normative language (imposing requirements on VVP implementations) and non-normative language (suggesting how other solutions could react).
 
 ## Chat and conversations
-The dossier cited in a VVP passport may also be cited by an RCS verification authority (VA), may include evidence that is also submitted to a VA, or may consist of evidence created by a VA. This unlocks synergies between vetting for RCS and vetting for voice. It may also allow properly vetted RCS chatbots to make verifiable voice calls, including calls that carry brand information (see {{RDC-DRAFT}} and {{CTIA-BCID}}), distinguishing them with 100% confidence from AI-driven voice scams.
+The dossier cited in a VVP passport may also be cited by an RCS verification authority (VA), may include evidence that is also submitted to a VA, or may consist of evidence created by a VA. This unlocks synergies between vetting for RCS ({{GSMA-RCS}}) and vetting for voice. It may also allow properly vetted RCS chatbots to make verifiable voice calls, including calls that carry brand information (see {{RDC-DRAFT}} and {{CTIA-BCID}}), distinguishing them with 100% confidence from AI-driven voice scams.
 
 When conversations are captured in rich containers such as vCon ({{VCON-DRAFT}}), a VVP passport may be included (e.g., in the `stir` field of a vCon), proving the identity of a calling party. As long as signatures over the data structure assert truthfully that the passport was verified at the time of attachment, no replay attack is possible, and all of VVP's guarantees transfer. A VVP dossier by itself can also provide permanent evidence of assertions as attachments to a conversation.
 
