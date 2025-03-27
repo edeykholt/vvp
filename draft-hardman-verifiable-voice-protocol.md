@@ -110,6 +110,7 @@ informative:
   RFC8588:
   RFC6350:
   RFC7095:
+  VCON-DRAFT: I-D.ietf-vcon-vcon-container
   RCD-DRAFT: I-D.ietf-sipcore-callinfo-rcd
   RCD-PASSPORT: I-D.ietf-stir-passport-rcd
   SD-JWT-DRAFT: I-D.ietf-oauth-selective-disclosure-jwt
@@ -160,7 +161,7 @@ informative:
 
 --- abstract
 
-Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and individuals making telephone calls. This eliminates trust gaps that scammers exploit. Like related technolgies such as SHAKEN, RCD, and BCID, VVP binds cryptographic evidence to a SIP INVITE, and verifies this evidence downstream. However, VVP builds from different technical and governance assumptions, and uses better, richer evidence. This allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. Because it is easier to adopt, VVP can plug gaps or build bridges between other approaches, functioning as glue in hybrid ecosystems. For example, it may justify an A attestation in SHAKEN, or an RCD passport for branded calling, when a call originates outside SHAKEN or RCD ecosystems. VVP also works well as a standalone mechanism, independent of other solutions. An extra benefit is that VVP enables two-way evidence sharing with verifiable text and chat, as well as with other industry verticals that need verifiability in non-telco contexts.
+Verifiable Voice Protocol (VVP) authenticates and authorizes organizations and individuals making telephone calls. This eliminates trust gaps that scammers exploit. Like related technolgies such as SHAKEN, RCD, and BCID, VVP binds cryptographic evidence to a SIP INVITE, and verifies this evidence downstream. However, VVP builds from different technical and governance assumptions, and uses better, richer evidence. This allows VVP to cross jurisdictional boundaries easily and robustly. It also makes VVP simpler, more decentralized, cheaper to deploy and maintain, more private, more scalable, and higher assurance than alternatives. Because it is easier to adopt, VVP can plug gaps or build bridges between other approaches, functioning as glue in hybrid ecosystems. For example, it may justify an A attestation in SHAKEN, or an RCD passport for branded calling, when a call originates outside SHAKEN or RCD ecosystems. VVP also works well as a standalone mechanism, independent of other solutions. An extra benefit is that VVP enables two-way evidence sharing with verifiable text and chat (e.g., RCS and vCon), as well as with other industry verticals that need verifiability in non-telco contexts.
 
 --- middle
 
@@ -804,6 +805,11 @@ VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mech
 
 ## Certificates {#interop-certs}
 Certificates can add value to VVP, and VVP can add value to certificate-based ecosystems or stacks. In the rest of this section, note the difference between normative language (imposing requirements on VVP implementations) and non-normative language (suggesting how other solutions could react).
+
+## Chat and conversations
+The dossier cited in a VVP passport may also be cited by an RCS verification authority (VA), may include evidence that is also submitted to a VA, or may consist of evidence created by a VA. This unlocks synergies between vetting for RCS and vetting for voice. It may also allow properly vetted RCS chatbots to make verifiable voice calls, including calls that carry brand information (see {{RDC-DRAFT}} and {{CTIA-BCID}}), distinguishing them with 100% confidence from AI-driven voice scams.
+
+When conversations are captured in rich containers such as vCon ({{VCON-DRAFT}}), a VVP passport may be included (e.g., in the `stir` field of a vCon), proving the identity of a calling party. As long as signatures over the data structure assert truthfully that the passport was verified at the time of attachment, no replay attack is possible, and all of VVP's guarantees transfer. A VVP dossier by itself can also provide permanent evidence of assertions as attachments to a conversation.
 
 ### Cascaded mode
 Verifiers who prefer to operate in certificate ecosystems such as SHAKEN and RCD can be satisfied by having an intermediary verify according to VVP rules (see {{<verifying}}), and then signing a new passport in a certificate-dependent format (e.g., for SHAKEN and/or RCD). In such cases, the new passport contains an `x5u` header pointing to the certificate of the new signer.
