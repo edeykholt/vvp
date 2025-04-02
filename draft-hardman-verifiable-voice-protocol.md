@@ -153,6 +153,12 @@ Services and Client Specification, version 11.0"
     author:
       org: Provenant
     date: 20 Dec 2024
+  CITATION-SCHEMA:
+    target: https://github.com/provenant-dev/public-schema/blob/main/citation/index.md
+    title: "Citation Schema"
+    author:
+      name: Daniel Hardman
+    date: 2 Apr 2025
   GCD-SCHEMA:
     target: https://github.com/provenant-dev/public-schema/blob/main/gcd/index.md
     title: "Generalized Cooperative Delegation (GCD) Credentials"
@@ -612,12 +618,14 @@ The `evd` field in the passport contains the OOBI ({{<aid}}) of an ACDC data gra
 ### Accountable Party Evidence {#APE}
 The dossier MUST include at least what is called *accountable party evidence* (*APE*).
 
-APE consists of several credentials, explored in detail below. It MUST include a vetting credential for the AP. It SHOULD include a TNAlloc credential that proves RTU. Normally the RTU MUST be assigned to the AP; however, if a proxy is the OP and uses their own phone number, the RTU MUST be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard {{RFC6350}} or JCard {{RFC7095}}.) If no brand credential is present, verifiers MUST NOT impute a brand to the call on the basis of any VVP guarantees.
+APE consists of several credentials, explored in detail below. It MUST include a vetting credential for the AP. It SHOULD include a TNAlloc credential that proves RTU. Normally the RTU MUST be assigned to the AP; however, if a proxy is the OP and uses their own phone number, the RTU MUST be assigned to the OP instead. If the AP intends to contextualize the call with a brand, it MUST include a brand credential for the AP. (In cases where callers are private individuals, "brand" maps to descriptive information about the individual, as imagined in mechanisms like VCard {{RFC6350}} or JCard {{RFC7095}}.) If no brand credential is present, verifiers MUST NOT impute a brand to the call on the basis of any VVP guarantees. APE MAY also include evidence that will aid in settlement.
 
 ### Delegation Evidence {#DE}
 When a private individual makes a call with VVP, they might be both the AP and the OP. In such cases, we expect their AID to be the recipient or issuee of all the APE, and no backing evidence beyond the APE may be necessary. However, in business contexts, it will almost always be true that the OP role is played by a delegate. In such conditions, evidence must also include proof that this indirection is valid. We call this *delegation evidence* (*DE*).
 
 DE is nearly always required when the AP is an organization, because the cryptographic identifier for the organization as a legal entity is typically not the same as the cryptographic identifier for the organization's automated software that prepares SIP INVITEs. DE can thus distinguish between Acme Corporation in general, and software operated by Acme's IT department for the express purpose of signing voice traffic. The former has a vetting credential and legal accountability, and can act as the company to publish press releases, prepare invoices, spend money, and make attestations to regulators; the latter should only be able to sign outbound voice calls on Acme's behalf. Failing to make this distinction creates serious cybersecurity risks.
+
+Delegation evidence may also be used to prove that an AI-powered agent is empowered to make phone calls on behalf of an AP.
 
 <figure>
 <name>Sample evidence graph; OP kid could bind to APE or DE</name>
@@ -759,8 +767,8 @@ v?                                  (APE)                 (DE)
 : | SAID                   +--+  |                     +-+  |
 : |   AID of issuer        |     | e.g., delegate RTU, +----+
 :.:...AID of AP            |     | vet for call ctr,   | |  |
-  |   brand name           |     | proxy right to brand| +--+
-  |   logo                 |     |                     | |
+  |   brand name           |     | settlement, AI ok,  | +--+
+  |   logo                 |     | proxy right to brand| |
   |   ...more attributes   |     +-+-------------------+ |
   +------------------------+       +---------------------+
 ]]>
@@ -807,6 +815,11 @@ A delegated signer credential proves that automation running under the control o
 
 An example delegated signer credential and its schema are shown in {{<dsig-cred-sample}}.
 
+### Additional credential types
+New credential types can be added to a dossier, to answer novel questions for verifiers, without changing any core characteristics of VVP.
+
+For example, a credential could be attached to a dossier to assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses. Or a credential could be attached to a dossier to prove that the accountable party empowered an AI powered agent to make calls on its behalf (analogous to how companies empower chatbots in RCS).
+
 # Interoperability
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
 
@@ -831,7 +844,7 @@ Valid VVP passports that obey this requirement can thus be used to enable VVP-un
 ## Other credential formats {#interop-creds}
 The stable evidence that drives VVP -- vetting credential ({{<vetting-credential}}), TNAlloc credential ({{<tnalloc-credential}}), brand credential ({{<brand-credential}}), brand proxy credential ({{<brand-proxy-credential}}), and delegated signer credential ({{<delegated-signer-credential}}) -- MUST all be ACDCs. This is because only when the data in these credentials is modeled as an ACDC is it associated with permanent identities that possess appropriate security guarantees.
 
-However, VVP can easily be driven by other approaches to evidence, treating the ACDCs as a somewhat secondary format transformation. In such a case, a *bridging party* plays a pivotal role. This party MUST verify foreign evidence (e.g., W3C verifiable credentials {{W3C-VC}}), and then issue ACDCs that derive from it. It MAY radically transform the data in the process (e.g., combining or splitting credentials, changing schemas or data values).
+However, VVP can easily be driven by other approaches to evidence, treating the ACDCs as a somewhat secondary format transformation. In such a case, a *bridging party* plays a pivotal role. This party MUST verify foreign evidence (e.g., W3C verifiable credentials {{W3C-VC}}), and then issue ACDCs that derive from it (e.g., using {{CITATION-SCHEMA}}). It MAY radically transform the data in the process (e.g., combining or splitting credentials, changing schemas or data values).
 
 This transformation from foreign evidence to ACDCs is very flexible, and allows for tremendous interoperability. On the calling side, any ecosystem that deals in cryptographic evidence can provide input to VVP, no matter what evidence mechanisms they prefer.
 
