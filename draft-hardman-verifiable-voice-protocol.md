@@ -816,9 +816,9 @@ A delegated signer credential proves that automation running under the control o
 An example delegated signer credential and its schema are shown in {{<dsig-cred-sample}}.
 
 ### Additional credential types
-New credential types can be added to a dossier, to answer novel questions for verifiers, without changing any core characteristics of VVP.
+New credential types can be added to a dossier, to answer any number of novel questions for verifiers, without changing any core characteristics of VVP.
 
-For example, a credential could be attached to a dossier to assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses. Or a credential could be attached to a dossier to prove that the accountable party empowered an AI powered agent to make calls on its behalf (analogous to how companies empower chatbots in RCS).
+For example, a credential could be attached to a dossier to assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses. Or a credential could be attached to a dossier to prove that the AP empowered an AI powered agent to make calls on its behalf (analogous to how chatbots represent companies in RCS contexts).
 
 # Interoperability
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
