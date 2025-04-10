@@ -153,6 +153,14 @@ Services and Client Specification, version 11.0"
     author:
       org: Provenant
     date: 20 Dec 2024
+  PERSONHOOD-CRED:
+    target: https://arxiv.org/pdf/2408.07892
+    title: "Personhood credentials:
+Artificial intelligence and the value of
+privacy-preserving tools to distinguish who is real online"
+    author:
+      name: Steven Adler, et al.
+    date: Aug 2024
   F2F-SCHEMA:
     target: https://github.com/provenant-dev/public-schema/blob/main/face-to-face/index.md
     title: "Face-to-Face Credentials"
@@ -824,7 +832,7 @@ An example delegated signer credential and its schema are shown in {{<dsig-cred-
 ### Additional credential types
 New credential types can be added to a dossier, to answer any number of novel questions for verifiers, without changing any core characteristics of VVP.
 
-For example, a credential could be attached to a dossier to prove that the caller is a human being instead of an AI (see {{F2F-SCHEMA}}), or a credential could be attached to a dossier to prove that the AP empowered an AI agent to make calls on its behalf (analogous to how chatbots represent companies in RCS contexts). An additional credential could assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses.
+For example, a credential could be attached to a dossier to prove that the caller is a human being instead of an AI (see {{F2F-SCHEMA}} and {{PERSONHOOD-CRED}}), or a credential could be attached to a dossier to prove that the AP empowered an AI agent to make calls on its behalf (analogous to how chatbots represent companies in RCS contexts). An additional credential could assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses.
 
 # Interoperability
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
