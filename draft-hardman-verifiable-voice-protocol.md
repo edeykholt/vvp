@@ -159,7 +159,70 @@ Services and Client Specification, version 11.0"
 Artificial intelligence and the value of
 privacy-preserving tools to distinguish who is real online"
     author:
-      name: Steven Adler, et al.
+      -
+        name: Steven Adler
+      -
+        name: Zoë Hitzig
+      -
+        name: Shrey Jain
+      -
+        name: Catherine Brewer
+      -
+        name: Wayne Chang
+      -
+        name: Renée DiResta
+      -
+        name: Eddy Lazzarin
+      -
+        name: Sean McGregor
+      -
+        name: Wendy Seltzer
+      -
+        name: Divya Siddarth
+      -
+        name: Nouran Soliman
+      -
+        name: Tobin South
+      -
+        name: Connor Spelliscy
+      -
+        name: Manu Sporny
+      -
+        name: Varya Srivastava
+      -
+        name: John Bailey
+      -
+        name: Brian Christian
+      -
+        name: Andrew Critch
+      -
+        name: Ronnie Falcon
+      -
+        name: Heather Flanagan
+      -
+        name: Kim Hamilton Duffy
+      -
+        name: Eric Ho
+      -
+        name: Claire R. Leibowicz
+      -
+        name: Srikanth Nadhamuni
+      -
+        name: Alan Z. Rozenshtein
+      -
+        name: David Schnurr
+      -
+        name: Evan Shapiro
+      -
+        name: Lacey Strahm
+      -
+        name: Andrew Trask
+      -
+        name: Zoe Weinberg
+      -
+        name: Cedric Whitney
+      -
+        name: Tom Zick
     date: Aug 2024
   F2F-SCHEMA:
     target: https://github.com/provenant-dev/public-schema/blob/main/face-to-face/index.md
@@ -830,7 +893,7 @@ A delegated signer credential proves that automation running under the control o
 An example delegated signer credential and its schema are shown in {{<dsig-cred-sample}}.
 
 ### Additional credential types
-New credential types can be added to a dossier, to answer any number of novel questions for verifiers, without changing any core characteristics of VVP.
+New credential types can be added to a dossier, to answer any number of novel questions for verifiers, without changing the core characteristics of VVP.
 
 For example, a credential could be attached to a dossier to prove that the caller is a human being instead of an AI (see {{F2F-SCHEMA}} and {{PERSONHOOD-CRED}}), or a credential could be attached to a dossier to prove that the AP empowered an AI agent to make calls on its behalf (analogous to how chatbots represent companies in RCS contexts). An additional credential could assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses.
 
