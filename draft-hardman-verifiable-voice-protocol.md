@@ -153,6 +153,12 @@ Services and Client Specification, version 11.0"
     author:
       org: Provenant
     date: 20 Dec 2024
+  F2F-SCHEMA:
+    target: https://github.com/provenant-dev/public-schema/blob/main/face-to-face/index.md
+    title: "Face-to-Face Credentials"
+    author:
+      name: Daniel Hardman
+    date: 13 Dec 2023
   CITATION-SCHEMA:
     target: https://github.com/provenant-dev/public-schema/blob/main/citation/index.md
     title: "Citation Schema"
@@ -818,7 +824,7 @@ An example delegated signer credential and its schema are shown in {{<dsig-cred-
 ### Additional credential types
 New credential types can be added to a dossier, to answer any number of novel questions for verifiers, without changing any core characteristics of VVP.
 
-For example, a credential could be attached to a dossier to assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses. Or a credential could be attached to a dossier to prove that the AP empowered an AI agent to make calls on its behalf (analogous to how chatbots represent companies in RCS contexts).
+For example, a credential could be attached to a dossier to prove that the caller is a human being instead of an AI (see {{F2F-SCHEMA}}), or a credential could be attached to a dossier to prove that the AP empowered an AI agent to make calls on its behalf (analogous to how chatbots represent companies in RCS contexts). An additional credential could assist with questions about settlement (how the terminating service provider will be paid to connect the call). It might document the relationship between an AP and one or more financial clearinghouses.
 
 # Interoperability
 VVP can achieve its goals without any dependence on RCD, SHAKEN, or similar mechanisms. However, it also provides easy bridges so value can flow to and from other ecosystems with similar goals.
